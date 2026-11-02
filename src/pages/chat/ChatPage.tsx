@@ -1,0 +1,494 @@
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Search,
+  Send,
+  ShieldCheck,
+  CheckCheck,
+  MessageSquare,
+  Briefcase,
+  ChevronLeft,
+  Loader2,
+  AlertCircle,
+  Building2,
+  ExternalLink,
+} from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { chatService } from '@/services/chatService';
+import type { ChatModel, MessageModel } from '@/types/chat';
+import { ROUTES } from '@/utils/constants';
+
+export const ChatPage: React.FC = () => {
+  const { chatId: routeChatId } = useParams<{ chatId: string }>();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const candidateId = user?.uid || '';
+
+  const passedState = location.state as {
+    activeChatId?: string;
+    recruiterId?: string;
+    recruiterName?: string;
+    jobTitle?: string;
+    jobId?: string;
+  } | undefined;
+
+  const [chats, setChats] = useState<ChatModel[]>([]);
+  const [activeChatId, setActiveChatId] = useState<string | null>(
+    routeChatId || passedState?.activeChatId || null
+  );
+  const [messages, setMessages] = useState<MessageModel[]>([]);
+  const [inputText, setInputText] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loadingChats, setLoadingChats] = useState(true);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [chatError, setChatError] = useState<string | null>(null);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // 1. Subscribe to Candidate's Realtime Chat List
+  useEffect(() => {
+    if (!candidateId) {
+      setLoadingChats(false);
+      return;
+    }
+
+    setLoadingChats(true);
+    setChatError(null);
+
+    const unsub = chatService.subscribeToCandidateChats(
+      candidateId,
+      (liveChats) => {
+        setChats(liveChats);
+        setLoadingChats(false);
+
+        // Auto-select first chat on desktop if none selected
+        if (liveChats.length > 0 && !activeChatId && !routeChatId && !passedState?.activeChatId) {
+          const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
+          if (isDesktop) {
+            setActiveChatId(liveChats[0].id);
+          }
+        }
+      },
+      (err) => {
+        console.error('[ChatPage] Error loading chats:', err);
+        setChatError('Failed to load conversations from Firebase.');
+        setLoadingChats(false);
+      }
+    );
+
+    return () => unsub();
+  }, [candidateId, activeChatId, routeChatId, passedState?.activeChatId]);
+
+  // 2. Subscribe to Active Chat Messages & Mark as Read
+  useEffect(() => {
+    if (!activeChatId || !candidateId) {
+      setMessages([]);
+      setLoadingMessages(false);
+      return;
+    }
+
+    setLoadingMessages(true);
+
+    // Mark conversation as read for the candidate
+    chatService.markAsRead(activeChatId, candidateId);
+
+    const unsub = chatService.subscribeToMessages(
+      activeChatId,
+      (liveMessages) => {
+        setMessages(liveMessages);
+        setLoadingMessages(false);
+        setTimeout(() => {
+          messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      },
+      (err) => {
+        console.error('[ChatPage] Error loading messages:', err);
+        setLoadingMessages(false);
+      }
+    );
+
+    return () => unsub();
+  }, [activeChatId, candidateId]);
+
+  // Send Message with WebCrypto AES-CTR Encryption
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputText.trim() || !activeChatId || !candidateId || sending) return;
+
+    const textToSend = inputText.trim();
+    setInputText('');
+
+    try {
+      setSending(true);
+      await chatService.sendMessage({
+        chatId: activeChatId,
+        senderId: candidateId,
+        content: textToSend,
+      });
+
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        inputRef.current?.focus();
+      }, 50);
+    } catch (err: unknown) {
+      console.error('[ChatPage] Failed to send encrypted message:', err);
+      // Restore input text on failure
+      setInputText(textToSend);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const filteredChats = chats.filter((c) => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return true;
+    return (
+      (c.recruiterName && c.recruiterName.toLowerCase().includes(q)) ||
+      (c.companyName && c.companyName.toLowerCase().includes(q)) ||
+      (c.jobRole && c.jobRole.toLowerCase().includes(q)) ||
+      (c.decryptedLastMessage && c.decryptedLastMessage.toLowerCase().includes(q))
+    );
+  });
+
+  const activeChat = chats.find((c) => c.id === activeChatId) || {
+    id: activeChatId || '',
+    jobId: passedState?.jobId || '',
+    candidateId,
+    recruiterId: passedState?.recruiterId || '',
+    recruiterName: passedState?.recruiterName || 'Recruiter',
+    recruiterPhotoUrl: undefined,
+    recruiterDesignation: 'Hiring Lead',
+    companyName: 'Company',
+    companyLogoUrl: undefined,
+    jobRole: passedState?.jobTitle || 'Role Opening',
+    lastMessage: '',
+    lastMessageTime: new Date().toISOString(),
+    participantIds: [candidateId, passedState?.recruiterId || ''],
+    unreadCountCandidate: 0,
+    unreadCount: 0,
+  };
+
+  const formatMessageTime = (isoString: string | Date | any) => {
+    if (!isoString) return '';
+    const date = new Date(isoString);
+    if (isNaN(date.getTime())) return '';
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const formatChatDate = (isoString: string | Date | any) => {
+    if (!isoString) return '';
+    const date = new Date(isoString);
+    if (isNaN(date.getTime())) return '';
+    const now = new Date();
+    const isToday = date.toDateString() === now.toDateString();
+    if (isToday) {
+      return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    }
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  return (
+    <div className="space-y-6 max-w-7xl mx-auto pb-12 w-full min-w-0 animate-in fade-in duration-300">
+      {/* Header Banner */}
+      <div className="bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-8 border border-slate-200/90 dark:border-[#1f293d] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-brand-50 dark:bg-brand-950/60 border border-brand-200/60 dark:border-brand-800/40 flex items-center justify-center text-brand-600 dark:text-brand-400 shrink-0">
+            <MessageSquare className="w-6 h-6 sm:w-7 sm:h-7" />
+          </div>
+          <div>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
+              Recruiter Messages
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+              Secure, end-to-end encrypted direct messaging with verified hiring teams and recruiters.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 text-xs font-bold text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/40 border border-brand-200/80 dark:border-brand-800/60 px-3.5 py-1.5 rounded-xl shrink-0">
+          <ShieldCheck className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+          <span>AES-CTR Encrypted</span>
+        </div>
+      </div>
+
+      {chatError && (
+        <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 text-xs font-semibold flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+          <span>{chatError}</span>
+        </div>
+      )}
+
+      {/* Main Chat Workspace Container */}
+      <div className="bg-white dark:bg-[#111827] rounded-3xl border border-slate-200/90 dark:border-[#1f293d] shadow-sm overflow-hidden h-[calc(100vh-230px)] min-h-[580px] grid grid-cols-1 lg:grid-cols-12">
+        {/* Left Column: Conversations List (4 Cols on desktop; full width on mobile when no active chat) */}
+        <div
+          className={`lg:col-span-4 border-r border-slate-200 dark:border-[#1f293d] flex flex-col h-full bg-slate-50/50 dark:bg-[#0b0f19]/50 min-w-0 ${
+            activeChatId ? 'hidden lg:flex' : 'flex'
+          }`}
+        >
+          {/* Search Bar */}
+          <div className="p-4 border-b border-slate-200 dark:border-[#1f293d] space-y-3 bg-white dark:bg-[#111827]">
+            <div className="relative">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search recruiters or messages..."
+                className="w-full pl-10 pr-3.5 py-2 text-xs bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-[#1f293d] rounded-xl text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
+              />
+            </div>
+          </div>
+
+          {/* Conversations Scroll List */}
+          <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-[#1f293d]">
+            {loadingChats ? (
+              <div className="p-8 text-center text-xs text-slate-400 flex flex-col items-center justify-center gap-2">
+                <Loader2 className="w-5 h-5 animate-spin text-brand-600" />
+                <span>Loading conversations...</span>
+              </div>
+            ) : filteredChats.length === 0 ? (
+              <div className="p-12 text-center text-xs text-slate-400 space-y-2">
+                <MessageSquare className="w-8 h-8 text-slate-300 dark:text-slate-600 mx-auto mb-1" />
+                <p className="font-bold text-slate-600 dark:text-slate-300">NO MESSAGES YET</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 max-w-xs mx-auto">
+                  When recruiters contact you about job applications, your direct encrypted chats will appear here.
+                </p>
+              </div>
+            ) : (
+              filteredChats.map((chat) => {
+                const isActive = chat.id === activeChatId;
+                const unread = Number(chat.unreadCountCandidate || chat.unreadCount || 0);
+
+                return (
+                  <button
+                    key={chat.id}
+                    type="button"
+                    onClick={() => setActiveChatId(chat.id)}
+                    className={`w-full p-4 text-left transition flex items-start gap-3.5 min-w-0 ${
+                      isActive
+                        ? 'bg-white dark:bg-[#1a2333] shadow-xs border-l-4 border-brand-600 dark:border-brand-400'
+                        : 'hover:bg-slate-100/70 dark:hover:bg-[#1f293d]/50'
+                    }`}
+                  >
+                    {/* Recruiter Avatar */}
+                    {chat.recruiterPhotoUrl ? (
+                      <img
+                        src={chat.recruiterPhotoUrl}
+                        alt={chat.recruiterName}
+                        className="w-10 h-10 rounded-2xl object-cover shrink-0 border border-slate-200 dark:border-[#1f293d] shadow-xs"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-700 to-indigo-900 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
+                        {chat.recruiterName ? chat.recruiterName.charAt(0).toUpperCase() : 'R'}
+                      </div>
+                    )}
+
+                    <div className="flex-1 min-w-0 space-y-0.5">
+                      <div className="flex items-center justify-between gap-1">
+                        <p className="font-bold text-xs text-slate-900 dark:text-slate-100 truncate">
+                          {chat.recruiterName}
+                        </p>
+                        <span className="text-[10px] text-slate-400 shrink-0 font-medium">
+                          {formatChatDate(chat.lastMessageTime)}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                        <Building2 className="w-3 h-3 shrink-0 text-slate-400" />
+                        <span className="truncate">{chat.companyName}</span>
+                        {chat.jobRole && (
+                          <>
+                            <span>•</span>
+                            <span className="truncate text-slate-600 dark:text-slate-300">{chat.jobRole}</span>
+                          </>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between gap-2 pt-0.5">
+                        <p
+                          className={`text-xs truncate ${
+                            unread > 0
+                              ? 'font-bold text-slate-900 dark:text-slate-100'
+                              : 'text-slate-500 dark:text-slate-400'
+                          }`}
+                        >
+                          {chat.decryptedLastMessage || 'Encrypted conversation...'}
+                        </p>
+                        {unread > 0 && (
+                          <span className="w-5 h-5 rounded-full bg-brand-600 text-white text-[10px] font-black flex items-center justify-center shrink-0 shadow-xs">
+                            {unread > 99 ? '99+' : unread}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        {/* Right Column: Active Conversation Stream (8 Cols on desktop; full width on mobile when chat open) */}
+        <div
+          className={`lg:col-span-8 flex flex-col h-full bg-white dark:bg-[#111827] min-w-0 ${
+            activeChatId ? 'flex' : 'hidden lg:flex'
+          }`}
+        >
+          {activeChatId ? (
+            <>
+              {/* Active Chat Header */}
+              <div className="p-3.5 sm:p-4 border-b border-slate-200 dark:border-[#1f293d] flex items-center justify-between bg-white dark:bg-[#111827] min-w-0">
+                <div className="flex items-center gap-3 min-w-0">
+                  {/* Back button on mobile */}
+                  <button
+                    type="button"
+                    onClick={() => setActiveChatId(null)}
+                    className="p-1.5 -ml-1 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#1f293d] lg:hidden transition"
+                    aria-label="Back to conversations"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+
+                  {activeChat.recruiterPhotoUrl ? (
+                    <img
+                      src={activeChat.recruiterPhotoUrl}
+                      alt={activeChat.recruiterName}
+                      className="w-10 h-10 rounded-2xl object-cover shrink-0 border border-slate-200 dark:border-[#1f293d] shadow-xs"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-700 to-indigo-900 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+                      {activeChat.recruiterName ? activeChat.recruiterName.charAt(0).toUpperCase() : 'R'}
+                    </div>
+                  )}
+
+                  <div className="min-w-0">
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 truncate">
+                      {activeChat.recruiterName}
+                    </h3>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate flex items-center gap-1.5">
+                      <span>{activeChat.companyName}</span>
+                      {activeChat.jobRole && (
+                        <>
+                          <span>•</span>
+                          <span className="text-slate-700 dark:text-slate-300 font-semibold">{activeChat.jobRole}</span>
+                        </>
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                {activeChat.jobId && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(ROUTES.JOB_DETAILS.replace(':jobId', activeChat.jobId))}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-[#1f293d] hover:bg-slate-200 dark:hover:bg-[#253248] rounded-xl transition shrink-0"
+                  >
+                    <Briefcase className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">View Job</span>
+                    <ExternalLink className="w-3 h-3 text-slate-400 ml-0.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Message History Stream */}
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-slate-50/40 dark:bg-[#0b0f19]/40 min-w-0">
+                {loadingMessages ? (
+                  <div className="h-full flex flex-col items-center justify-center text-xs text-slate-400 gap-2">
+                    <Loader2 className="w-5 h-5 animate-spin text-brand-600" />
+                    <span>Loading messages...</span>
+                  </div>
+                ) : messages.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center text-xs text-slate-400 space-y-2 p-6 text-center">
+                    <ShieldCheck className="w-8 h-8 text-brand-500" />
+                    <p className="font-bold text-slate-700 dark:text-slate-300">
+                      Encrypted Chat Channel Established
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400 max-w-sm">
+                      Send a message below. Messages are encrypted in real time using AES-CTR matching the TalentBay mobile apps and Recruiter platform.
+                    </p>
+                  </div>
+                ) : (
+                  messages.map((msg) => {
+                    const isCandidate = msg.senderId === candidateId;
+
+                    return (
+                      <div
+                        key={msg.id}
+                        className={`flex flex-col ${isCandidate ? 'items-end' : 'items-start'}`}
+                      >
+                        <div
+                          className={`max-w-[85%] sm:max-w-[70%] px-4 py-2.5 rounded-2xl shadow-xs text-xs sm:text-sm break-words leading-relaxed ${
+                            isCandidate
+                              ? 'bg-brand-600 text-white rounded-tr-xs'
+                              : 'bg-white dark:bg-[#1f293d] border border-slate-200 dark:border-[#253248] text-slate-800 dark:text-slate-100 rounded-tl-xs'
+                          }`}
+                        >
+                          <p>{msg.decryptedContent || msg.content}</p>
+
+                          <div
+                            className={`flex items-center justify-end gap-1 text-[10px] mt-1 ${
+                              isCandidate ? 'text-brand-200' : 'text-slate-400'
+                            }`}
+                          >
+                            <span>{formatMessageTime(msg.timestamp)}</span>
+                            {isCandidate && (
+                              <CheckCheck
+                                className={`w-3.5 h-3.5 ${msg.isRead ? 'text-emerald-300' : 'text-brand-300'}`}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Message Composer Form */}
+              <form
+                onSubmit={handleSendMessage}
+                className="p-3 sm:p-4 border-t border-slate-200 dark:border-[#1f293d] bg-white dark:bg-[#111827] flex items-center gap-2.5 min-w-0"
+              >
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  placeholder="Type an encrypted message..."
+                  className="flex-1 px-4 py-2.5 text-xs sm:text-sm bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-[#1f293d] rounded-xl text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
+                />
+                <button
+                  type="submit"
+                  disabled={!inputText.trim() || sending}
+                  className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 active:bg-brand-800 rounded-xl transition shadow-xs disabled:opacity-50 shrink-0"
+                >
+                  {sending ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Send className="w-3.5 h-3.5" />
+                  )}
+                  <span>Send</span>
+                </button>
+              </form>
+            </>
+          ) : (
+            <div className="h-full flex flex-col items-center justify-center p-8 text-center space-y-2">
+              <MessageSquare className="w-10 h-10 text-slate-300 dark:text-slate-600" />
+              <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">
+                Select a Conversation
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
+                Choose an active recruiter conversation from the list to view real-time encrypted messages.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
