@@ -177,22 +177,22 @@ export const EditSkillsModal: React.FC<EditSkillsModalProps> = ({
                 type="button"
                 onClick={handleFetchAiSkills}
                 disabled={fetchingAiSkills || skills.length === 0}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 disabled:opacity-50 transition"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 disabled:opacity-50 transition"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{fetchingAiSkills ? 'Generating...' : 'Get AI Suggestions'}</span>
               </button>
             </div>
             {recommendedSkills.length > 0 ? (
-              <div className="flex flex-wrap gap-2 p-3 bg-purple-50/50 dark:bg-purple-950/20 rounded-2xl border border-purple-200/60 dark:border-purple-900/40">
+              <div className="flex flex-wrap gap-2 p-3 bg-brand-50/50 dark:bg-brand-950/20 rounded-2xl border border-brand-200/60 dark:border-brand-900/40">
                 {recommendedSkills.map((rec) => (
                   <button
                     key={rec}
                     type="button"
                     onClick={() => handleAddSkill(rec)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white dark:bg-slate-900 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900/50 shadow-xs transition"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white dark:bg-slate-900 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 hover:bg-brand-100 dark:hover:bg-brand-900/50 shadow-xs transition"
                   >
-                    <Plus className="w-3 h-3 text-purple-500" />
+                    <Plus className="w-3 h-3 text-brand-500" />
                     <span>{rec}</span>
                   </button>
                 ))}

@@ -211,7 +211,7 @@ export const JobsPage: React.FC = () => {
               onClick={() => setSelectedCategory(cat)}
               className={`px-5 py-2 text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-teal-600 text-white border-teal-600'
+                  ? 'bg-indigo-600 text-white border-indigo-600'
                   : 'bg-transparent text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500'
               }`}
             >

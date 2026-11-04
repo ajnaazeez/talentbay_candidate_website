@@ -125,9 +125,9 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
             {/* AI CV Quick Link */}
             <NavLink
               to={ROUTES.RESUME_BUILDER}
-              className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800/60 hover:bg-purple-100 dark:hover:bg-purple-900/50 transition shadow-xs"
+              className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 border border-brand-200/80 dark:border-brand-800/60 hover:bg-brand-100 dark:hover:bg-brand-900/50 transition shadow-xs"
             >
-              <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+              <Sparkles className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
               <span>AI Resume</span>
             </NavLink>
 

@@ -278,7 +278,7 @@ export const LoginPage: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 hover:from-brand-500 hover:via-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+            className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white shadow-md shadow-brand-500/20 hover:shadow-lg hover:shadow-brand-500/30 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
           >
             <span>{loading ? 'Signing in...' : 'Sign In with Email'}</span>
             <ArrowRight className="w-4 h-4" />
@@ -333,7 +333,7 @@ export const LoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 hover:from-brand-500 hover:via-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white shadow-md shadow-brand-500/20 hover:shadow-lg hover:shadow-brand-500/30 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <span>{loading ? 'Sending Code...' : 'Send Verification OTP'}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -386,7 +386,7 @@ export const LoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading || otp.length !== 6}
-                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 hover:from-brand-500 hover:via-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white shadow-md shadow-brand-500/20 hover:shadow-lg hover:shadow-brand-500/30 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <span>{loading ? 'Verifying...' : 'Verify & Sign In'}</span>
                 <ArrowRight className="w-4 h-4" />

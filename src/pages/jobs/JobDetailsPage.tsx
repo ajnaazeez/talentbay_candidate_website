@@ -546,7 +546,7 @@ export const JobDetailsPage: React.FC = () => {
                 type="button"
                 disabled={isApplying}
                 onClick={() => setApplyModalOpen(true)}
-                className="w-full h-12 bg-teal-600 hover:bg-teal-700 text-white text-xs font-black tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm"
+                className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm"
               >
                 {isApplying ? 'APPLYING...' : 'APPLY NOW'}
               </button>

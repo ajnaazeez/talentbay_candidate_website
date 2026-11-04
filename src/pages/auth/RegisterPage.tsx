@@ -403,7 +403,7 @@ export const RegisterPage: React.FC = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 hover:from-brand-500 hover:via-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 mt-4"
+          className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white shadow-md shadow-brand-500/20 hover:shadow-lg hover:shadow-brand-500/30 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 mt-4"
         >
           <span>{loading ? 'Creating Account...' : 'Create Candidate Account'}</span>
           <ArrowRight className="w-4 h-4" />

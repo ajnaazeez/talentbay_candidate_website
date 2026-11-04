@@ -335,7 +335,7 @@ export const DashboardPage: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="SEARCH FOR JOBS, COMPANIES..."
-            className="w-full pl-12 pr-28 py-3.5 bg-white dark:bg-[#111827] border border-slate-300 dark:border-slate-800 rounded-none text-sm font-semibold tracking-wide text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-teal-600 dark:focus:border-teal-500 focus:ring-1 focus:ring-teal-600 transition"
+            className="w-full pl-12 pr-28 py-3.5 bg-white dark:bg-[#111827] border border-slate-300 dark:border-slate-800 rounded-none text-sm font-semibold tracking-wide text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-1 focus:ring-indigo-600 transition"
           />
           <button
             type="submit"
@@ -377,7 +377,7 @@ export const DashboardPage: React.FC = () => {
         {/* Invites */}
         <Link
           to={ROUTES.INVITATIONS}
-          className="p-5 sm:p-6 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-center hover:border-teal-500 dark:hover:border-teal-500 transition group relative"
+          className="p-5 sm:p-6 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-center hover:border-indigo-500 dark:hover:border-indigo-500 transition group relative"
         >
           <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
             {pendingInvitesCount}
@@ -386,7 +386,7 @@ export const DashboardPage: React.FC = () => {
             INVITES
           </div>
           {pendingInvitesCount > 0 && (
-            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-teal-500" />
+            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-indigo-600" />
           )}
         </Link>
       </div>
@@ -402,7 +402,7 @@ export const DashboardPage: React.FC = () => {
               onClick={() => setSelectedCategory(category)}
               className={`px-5 py-2 text-xs font-bold tracking-wider uppercase whitespace-nowrap transition-all border ${
                 isSelected
-                  ? 'bg-teal-600 dark:bg-teal-600 text-white border-teal-600 shadow-xs'
+                  ? 'bg-indigo-600 dark:bg-indigo-600 text-white border-indigo-600 shadow-xs'
                   : 'bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600'
               }`}
             >
@@ -420,7 +420,7 @@ export const DashboardPage: React.FC = () => {
           </h2>
           <Link
             to={ROUTES.JOBS}
-            className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline tracking-wider uppercase"
+            className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline tracking-wider uppercase"
           >
             VIEW ALL
           </Link>
@@ -445,7 +445,7 @@ export const DashboardPage: React.FC = () => {
             <div className="pt-2">
               <Link
                 to={ROUTES.JOBS}
-                className="inline-block px-5 py-2.5 bg-teal-600 text-white text-xs font-bold uppercase tracking-wider hover:bg-teal-700 transition"
+                className="inline-block px-5 py-2.5 bg-indigo-600 text-white text-xs font-bold uppercase tracking-wider hover:bg-indigo-700 transition"
               >
                 Explore All Jobs
               </Link>
@@ -476,7 +476,7 @@ export const DashboardPage: React.FC = () => {
           </h2>
           <Link
             to={ROUTES.COMPANIES}
-            className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline tracking-wider uppercase"
+            className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline tracking-wider uppercase"
           >
             VIEW ALL
           </Link>

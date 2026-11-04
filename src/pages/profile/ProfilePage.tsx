@@ -399,7 +399,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate(ROUTES.SUBSCRIPTION)}
-                className="text-xs font-semibold text-teal-600 dark:text-teal-400 hover:underline inline-flex items-center gap-1 cursor-pointer"
+                className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 cursor-pointer"
               >
                 <Tv className="w-3 h-3" />
                 <span>View Subscription Plans</span>
@@ -411,7 +411,7 @@ export const ProfilePage: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate(ROUTES.SUBSCRIPTION)}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline uppercase tracking-wider cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline uppercase tracking-wider cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Upgrade to Premium</span>
@@ -466,7 +466,7 @@ export const ProfilePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, basicInfo: true }))}
-            className="w-full py-2.5 px-6 border border-teal-600 text-teal-600 dark:border-teal-400 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/20 text-xs font-black tracking-wider uppercase transition cursor-pointer"
+            className="w-full py-2.5 px-6 border border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 text-xs font-black tracking-wider uppercase transition cursor-pointer"
           >
             EDIT INTRODUCTION
           </button>
@@ -570,7 +570,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setModalOpen((prev) => ({ ...prev, skills: true }))}
-                className="text-xs font-bold uppercase text-teal-600 dark:text-teal-400 hover:underline"
+                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline"
               >
                 + Add Skills
               </button>
@@ -590,7 +590,7 @@ export const ProfilePage: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate(ROUTES.CAREER_READINESS)}
-              className="w-full py-2.5 border border-teal-600 text-teal-600 dark:border-teal-400 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/20 text-xs font-black tracking-wider uppercase transition flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-2.5 border border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 text-xs font-black tracking-wider uppercase transition flex items-center justify-center gap-2 cursor-pointer"
             >
               <BarChart2 className="w-4 h-4" />
               <span>CHECK PERFORMANCE &amp; READINESS</span>
@@ -606,11 +606,11 @@ export const ProfilePage: React.FC = () => {
                     <div className="text-xs text-slate-500 font-medium">
                       {a.difficulty} • {a.proficiencyLevel}
                     </div>
-                    <div className="text-xs font-bold text-teal-600 dark:text-teal-400">
+                    <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
                       {Math.round(a.percentage || (a.score / Math.max(a.totalQuestions, 1)) * 100)}% Score
                     </div>
                   </div>
-                  <Verified className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+                  <Verified className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                 </div>
               ))}
             </div>
@@ -684,7 +684,7 @@ export const ProfilePage: React.FC = () => {
                   setSelectedExperience(null);
                   setModalOpen((prev) => ({ ...prev, experience: true }));
                 }}
-                className="text-xs font-bold uppercase text-teal-600 dark:text-teal-400 hover:underline"
+                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline"
               >
                 + Add Experience
               </button>
@@ -754,7 +754,7 @@ export const ProfilePage: React.FC = () => {
                   setSelectedEducation(null);
                   setModalOpen((prev) => ({ ...prev, education: true }));
                 }}
-                className="text-xs font-bold uppercase text-teal-600 dark:text-teal-400 hover:underline"
+                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline"
               >
                 + Add Education
               </button>
@@ -855,7 +855,7 @@ export const ProfilePage: React.FC = () => {
                   setSelectedProject(null);
                   setModalOpen((prev) => ({ ...prev, project: true }));
                 }}
-                className="text-xs font-bold uppercase text-teal-600 dark:text-teal-400 hover:underline"
+                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline"
               >
                 + Add Projects
               </button>
@@ -1017,7 +1017,7 @@ export const ProfilePage: React.FC = () => {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-center">
-                  <FileText className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+                  <FileText className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div>
                   <div className="text-xs font-bold uppercase text-slate-900 dark:text-white">
@@ -1059,7 +1059,7 @@ export const ProfilePage: React.FC = () => {
                 type="button"
                 disabled={uploadingResume}
                 onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-2 border border-teal-600 text-teal-600 dark:border-teal-400 dark:text-teal-400 text-xs font-black uppercase tracking-wider hover:bg-teal-50 dark:hover:bg-teal-950/20 transition cursor-pointer"
+                className="px-4 py-2 border border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 text-xs font-black uppercase tracking-wider hover:bg-indigo-50 dark:hover:bg-indigo-950/20 transition cursor-pointer"
               >
                 {uploadingResume ? 'UPLOADING...' : 'UPLOAD CV'}
               </button>
@@ -1084,8 +1084,8 @@ export const ProfilePage: React.FC = () => {
         {latestSavedCv ? (
           <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900 space-y-4">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-lg bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/40 flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+              <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/40 flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
               </div>
               <div className="space-y-1 flex-1">
                 <div className="flex items-center gap-2">
@@ -1135,8 +1135,8 @@ export const ProfilePage: React.FC = () => {
         ) : (
           <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/40 flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+              <div className="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/40 flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
               </div>
               <div>
                 <h4 className="text-sm font-bold text-slate-900 dark:text-white">
@@ -1151,7 +1151,7 @@ export const ProfilePage: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate(ROUTES.RESUME_BUILDER)}
-              className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-black uppercase tracking-wider transition cursor-pointer whitespace-nowrap self-start sm:self-auto"
+              className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black uppercase tracking-wider transition cursor-pointer whitespace-nowrap self-start sm:self-auto"
             >
               CREATE
             </button>

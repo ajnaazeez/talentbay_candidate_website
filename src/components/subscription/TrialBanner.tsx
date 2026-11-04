@@ -33,7 +33,7 @@ export const TrialBanner: React.FC = () => {
   if (isTrialActive) {
     const daysLeft = subscriptionService.getDaysRemaining(candidate.trialExpiryDate);
     return (
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-4 sm:p-5 shadow-sm border border-emerald-500/30">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-800 text-white p-4 sm:p-5 shadow-sm border border-emerald-500/30">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center shrink-0">

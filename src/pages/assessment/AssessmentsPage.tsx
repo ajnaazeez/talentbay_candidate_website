@@ -302,7 +302,7 @@ export const AssessmentsPage: React.FC = () => {
       )}
 
       {/* Assessment Stats Box (Matching Flutter exactly) */}
-      <div className="border border-teal-500/20 bg-teal-500/[0.02] dark:bg-slate-900/40 p-6 md:p-8 space-y-6">
+      <div className="border border-indigo-500/20 bg-indigo-500/[0.02] dark:bg-slate-900/40 p-6 md:p-8 space-y-6">
         <div className="grid grid-cols-3 text-center divide-x divide-slate-100 dark:divide-slate-800">
           <div>
             <div className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
@@ -333,8 +333,8 @@ export const AssessmentsPage: React.FC = () => {
         </div>
 
         {/* AI-POWERED ASSESSMENTS ACTIVE Banner */}
-        <div className="border border-teal-500/30 p-2.5 flex items-center justify-center gap-2 text-center">
-          <Sparkles className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
+        <div className="border border-indigo-500/30 p-2.5 flex items-center justify-center gap-2 text-center">
+          <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
           <span className="text-[10px] font-black uppercase tracking-[1.5px] text-slate-800 dark:text-slate-200">
             AI-POWERED ASSESSMENTS ACTIVE
           </span>
@@ -345,7 +345,7 @@ export const AssessmentsPage: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate(ROUTES.CAREER_READINESS)}
-            className="w-full py-2.5 px-4 rounded-full border border-teal-600/50 hover:border-teal-600 text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/20 transition flex items-center justify-center gap-2 text-xs font-black tracking-wider uppercase cursor-pointer"
+            className="w-full py-2.5 px-4 rounded-full border border-indigo-600/50 hover:border-indigo-600 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 transition flex items-center justify-center gap-2 text-xs font-black tracking-wider uppercase cursor-pointer"
           >
             <BarChart2 className="w-4 h-4" />
             HOW AM I PERFORMING?
@@ -377,7 +377,7 @@ export const AssessmentsPage: React.FC = () => {
                       <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
                         {skillName}
                       </span>
-                      <span className="bg-teal-600 text-white text-[9px] font-bold uppercase px-1.5 py-0.5 tracking-wider">
+                      <span className="bg-indigo-600 text-white text-[9px] font-bold uppercase px-1.5 py-0.5 tracking-wider">
                         ADDED
                       </span>
                     </div>

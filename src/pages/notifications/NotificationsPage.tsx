@@ -78,7 +78,7 @@ export const NotificationsPage: React.FC = () => {
           <button
             type="button"
             onClick={() => markAllAsRead()}
-            className="flex items-center gap-1.5 text-xs font-bold text-teal-600 dark:text-teal-400 hover:text-teal-700 transition uppercase tracking-wider cursor-pointer"
+            className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 transition uppercase tracking-wider cursor-pointer"
           >
             <CheckCheck className="w-4 h-4" />
             <span>Mark all as read</span>
@@ -97,7 +97,7 @@ export const NotificationsPage: React.FC = () => {
               onClick={() => setSelectedFilter(filter)}
               className={`px-5 py-2 text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-teal-600 text-white border-teal-600'
+                  ? 'bg-indigo-600 text-white border-indigo-600'
                   : 'bg-transparent text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500'
               }`}
             >
@@ -132,14 +132,14 @@ export const NotificationsPage: React.FC = () => {
                 key={notif.id}
                 onClick={() => handleTileClick(notif)}
                 className={`py-4 px-3 flex items-start gap-4 transition cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/40 ${
-                  isUnread ? 'bg-teal-50/30 dark:bg-teal-950/10' : ''
+                  isUnread ? 'bg-indigo-50/30 dark:bg-indigo-950/10' : ''
                 }`}
               >
                 {/* 48x48 Circular Avatar / Icon */}
                 <div
                   className={`w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden border ${
                     isUnread
-                      ? 'border-2 border-teal-600 dark:border-teal-400 bg-white dark:bg-slate-900'
+                      ? 'border-2 border-indigo-600 dark:border-indigo-400 bg-white dark:bg-slate-900'
                       : 'border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900'
                   }`}
                 >
@@ -173,7 +173,7 @@ export const NotificationsPage: React.FC = () => {
                     <span
                       className={`text-xs whitespace-nowrap ${
                         isUnread
-                          ? 'font-bold text-teal-600 dark:text-teal-400'
+                          ? 'font-bold text-indigo-600 dark:text-indigo-400'
                           : 'text-slate-400'
                       }`}
                     >

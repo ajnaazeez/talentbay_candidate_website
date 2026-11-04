@@ -128,7 +128,7 @@ export const EditHeadlineSummaryModal: React.FC<EditHeadlineSummaryModalProps> =
                 type="button"
                 onClick={handleEnhanceHeadline}
                 disabled={enhancingHeadline || !bio.trim()}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 disabled:opacity-50 transition"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 disabled:opacity-50 transition"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{enhancingHeadline ? 'Enhancing...' : 'AI Enhance'}</span>
@@ -157,7 +157,7 @@ export const EditHeadlineSummaryModal: React.FC<EditHeadlineSummaryModalProps> =
                 type="button"
                 onClick={handleEnhanceSummary}
                 disabled={enhancingSummary || !aboutMe.trim()}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 disabled:opacity-50 transition"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 disabled:opacity-50 transition"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{enhancingSummary ? 'Enhancing...' : 'AI Enhance'}</span>

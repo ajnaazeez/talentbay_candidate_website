@@ -234,7 +234,7 @@ export const ApplicationsPage: React.FC = () => {
         >
           <Mail className="w-5 h-5" />
           {unreadChatsCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-teal-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
               {unreadChatsCount > 9 ? '9+' : unreadChatsCount}
             </span>
           )}
@@ -250,7 +250,7 @@ export const ApplicationsPage: React.FC = () => {
             onClick={() => setActiveTab('applied')}
             className={`pb-3 text-xs sm:text-sm font-black tracking-widest uppercase transition-all relative ${
               activeTab === 'applied'
-                ? 'text-teal-600 dark:text-teal-400 border-b-2 border-teal-600 dark:border-teal-400 -mb-[1px]'
+                ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 -mb-[1px]'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
@@ -268,7 +268,7 @@ export const ApplicationsPage: React.FC = () => {
             onClick={() => setActiveTab('saved')}
             className={`pb-3 text-xs sm:text-sm font-black tracking-widest uppercase transition-all relative ${
               activeTab === 'saved'
-                ? 'text-teal-600 dark:text-teal-400 border-b-2 border-teal-600 dark:border-teal-400 -mb-[1px]'
+                ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 -mb-[1px]'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
@@ -286,7 +286,7 @@ export const ApplicationsPage: React.FC = () => {
             onClick={() => setActiveTab('accepted')}
             className={`pb-3 text-xs sm:text-sm font-black tracking-widest uppercase transition-all relative ${
               activeTab === 'accepted'
-                ? 'text-teal-600 dark:text-teal-400 border-b-2 border-teal-600 dark:border-teal-400 -mb-[1px]'
+                ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 -mb-[1px]'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
@@ -316,7 +316,7 @@ export const ApplicationsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-teal-600 text-white text-xs font-bold uppercase tracking-wider hover:bg-teal-700 transition"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-xs font-bold uppercase tracking-wider hover:bg-indigo-700 transition"
               >
                 <RefreshCw className="w-3.5 h-3.5" /> RETRY
               </button>
@@ -377,7 +377,7 @@ export const ApplicationsPage: React.FC = () => {
                       <div className="flex-1 min-w-0">
                         <Link
                           to={`/jobs/${app.jobId}`}
-                          className="text-sm sm:text-base font-black text-slate-900 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 transition tracking-wide uppercase line-clamp-1"
+                          className="text-sm sm:text-base font-black text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition tracking-wide uppercase line-clamp-1"
                         >
                           {job?.title || job?.roleName || app.jobTitle || 'Role Details'}
                         </Link>
@@ -405,7 +405,7 @@ export const ApplicationsPage: React.FC = () => {
                           type="button"
                           disabled={isConnecting}
                           onClick={() => handleMessageRecruiter(job, app.applicationId)}
-                          className="text-xs font-black tracking-wider uppercase text-slate-900 dark:text-white underline hover:text-teal-600 dark:hover:text-teal-400 transition cursor-pointer"
+                          className="text-xs font-black tracking-wider uppercase text-slate-900 dark:text-white underline hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer"
                         >
                           {isConnecting ? 'CONNECTING...' : 'MESSAGE'}
                         </button>
