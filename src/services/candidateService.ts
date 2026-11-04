@@ -166,6 +166,20 @@ export const candidateService = {
 
     return downloadUrl;
   },
+
+  /**
+   * Removes candidate profile photo
+   */
+  async removeProfilePhoto(candidateId: string): Promise<void> {
+    if (!candidateId) return;
+    await updateDoc(doc(db, COLLECTIONS.CANDIDATES, candidateId), {
+      photoUrl: null,
+      lastUpdated: new Date().toISOString(),
+    });
+    await updateDoc(doc(db, COLLECTIONS.USERS, candidateId), {
+      photoURL: null,
+    }).catch(() => null);
+  },
 };
 
 export const {
@@ -174,4 +188,5 @@ export const {
   uploadResume,
   deleteResume,
   uploadProfilePhoto,
+  removeProfilePhoto,
 } = candidateService;

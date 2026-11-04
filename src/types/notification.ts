@@ -1,11 +1,14 @@
 export type NotificationType =
   | 'application'
   | 'chat'
+  | 'chat_message'
+  | 'job_invitation'
   | 'interview'
   | 'subscription'
   | 'assessment'
   | 'general'
-  | 'job_match';
+  | 'job_match'
+  | string;
 
 export type NotificationFilter = 'All' | 'Unread' | 'Read';
 
