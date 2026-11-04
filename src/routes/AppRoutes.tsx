@@ -23,6 +23,7 @@ import { AssessmentsPage } from '@/pages/assessment/AssessmentsPage';
 import { CareerReadinessPage } from '@/pages/assessment/CareerReadinessPage';
 import { ChatPage } from '@/pages/chat/ChatPage';
 import { NotificationsPage } from '@/pages/notifications/NotificationsPage';
+import { SubscriptionPage } from '@/pages/subscription/SubscriptionPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ROUTES } from '@/utils/constants';
 
@@ -108,7 +109,7 @@ export const AppRoutes: React.FC = () => {
           <Route path={ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
 
           {/* Subscription & Settings */}
-          <Route path={ROUTES.SUBSCRIPTION} element={<UnderConstructionPage title="Subscription Plans" phase="Phase 7" />} />
+          <Route path={ROUTES.SUBSCRIPTION} element={<SubscriptionPage />} />
           <Route path={ROUTES.SETTINGS} element={<UnderConstructionPage title="Settings" phase="Phase 8" />} />
           <Route path={ROUTES.SUPPORT} element={<UnderConstructionPage title="Support & Help" phase="Phase 8" />} />
           <Route path={ROUTES.ABOUT} element={<UnderConstructionPage title="About TalentBay" phase="Phase 8" />} />

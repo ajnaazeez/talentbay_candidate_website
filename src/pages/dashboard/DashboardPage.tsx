@@ -17,6 +17,7 @@ import { StatCard } from '@/components/common/StatCard';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { ROUTES } from '@/utils/constants';
+import { TrialBanner } from '@/components/subscription/TrialBanner';
 
 export const DashboardPage: React.FC = () => {
   return (
@@ -45,6 +46,9 @@ export const DashboardPage: React.FC = () => {
           </div>
         }
       />
+
+      {/* 7-Day Free Trial / Subscription Callout */}
+      <TrialBanner />
 
       {/* Profile Completion Callout */}
       <div className="p-6 rounded-3xl bg-gradient-to-r from-brand-900 via-indigo-900 to-slate-900 text-white relative overflow-hidden shadow-xl border border-brand-800/40">

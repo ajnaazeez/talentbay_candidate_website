@@ -110,10 +110,13 @@ export interface CandidateModel {
 
   // Subscription & Trial
   isPremium?: boolean;
+  subscriptionPlanId?: string;
   subscriptionExpiryDate?: string | Date | null;
-  subscriptionStatus?: 'none' | 'trial' | 'active' | 'expired';
+  subscriptionStatus?: 'none' | 'trial' | 'active' | 'expired' | 'cancelled';
   hasUsedTrial?: boolean;
   trialStartDate?: string | Date | null;
   trialExpiryDate?: string | Date | null;
   appleSubscriptionId?: string;
+  razorpayPaymentId?: string;
+  razorpayOrderId?: string;
 }

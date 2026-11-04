@@ -99,6 +99,12 @@ export const jobService = {
             state: data.state || '',
             country: data.country || '',
           },
+          locations: Array.isArray(data.locations) && data.locations.length > 0
+            ? data.locations.filter((l: any) => typeof l === 'string' && l.trim())
+            : (data.jobLocation?.city ? [data.jobLocation.city] : (data.city ? [data.city] : [])),
+          jobLocations: Array.isArray(data.jobLocations)
+            ? data.jobLocations
+            : (data.jobLocation ? [data.jobLocation] : []),
           vacancies: Number(data.vacancies) || 1,
           officeCount: Number(data.officeCount) || 0,
           experienceRequired: data.experienceRequired || {
@@ -156,13 +162,25 @@ export const jobService = {
               j.roleName.toLowerCase().includes(qLower) ||
               j.companyName?.toLowerCase().includes(qLower) ||
               j.skillsRequired.some((s) => s.toLowerCase().includes(qLower)) ||
-              j.jobDescription.toLowerCase().includes(qLower)
+              j.jobDescription.toLowerCase().includes(qLower) ||
+              (j.locations && j.locations.some((l: string) => l.toLowerCase().includes(qLower))) ||
+              (j.jobLocation?.city && j.jobLocation.city.toLowerCase().includes(qLower))
           );
         }
 
         if (location && location.trim() && location !== 'all') {
           const locLower = location.toLowerCase().trim();
           filtered = filtered.filter((j) => {
+            if (j.locations && j.locations.some((l: string) => l.toLowerCase().includes(locLower))) {
+              return true;
+            }
+            if (j.jobLocations && j.jobLocations.some((jl: any) =>
+              jl.city?.toLowerCase().includes(locLower) ||
+              jl.state?.toLowerCase().includes(locLower) ||
+              jl.country?.toLowerCase().includes(locLower)
+            )) {
+              return true;
+            }
             const city = j.jobLocation.city?.toLowerCase() || '';
             const state = j.jobLocation.state?.toLowerCase() || '';
             const country = j.jobLocation.country?.toLowerCase() || '';
@@ -261,6 +279,12 @@ export const jobService = {
           state: data.state || '',
           country: data.country || '',
         },
+        locations: Array.isArray(data.locations) && data.locations.length > 0
+          ? data.locations.filter((l: any) => typeof l === 'string' && l.trim())
+          : (data.jobLocation?.city ? [data.jobLocation.city] : (data.city ? [data.city] : [])),
+        jobLocations: Array.isArray(data.jobLocations)
+          ? data.jobLocations
+          : (data.jobLocation ? [data.jobLocation] : []),
         vacancies: Number(data.vacancies) || 1,
         officeCount: Number(data.officeCount) || 0,
         experienceRequired: data.experienceRequired || {

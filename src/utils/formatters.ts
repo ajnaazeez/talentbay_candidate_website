@@ -1,3 +1,23 @@
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  INR: '₹',
+  USD: '$',
+  EUR: '€',
+  GBP: '£',
+  AED: 'AED ',
+  SAR: 'SAR ',
+  CAD: 'CA$',
+  AUD: 'A$',
+  SGD: 'SG$',
+  MYR: 'RM ',
+  QAR: 'QAR ',
+  JPY: '¥',
+};
+
+export function getCurrencySymbol(currency: string = 'INR'): string {
+  const code = (currency || 'INR').toUpperCase().trim();
+  return CURRENCY_SYMBOLS[code] || `${code} `;
+}
+
 /**
  * Formats a salary range with currency and frequency.
  */
@@ -7,10 +27,11 @@ export function formatSalary(
   currency: string = 'INR',
   type: string = 'CTC'
 ): string {
-  const symbol = currency === 'INR' ? '₹' : currency === 'USD' ? '$' : currency === 'EUR' ? '€' : `${currency} `;
+  const code = (currency || 'INR').toUpperCase().trim();
+  const symbol = getCurrencySymbol(code);
 
   const formatNumber = (num: number) => {
-    if (currency === 'INR') {
+    if (code === 'INR') {
       if (num >= 10000000) {
         return `${(num / 10000000).toFixed(1)} Cr`;
       }
@@ -18,6 +39,9 @@ export function formatSalary(
         return `${(num / 100000).toFixed(num % 100000 === 0 ? 0 : 1)} LPA`;
       }
     } else {
+      if (num >= 1000000) {
+        return `${(num / 1000000).toFixed(1)}M`;
+      }
       if (num >= 1000) {
         return `${(num / 1000).toFixed(0)}k`;
       }

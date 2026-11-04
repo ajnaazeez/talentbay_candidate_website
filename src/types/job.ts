@@ -33,6 +33,8 @@ export interface Job {
   employmentType: EmploymentType;
   workMode: WorkMode;
   jobLocation: JobLocation;
+  locations?: string[];
+  jobLocations?: JobLocation[];
   vacancies: number;
   officeCount?: number;
   experienceRequired: JobExperienceRequired;

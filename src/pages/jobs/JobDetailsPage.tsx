@@ -138,13 +138,15 @@ export const JobDetailsPage: React.FC = () => {
     job.skillsRequired.length > 0 ? job.skillsRequired : job.mustHaveSkills
   );
 
-  const locationString = [
-    job.jobLocation?.city,
-    job.jobLocation?.state,
-    job.jobLocation?.country,
-  ]
-    .filter(Boolean)
-    .join(', ') || 'Location Unspecified';
+  const locationString = job.locations && job.locations.length > 0
+    ? job.locations.join(', ')
+    : [
+        job.jobLocation?.city,
+        job.jobLocation?.state,
+        job.jobLocation?.country,
+      ]
+        .filter(Boolean)
+        .join(', ') || 'Location Unspecified';
 
   const salaryDisplay = formatSalary(job.salary.min, job.salary.max, job.salary.currency, job.salary.type);
 
