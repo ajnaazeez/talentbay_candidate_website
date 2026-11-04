@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import type { JobFilterOptions } from '@/types';
 import {
   Search,
   MapPin,
   RotateCcw,
   X,
+  History,
+  Trash2,
 } from 'lucide-react';
+import { searchHistoryUtil, type SearchHistoryItem } from '@/utils/searchHistory';
 
 interface JobFiltersProps {
   filters: JobFilterOptions;
@@ -52,6 +55,39 @@ export const JobFilters: React.FC<JobFiltersProps> = ({
   onReset,
   totalResults,
 }) => {
+  const [history, setHistory] = useState<SearchHistoryItem[]>([]);
+
+  useEffect(() => {
+    setHistory(searchHistoryUtil.getHistory());
+  }, []);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const q = filters.searchQuery?.trim();
+      if (q) {
+        const updated = searchHistoryUtil.addQuery(q);
+        setHistory(updated);
+      }
+    }
+  };
+
+  const handleSelectHistory = (query: string) => {
+    const updated = searchHistoryUtil.addQuery(query);
+    setHistory(updated);
+    onChange({ ...filters, searchQuery: query });
+  };
+
+  const handleRemoveHistory = (e: React.MouseEvent, query: string) => {
+    e.stopPropagation();
+    const updated = searchHistoryUtil.removeQuery(query);
+    setHistory(updated);
+  };
+
+  const handleClearHistory = () => {
+    searchHistoryUtil.clearHistory();
+    setHistory([]);
+  };
+
   const isFiltered = Boolean(
     filters.searchQuery ||
     (filters.location && filters.location !== 'all') ||
@@ -62,7 +98,7 @@ export const JobFilters: React.FC<JobFiltersProps> = ({
   );
 
   return (
-    <div className="bg-white dark:bg-dark-card rounded-2xl border border-gray-100 dark:border-dark-border p-5 sm:p-6 shadow-soft space-y-5">
+    <div className="bg-white dark:bg-dark-card rounded-2xl border border-gray-100 dark:border-dark-border p-5 sm:p-6 shadow-soft space-y-4">
       {/* Search & Location Bar */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
         {/* Keyword Search */}
@@ -70,9 +106,16 @@ export const JobFilters: React.FC<JobFiltersProps> = ({
           <Search className="absolute left-3.5 top-3 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search role title, company name, skills (e.g. React, Python)..."
+            placeholder="Search role title, company name, skills (press Enter to save)..."
             value={filters.searchQuery || ''}
             onChange={(e) => onChange({ ...filters, searchQuery: e.target.value })}
+            onKeyDown={handleKeyDown}
+            onBlur={() => {
+              if (filters.searchQuery?.trim()) {
+                const updated = searchHistoryUtil.addQuery(filters.searchQuery);
+                setHistory(updated);
+              }
+            }}
             className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-dark-border bg-gray-50/50 dark:bg-dark-bg text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white dark:focus:bg-dark-bg transition-all"
           />
           {filters.searchQuery && (
@@ -98,6 +141,43 @@ export const JobFilters: React.FC<JobFiltersProps> = ({
           />
         </div>
       </div>
+
+      {/* 30-Day Search History Bar */}
+      {history.length > 0 && (
+        <div className="flex items-center gap-2 flex-wrap pt-1 text-xs">
+          <span className="inline-flex items-center gap-1 text-gray-400 font-semibold select-none">
+            <History className="w-3.5 h-3.5 text-brand-500" />
+            <span>Recent:</span>
+          </span>
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {history.slice(0, 6).map((item) => (
+              <button
+                key={item.query}
+                type="button"
+                onClick={() => handleSelectHistory(item.query)}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-dark-bg dark:hover:bg-dark-border text-gray-700 dark:text-gray-300 font-medium transition group"
+                title={`Searched on ${new Date(item.timestamp).toLocaleDateString()}`}
+              >
+                <span>{item.query}</span>
+                <span
+                  onClick={(e) => handleRemoveHistory(e, item.query)}
+                  className="p-0.5 rounded-full hover:bg-gray-300 dark:hover:bg-slate-700 text-gray-400 hover:text-gray-700 dark:hover:text-white"
+                >
+                  <X className="w-3 h-3" />
+                </span>
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={handleClearHistory}
+            className="text-[11px] text-gray-400 hover:text-red-500 ml-auto inline-flex items-center gap-1 transition"
+          >
+            <Trash2 className="w-3 h-3" />
+            <span>Clear History</span>
+          </button>
+        </div>
+      )}
 
       {/* Filter Row 2: Pills and Selectors */}
       <div className="pt-2 border-t border-gray-100 dark:border-dark-border space-y-4">

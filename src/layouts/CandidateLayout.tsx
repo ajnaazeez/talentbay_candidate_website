@@ -1,14 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { CandidateSidebar } from './CandidateSidebar';
 import { CandidateHeader } from './CandidateHeader';
 import { useNotifications } from '@/hooks/useNotifications';
+import { useAuth } from '@/hooks/useAuth';
+import { jobService } from '@/services/jobService';
 import { cn } from '@/lib/utils';
 
 export const CandidateLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { unreadNotificationsCount, unreadChatsCount } = useNotifications();
+  const { candidate } = useAuth();
+  const [pendingInvitesCount, setPendingInvitesCount] = useState(0);
+
+  useEffect(() => {
+    if (!candidate?.uid) {
+      setPendingInvitesCount(0);
+      return;
+    }
+
+    const unsub = jobService.subscribeToInvites(
+      candidate.uid,
+      (invites) => {
+        setPendingInvitesCount(invites.length);
+      },
+      () => setPendingInvitesCount(0)
+    );
+
+    return () => unsub();
+  }, [candidate?.uid]);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100 flex flex-col transition-colors">
@@ -20,6 +41,7 @@ export const CandidateLayout: React.FC = () => {
         onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
         unreadNotificationsCount={unreadNotificationsCount}
         unreadChatsCount={unreadChatsCount}
+        pendingInvitesCount={pendingInvitesCount}
       />
 
       {/* Main Content Area */}

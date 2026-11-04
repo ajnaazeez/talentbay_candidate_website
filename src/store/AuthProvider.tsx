@@ -147,6 +147,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
+  const deleteAccount = useCallback(async () => {
+    setLoading(true);
+    try {
+      await authService.deleteUserAccount();
+      setUser(null);
+      setCandidateProfile(null);
+      setUserProfile(null);
+      setError(null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const isCandidate = useMemo(() => {
     if (!user) return false;
     if (userProfile && userProfile.role !== 'candidate') return false;
@@ -166,6 +179,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signUpWithEmail,
     sendPasswordReset,
     signOut,
+    deleteAccount,
     refreshProfile,
     refreshCandidate: refreshProfile,
   }), [
@@ -180,6 +194,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signUpWithEmail,
     sendPasswordReset,
     signOut,
+    deleteAccount,
     refreshProfile,
   ]);
 

@@ -5,6 +5,7 @@ import {
   getDocs,
   addDoc,
   updateDoc,
+  deleteDoc,
   query,
   where,
   orderBy,
@@ -349,5 +350,29 @@ export const chatService = {
     });
 
     return docRef.id;
+  },
+
+  /**
+   * Edit a message sent by the user, encrypting the new text and marking isEdited: true.
+   */
+  async editMessage(chatId: string, messageId: string, newContent: string): Promise<void> {
+    const trimmed = newContent.trim();
+    if (!trimmed || !chatId || !messageId) return;
+
+    const encryptedContent = await cryptoUtils.encrypt(trimmed);
+    const msgRef = doc(db, COLLECTIONS.CHATS, chatId, COLLECTIONS.MESSAGES, messageId);
+    await updateDoc(msgRef, {
+      content: encryptedContent,
+      isEdited: true,
+    });
+  },
+
+  /**
+   * Delete a message from the conversation subcollection.
+   */
+  async deleteMessage(chatId: string, messageId: string): Promise<void> {
+    if (!chatId || !messageId) return;
+    const msgRef = doc(db, COLLECTIONS.CHATS, chatId, COLLECTIONS.MESSAGES, messageId);
+    await deleteDoc(msgRef);
   },
 };

@@ -17,6 +17,8 @@ import { ResumeBuilderPage } from '@/pages/profile/ResumeBuilderPage';
 import { JobsPage } from '@/pages/jobs/JobsPage';
 import { JobDetailsPage } from '@/pages/jobs/JobDetailsPage';
 import { SavedJobsPage } from '@/pages/jobs/SavedJobsPage';
+import { ApplicationsPage } from '@/pages/applications/ApplicationsPage';
+import { InvitationsPage } from '@/pages/invitations/InvitationsPage';
 import { CompaniesPage } from '@/pages/companies/CompaniesPage';
 import { CompanyDetailsPage } from '@/pages/companies/CompanyDetailsPage';
 import { AssessmentsPage } from '@/pages/assessment/AssessmentsPage';
@@ -24,6 +26,9 @@ import { CareerReadinessPage } from '@/pages/assessment/CareerReadinessPage';
 import { ChatPage } from '@/pages/chat/ChatPage';
 import { NotificationsPage } from '@/pages/notifications/NotificationsPage';
 import { SubscriptionPage } from '@/pages/subscription/SubscriptionPage';
+import { SettingsPage } from '@/pages/settings/SettingsPage';
+import { AboutPage } from '@/pages/info/AboutPage';
+import { SupportPage } from '@/pages/info/SupportPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ROUTES } from '@/utils/constants';
 
@@ -45,19 +50,6 @@ const RootRedirect: React.FC = () => {
 
   return <Navigate to={ROUTES.LOGIN} replace />;
 };
-
-// Placeholder component for future phase routes
-const UnderConstructionPage: React.FC<{ title: string; phase: string }> = ({ title, phase }) => (
-  <div className="p-8 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1f293d] shadow-sm text-center max-w-lg mx-auto space-y-3 my-12">
-    <div className="w-12 h-12 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 mx-auto flex items-center justify-center font-bold text-lg">
-      TB
-    </div>
-    <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">{title}</h2>
-    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-      This feature will be fully integrated in <strong>{phase}</strong>.
-    </p>
-  </div>
-);
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -87,7 +79,8 @@ export const AppRoutes: React.FC = () => {
           <Route path={ROUTES.JOBS} element={<JobsPage />} />
           <Route path={ROUTES.JOB_DETAILS} element={<JobDetailsPage />} />
           <Route path={ROUTES.SAVED_JOBS} element={<SavedJobsPage />} />
-          <Route path={ROUTES.APPLICATIONS} element={<UnderConstructionPage title="Job Applications" phase="Phase 5" />} />
+          <Route path={ROUTES.APPLICATIONS} element={<ApplicationsPage />} />
+          <Route path={ROUTES.INVITATIONS} element={<InvitationsPage />} />
 
           {/* Companies */}
           <Route path={ROUTES.COMPANIES} element={<CompaniesPage />} />
@@ -110,9 +103,9 @@ export const AppRoutes: React.FC = () => {
 
           {/* Subscription & Settings */}
           <Route path={ROUTES.SUBSCRIPTION} element={<SubscriptionPage />} />
-          <Route path={ROUTES.SETTINGS} element={<UnderConstructionPage title="Settings" phase="Phase 8" />} />
-          <Route path={ROUTES.SUPPORT} element={<UnderConstructionPage title="Support & Help" phase="Phase 8" />} />
-          <Route path={ROUTES.ABOUT} element={<UnderConstructionPage title="About TalentBay" phase="Phase 8" />} />
+          <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+          <Route path={ROUTES.SUPPORT} element={<SupportPage />} />
+          <Route path={ROUTES.ABOUT} element={<AboutPage />} />
         </Route>
       </Route>
 

@@ -16,6 +16,7 @@ export interface AuthContextType {
   signUpWithEmail: (params: SignUpCandidateParams) => Promise<User>;
   sendPasswordReset: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
   refreshProfile: () => Promise<void>;
   refreshCandidate: () => Promise<void>; // Convenient alias
 }

@@ -2,6 +2,17 @@
  * TalentBay Candidate Web - Global Application Constants & Routes
  */
 
+export const APP_CONFIG = {
+  appName: 'TalentBay Candidate',
+  appDescription: 'TalentBay Candidate Platform & Career Portal',
+  version: '1.0.18',
+  supportEmail: 'support@talentbay.com',
+  website: 'https://talentbay.com',
+  companyName: 'Waqtix LLP',
+  firebaseProjectId: 'talent-bay-d0b92',
+  razorpayKeyId: 'rzp_live_TdPCKnpedQNEW6',
+} as const;
+
 export const ROUTES = {
   // Public / Auth Routes
   HOME: '/',

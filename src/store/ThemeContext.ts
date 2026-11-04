@@ -1,11 +1,14 @@
 import { createContext, useContext } from 'react';
 
+export type ThemeMode = 'light' | 'dark' | 'system';
 export type Theme = 'light' | 'dark';
 
 export interface ThemeContextType {
-  theme: Theme;
+  theme: Theme; // Effective active theme ('light' | 'dark')
+  themeMode: ThemeMode; // User preference ('light' | 'dark' | 'system')
   toggleTheme: () => void;
-  setTheme: (theme: Theme) => void;
+  setTheme: (theme: ThemeMode) => void;
+  setThemeMode: (mode: ThemeMode) => void;
 }
 
 export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -17,3 +20,4 @@ export function useTheme(): ThemeContextType {
   }
   return context;
 }
+

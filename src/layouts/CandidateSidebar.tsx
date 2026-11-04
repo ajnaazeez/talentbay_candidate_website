@@ -19,6 +19,7 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
+  Mail,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/utils/constants';
@@ -30,6 +31,7 @@ interface CandidateSidebarProps {
   onToggleCollapse?: () => void;
   unreadNotificationsCount?: number;
   unreadChatsCount?: number;
+  pendingInvitesCount?: number;
 }
 
 interface NavItem {
@@ -51,6 +53,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
   onToggleCollapse,
   unreadNotificationsCount = 0,
   unreadChatsCount = 0,
+  pendingInvitesCount = 0,
 }) => {
   const location = useLocation();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -62,6 +65,12 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         { title: 'Overview', to: ROUTES.DASHBOARD, icon: LayoutDashboard },
         { title: 'Browse Jobs', to: ROUTES.JOBS, icon: Briefcase },
         { title: 'Applications', to: ROUTES.APPLICATIONS, icon: FileCheck2 },
+        {
+          title: 'Invitations',
+          to: ROUTES.INVITATIONS,
+          icon: Mail,
+          badge: pendingInvitesCount > 0 ? pendingInvitesCount : undefined,
+        },
         { title: 'Saved Jobs', to: ROUTES.SAVED_JOBS, icon: Bookmark },
       ],
     },

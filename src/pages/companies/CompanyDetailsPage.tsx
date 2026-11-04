@@ -18,6 +18,9 @@ import {
   ArrowLeft,
   ExternalLink,
   Calendar,
+  Phone,
+  Mail,
+  Share2,
 } from 'lucide-react';
 import { ROUTES } from '@/utils/constants';
 
@@ -242,6 +245,7 @@ export const CompanyDetailsPage: React.FC = () => {
 
         {/* Right Column: Company Info Cards */}
         <div className="lg:col-span-4 space-y-5">
+          {/* Company Overview */}
           <div className="rounded-3xl bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border p-6 shadow-soft space-y-4">
             <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500">
               Company Overview
@@ -266,16 +270,86 @@ export const CompanyDetailsPage: React.FC = () => {
                   {location}
                 </span>
               </div>
+              {company.contact?.addressLine && (
+                <div className="flex items-start justify-between gap-2">
+                  <span className="text-gray-400 shrink-0">Address</span>
+                  <span className="font-semibold text-gray-900 dark:text-white text-right">
+                    {company.contact.addressLine}
+                  </span>
+                </div>
+              )}
+              {company.contact?.phone && (
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-400">Phone</span>
+                  <a
+                    href={`tel:${company.contact.phone}`}
+                    className="font-semibold text-brand-600 hover:underline flex items-center gap-1"
+                  >
+                    <Phone className="w-3 h-3" />
+                    <span>{company.contact.phone}</span>
+                  </a>
+                </div>
+              )}
               {company.contact?.email && (
                 <div className="flex items-center justify-between truncate">
                   <span className="text-gray-400">Contact Email</span>
-                  <a href={`mailto:${company.contact.email}`} className="text-brand-600 hover:underline truncate">
-                    {company.contact.email}
+                  <a
+                    href={`mailto:${company.contact.email}`}
+                    className="text-brand-600 hover:underline truncate flex items-center gap-1"
+                  >
+                    <Mail className="w-3 h-3" />
+                    <span>{company.contact.email}</span>
+                  </a>
+                </div>
+              )}
+              {(company.profile.website || company.contact?.website || company.website) && (
+                <div className="flex items-center justify-between truncate">
+                  <span className="text-gray-400">Website</span>
+                  <a
+                    href={company.profile.website || company.contact?.website || company.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-brand-600 hover:underline truncate flex items-center gap-1"
+                  >
+                    <Globe className="w-3 h-3" />
+                    <span>Visit Website</span>
+                    <ExternalLink className="w-2.5 h-2.5 ml-0.5 opacity-70" />
                   </a>
                 </div>
               )}
             </div>
           </div>
+
+          {/* Social Presence & Links */}
+          {company.social && Object.keys(company.social).length > 0 && (
+            <div className="rounded-3xl bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border p-6 shadow-soft space-y-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+                <Share2 className="w-3.5 h-3.5 text-brand-500" />
+                <span>Connect & Social</span>
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {Object.entries(company.social).map(([network, url]) => {
+                  if (!url || typeof url !== 'string' || !url.trim()) return null;
+                  const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
+                  const label = network.charAt(0).toUpperCase() + network.slice(1);
+
+                  return (
+                    <a
+                      key={network}
+                      href={formattedUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-2 rounded-xl bg-gray-50 dark:bg-dark-bg hover:bg-gray-100 dark:hover:bg-dark-border border border-gray-100 dark:border-dark-border text-xs font-semibold text-gray-700 dark:text-gray-200 flex items-center justify-between transition group"
+                    >
+                      <span className="truncate">{label}</span>
+                      <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-brand-500 transition shrink-0" />
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

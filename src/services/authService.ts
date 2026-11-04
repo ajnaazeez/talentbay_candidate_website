@@ -8,6 +8,7 @@ import {
   type Unsubscribe,
   RecaptchaVerifier,
   signInWithPhoneNumber,
+  signInWithCustomToken,
   type ConfirmationResult,
 } from 'firebase/auth';
 import {
@@ -180,18 +181,44 @@ export const authService = {
   },
 
   /**
-   * Verify Phone OTP and ensure candidate records exist in Firestore.
+   * Verify Phone OTP, reconcile account using `loginWithPhoneOtp` Cloud Function
+   * & custom token, and ensure candidate records exist in Firestore.
    */
   async verifyPhoneOtp(
     confirmationResult: ConfirmationResult,
     otp: string
   ): Promise<User> {
     const userCredential = await confirmationResult.confirm(otp);
-    const user = userCredential.user;
+    const tempUser = userCredential.user;
+    let activeUser: User = tempUser;
+
+    // Stage 3 & 4 (Flutter Parity): Reconcile with canonical candidate account using loginWithPhoneOtp
+    try {
+      const idToken = await tempUser.getIdToken(true);
+      if (idToken) {
+        const loginCallable = httpsCallable<{ idToken: string }, { customToken?: string }>(
+          functions,
+          'loginWithPhoneOtp'
+        );
+        const res = await loginCallable({ idToken });
+        const customToken = res.data?.customToken;
+        if (customToken) {
+          const customCred = await signInWithCustomToken(auth, customToken);
+          if (customCred.user) {
+            activeUser = customCred.user;
+          }
+        }
+      }
+    } catch (cfErr) {
+      console.warn('[authService] loginWithPhoneOtp reconciliation notice (continuing with active credentials):', cfErr);
+    }
+
+    // Role check: enforce candidate role exclusively
+    await this.verifyCandidateRole(activeUser);
 
     const [userDocSnap, candDocSnap] = await Promise.all([
-      getDoc(doc(db, COLLECTIONS.USERS, user.uid)),
-      getDoc(doc(db, COLLECTIONS.CANDIDATES, user.uid)),
+      getDoc(doc(db, COLLECTIONS.USERS, activeUser.uid)),
+      getDoc(doc(db, COLLECTIONS.CANDIDATES, activeUser.uid)),
     ]);
 
     // Check if account already exists with a different role
@@ -210,9 +237,9 @@ export const authService = {
     // If new phone user, ensure candidate documents are created
     if (!candDocSnap.exists()) {
       const candidateData: Partial<CandidateModel> = {
-        uid: user.uid,
-        email: user.email || '',
-        phoneNumber: user.phoneNumber || undefined,
+        uid: activeUser.uid,
+        email: activeUser.email || '',
+        phoneNumber: activeUser.phoneNumber || undefined,
         createdAt: nowIso,
         lastUpdated: nowIso,
         isPremium: false,
@@ -225,20 +252,20 @@ export const authService = {
         isProfilePublic: true,
         accountStatus: 'Active',
       };
-      await setDoc(doc(db, COLLECTIONS.CANDIDATES, user.uid), candidateData, { merge: true });
+      await setDoc(doc(db, COLLECTIONS.CANDIDATES, activeUser.uid), candidateData, { merge: true });
     }
 
     if (!userDocSnap.exists()) {
       const userData: Record<string, any> = {
         role: 'candidate',
-        email: user.email || '',
+        email: activeUser.email || '',
         createdAt: serverTimestamp(),
       };
-      if (user.phoneNumber) {
-        userData.phoneNumber = user.phoneNumber;
-        userData.phoneDigits = lastTenDigits(user.phoneNumber);
+      if (activeUser.phoneNumber) {
+        userData.phoneNumber = activeUser.phoneNumber;
+        userData.phoneDigits = lastTenDigits(activeUser.phoneNumber);
       }
-      await setDoc(doc(db, COLLECTIONS.USERS, user.uid), userData, { merge: true });
+      await setDoc(doc(db, COLLECTIONS.USERS, activeUser.uid), userData, { merge: true });
 
       // Trigger trial initialization
       try {
@@ -249,7 +276,36 @@ export const authService = {
       }
     }
 
-    return user;
+    return activeUser;
+  },
+
+  /**
+   * Sync and claim verified mobile number using Cloud Function `syncVerifiedPhone`.
+   * Rejects numbers owned by another real account.
+   */
+  async syncVerifiedPhone(phoneNumber: string): Promise<void> {
+    const normalized = normalizePhoneNumber(phoneNumber);
+    if (!normalized) {
+      const err = new Error('Please enter a valid phone number with country code.');
+      (err as { code?: string }).code = 'auth/invalid-phone-number';
+      throw err;
+    }
+    const callable = httpsCallable<{ phoneNumber: string }, { success?: boolean }>(
+      functions,
+      'syncVerifiedPhone'
+    );
+    await callable({ phoneNumber: normalized });
+  },
+
+  /**
+   * Permanently delete user account via backend Cloud Function `deleteUserAccount`.
+   * Completely purges Firebase Auth, candidate profile, applications, chats, messages, and notifications.
+   * NEVER deletes Firestore documents or Auth user directly from the client.
+   */
+  async deleteUserAccount(): Promise<void> {
+    const callable = httpsCallable(functions, 'deleteUserAccount');
+    await callable();
+    await auth.signOut();
   },
 
   /**

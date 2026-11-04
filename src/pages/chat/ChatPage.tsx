@@ -12,6 +12,11 @@ import {
   AlertCircle,
   Building2,
   ExternalLink,
+  Copy,
+  Check,
+  Edit2,
+  Trash2,
+  X,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { chatService } from '@/services/chatService';
@@ -44,6 +49,54 @@ export const ChatPage: React.FC = () => {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [sending, setSending] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
+
+  // Message actions: Copy, Edit, Delete
+  const [copiedMsgId, setCopiedMsgId] = useState<string | null>(null);
+  const [editingMessage, setEditingMessage] = useState<MessageModel | null>(null);
+  const [editText, setEditText] = useState('');
+  const [deletingMessage, setDeletingMessage] = useState<MessageModel | null>(null);
+  const [isActionLoading, setIsActionLoading] = useState(false);
+
+  const handleCopyMessage = (msg: MessageModel) => {
+    const text = msg.decryptedContent || msg.content;
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedMsgId(msg.id);
+      setTimeout(() => setCopiedMsgId(null), 2000);
+    }
+  };
+
+  const handleStartEdit = (msg: MessageModel) => {
+    setEditingMessage(msg);
+    setEditText(msg.decryptedContent || msg.content);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!activeChatId || !editingMessage || !editText.trim()) return;
+    try {
+      setIsActionLoading(true);
+      await chatService.editMessage(activeChatId, editingMessage.id, editText.trim());
+      setEditingMessage(null);
+      setEditText('');
+    } catch (err) {
+      console.error('[ChatPage] Error editing message:', err);
+    } finally {
+      setIsActionLoading(false);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!activeChatId || !deletingMessage) return;
+    try {
+      setIsActionLoading(true);
+      await chatService.deleteMessage(activeChatId, deletingMessage.id);
+      setDeletingMessage(null);
+    } catch (err) {
+      console.error('[ChatPage] Error deleting message:', err);
+    } finally {
+      setIsActionLoading(false);
+    }
+  };
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -414,32 +467,73 @@ export const ChatPage: React.FC = () => {
                 ) : (
                   messages.map((msg) => {
                     const isCandidate = msg.senderId === candidateId;
+                    const isCopied = copiedMsgId === msg.id;
 
                     return (
                       <div
                         key={msg.id}
-                        className={`flex flex-col ${isCandidate ? 'items-end' : 'items-start'}`}
+                        className={`flex flex-col group ${isCandidate ? 'items-end' : 'items-start'}`}
                       >
-                        <div
-                          className={`max-w-[85%] sm:max-w-[70%] px-4 py-2.5 rounded-2xl shadow-xs text-xs sm:text-sm break-words leading-relaxed ${
-                            isCandidate
-                              ? 'bg-brand-600 text-white rounded-tr-xs'
-                              : 'bg-white dark:bg-[#1f293d] border border-slate-200 dark:border-[#253248] text-slate-800 dark:text-slate-100 rounded-tl-xs'
-                          }`}
-                        >
-                          <p>{msg.decryptedContent || msg.content}</p>
-
+                        <div className="relative max-w-[85%] sm:max-w-[70%]">
+                          {/* Quick Action Floating Bar on Hover */}
                           <div
-                            className={`flex items-center justify-end gap-1 text-[10px] mt-1 ${
-                              isCandidate ? 'text-brand-200' : 'text-slate-400'
+                            className={`absolute -top-7 z-10 hidden group-hover:flex items-center gap-1 bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-[#253248] rounded-lg shadow-sm px-1.5 py-0.5 text-slate-500 dark:text-slate-400 ${
+                              isCandidate ? 'right-0' : 'left-0'
                             }`}
                           >
-                            <span>{formatMessageTime(msg.timestamp)}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleCopyMessage(msg)}
+                              className="p-1 rounded hover:bg-slate-100 dark:hover:bg-[#253248] hover:text-slate-800 dark:hover:text-white transition"
+                              title="Copy message"
+                            >
+                              {isCopied ? <Check className="w-3 h-3 text-emerald-500" /> : <Copy className="w-3 h-3" />}
+                            </button>
                             {isCandidate && (
-                              <CheckCheck
-                                className={`w-3.5 h-3.5 ${msg.isRead ? 'text-emerald-300' : 'text-brand-300'}`}
-                              />
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => handleStartEdit(msg)}
+                                  className="p-1 rounded hover:bg-slate-100 dark:hover:bg-[#253248] hover:text-brand-500 transition"
+                                  title="Edit message"
+                                >
+                                  <Edit2 className="w-3 h-3" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setDeletingMessage(msg)}
+                                  className="p-1 rounded hover:bg-slate-100 dark:hover:bg-[#253248] hover:text-red-500 transition"
+                                  title="Delete message"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </button>
+                              </>
                             )}
+                          </div>
+
+                          {/* Message Bubble */}
+                          <div
+                            className={`px-4 py-2.5 rounded-2xl shadow-xs text-xs sm:text-sm break-words leading-relaxed ${
+                              isCandidate
+                                ? 'bg-brand-600 text-white rounded-tr-xs'
+                                : 'bg-white dark:bg-[#1f293d] border border-slate-200 dark:border-[#253248] text-slate-800 dark:text-slate-100 rounded-tl-xs'
+                            }`}
+                          >
+                            <p>{msg.decryptedContent || msg.content}</p>
+
+                            <div
+                              className={`flex items-center justify-end gap-1.5 text-[10px] mt-1 ${
+                                isCandidate ? 'text-brand-200' : 'text-slate-400'
+                              }`}
+                            >
+                              {msg.isEdited && <span className="italic opacity-80">(edited)</span>}
+                              <span>{formatMessageTime(msg.timestamp)}</span>
+                              {isCandidate && (
+                                <CheckCheck
+                                  className={`w-3.5 h-3.5 ${msg.isRead ? 'text-emerald-300' : 'text-brand-300'}`}
+                                />
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -489,6 +583,97 @@ export const ChatPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Edit Message Modal */}
+      {editingMessage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-[#111827] rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-[#1f293d] shadow-xl space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                <Edit2 className="w-4 h-4 text-brand-500" />
+                <span>Edit Message</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setEditingMessage(null)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <textarea
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              rows={3}
+              className="w-full p-3 text-sm bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-[#1f293d] rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
+            />
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setEditingMessage(null)}
+                className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1f293d] rounded-xl transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={!editText.trim() || isActionLoading}
+                onClick={handleSaveEdit}
+                className="px-4 py-2 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-50 rounded-xl transition flex items-center gap-1.5"
+              >
+                {isActionLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                <span>Save Changes</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Message Confirmation Modal */}
+      {deletingMessage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-[#111827] rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-[#1f293d] shadow-xl space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
+                <Trash2 className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                  Delete Message?
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Are you sure you want to delete this message? This cannot be undone.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-[#1f293d] text-xs text-slate-700 dark:text-slate-300 italic line-clamp-3">
+              "{deletingMessage.decryptedContent || deletingMessage.content}"
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setDeletingMessage(null)}
+                className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1f293d] rounded-xl transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isActionLoading}
+                onClick={handleConfirmDelete}
+                className="px-4 py-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 disabled:opacity-50 rounded-xl transition flex items-center gap-1.5"
+              >
+                {isActionLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                <span>Delete Message</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

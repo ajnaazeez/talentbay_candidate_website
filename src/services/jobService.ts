@@ -10,6 +10,8 @@ import {
   arrayUnion,
   arrayRemove,
   serverTimestamp,
+  onSnapshot,
+  Unsubscribe,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { COLLECTIONS } from '@/utils/constants';
@@ -438,6 +440,179 @@ export const jobService = {
       console.error('[jobService] Error fetching applications:', err);
       return [];
     }
+  },
+
+  /**
+   * Realtime stream of candidate applications.
+   * Matches Flutter getCandidateApplications stream.
+   */
+  subscribeToCandidateApplications(
+    candidateId: string,
+    callback: (applications: JobApplication[]) => void,
+    onError?: (error: Error) => void
+  ): Unsubscribe {
+    if (!candidateId) {
+      callback([]);
+      return () => {};
+    }
+
+    const q = query(
+      collection(db, COLLECTIONS.JOB_APPLICATIONS),
+      where('candidateId', '==', candidateId)
+    );
+
+    return onSnapshot(
+      q,
+      (snapshot) => {
+        const apps: JobApplication[] = snapshot.docs.map((d) => {
+          const data = d.data();
+          return {
+            id: d.id,
+            applicationId: data.applicationId || d.id,
+            jobId: data.jobId,
+            candidateId: data.candidateId,
+            candidateName: data.candidateName || '',
+            jobTitle: data.jobTitle || '',
+            companyId: data.companyId,
+            recruiterId: data.recruiterId,
+            resumeUrl: data.resumeUrl,
+            coverLetter: data.coverLetter,
+            applicationStatus: data.applicationStatus || 'applied',
+            appliedAt: data.appliedAt?.toDate ? data.appliedAt.toDate().toISOString() : data.appliedAt || new Date().toISOString(),
+            source: data.source || 'portal',
+            matchScore: data.matchScore || data.aiMatchScore || 0,
+          };
+        });
+
+        apps.sort((a, b) => new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime());
+        callback(apps);
+      },
+      (err) => {
+        console.error('[jobService.subscribeToCandidateApplications] Error:', err);
+        onError?.(err);
+      }
+    );
+  },
+
+  /**
+   * Fetches recruiter invitations for the candidate.
+   * Queries job_applications where status == 'invited'.
+   */
+  async getInvites(candidateId: string): Promise<JobApplication[]> {
+    if (!candidateId) return [];
+    try {
+      const q = query(
+        collection(db, COLLECTIONS.JOB_APPLICATIONS),
+        where('candidateId', '==', candidateId),
+        where('applicationStatus', '==', 'invited')
+      );
+      const snap = await getDocs(q);
+      const invites: JobApplication[] = [];
+
+      for (const d of snap.docs) {
+        const data = d.data();
+        invites.push({
+          id: d.id,
+          applicationId: data.applicationId || d.id,
+          jobId: data.jobId,
+          candidateId: data.candidateId,
+          candidateName: data.candidateName || '',
+          jobTitle: data.jobTitle || '',
+          companyId: data.companyId,
+          recruiterId: data.recruiterId,
+          resumeUrl: data.resumeUrl,
+          coverLetter: data.coverLetter,
+          applicationStatus: 'invited',
+          appliedAt: data.appliedAt?.toDate ? data.appliedAt.toDate().toISOString() : data.appliedAt || new Date().toISOString(),
+          source: data.source || 'recruiter_invite',
+          matchScore: data.matchScore || data.aiMatchScore || 0,
+        });
+      }
+
+      invites.sort((a, b) => new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime());
+      return invites;
+    } catch (err) {
+      console.error('[jobService.getInvites] Error:', err);
+      return [];
+    }
+  },
+
+  /**
+   * Realtime stream of candidate invitations.
+   * Matches Flutter JobRepository.getInvites(candidateId).
+   */
+  subscribeToInvites(
+    candidateId: string,
+    callback: (invites: JobApplication[]) => void,
+    onError?: (error: Error) => void
+  ): Unsubscribe {
+    if (!candidateId) {
+      callback([]);
+      return () => {};
+    }
+
+    const q = query(
+      collection(db, COLLECTIONS.JOB_APPLICATIONS),
+      where('candidateId', '==', candidateId),
+      where('applicationStatus', '==', 'invited')
+    );
+
+    return onSnapshot(
+      q,
+      (snapshot) => {
+        const invites: JobApplication[] = snapshot.docs.map((d) => {
+          const data = d.data();
+          return {
+            id: d.id,
+            applicationId: data.applicationId || d.id,
+            jobId: data.jobId,
+            candidateId: data.candidateId,
+            candidateName: data.candidateName || '',
+            jobTitle: data.jobTitle || '',
+            companyId: data.companyId,
+            recruiterId: data.recruiterId,
+            resumeUrl: data.resumeUrl,
+            coverLetter: data.coverLetter,
+            applicationStatus: 'invited',
+            appliedAt: data.appliedAt?.toDate ? data.appliedAt.toDate().toISOString() : data.appliedAt || new Date().toISOString(),
+            source: data.source || 'recruiter_invite',
+            matchScore: data.matchScore || data.aiMatchScore || 0,
+          };
+        });
+
+        invites.sort((a, b) => new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime());
+        callback(invites);
+      },
+      (err) => {
+        console.error('[jobService.subscribeToInvites] Error:', err);
+        onError?.(err);
+      }
+    );
+  },
+
+  /**
+   * Accepts an invitation: updates status to 'applied' and sets appliedAt to serverTimestamp().
+   * Matches Flutter acceptInvitation(applicationId).
+   */
+  async acceptInvitation(applicationId: string): Promise<void> {
+    if (!applicationId) throw new Error('Missing application ID to accept.');
+    const appRef = doc(db, COLLECTIONS.JOB_APPLICATIONS, applicationId);
+    await updateDoc(appRef, {
+      applicationStatus: 'applied',
+      appliedAt: serverTimestamp(),
+    });
+  },
+
+  /**
+   * Declines an invitation: updates status to 'rejected'.
+   * Matches Flutter declineInvitation(applicationId).
+   */
+  async declineInvitation(applicationId: string): Promise<void> {
+    if (!applicationId) throw new Error('Missing application ID to decline.');
+    const appRef = doc(db, COLLECTIONS.JOB_APPLICATIONS, applicationId);
+    await updateDoc(appRef, {
+      applicationStatus: 'rejected',
+    });
   },
 
   /**
