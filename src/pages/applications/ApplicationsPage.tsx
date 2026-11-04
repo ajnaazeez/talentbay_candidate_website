@@ -1,483 +1,567 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
-  FileCheck2,
-  Search,
-  Filter,
-  Building2,
-  MapPin,
   Briefcase,
-  DollarSign,
-  Clock,
-  ExternalLink,
-  MessageSquare,
-  ShieldCheck,
+  Bookmark,
+  CheckCircle2,
+  Mail,
+  Building2,
+  RefreshCw,
   AlertCircle,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotifications } from '@/hooks/useNotifications';
 import { jobService } from '@/services/jobService';
-import { Button } from '@/components/common/Button';
-import { Badge } from '@/components/common/Badge';
-import { PageHeader } from '@/components/common/PageHeader';
+import { chatService } from '@/services/chatService';
+import { JobCard } from '@/components/jobs/JobCard';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { ROUTES } from '@/utils/constants';
-import type { JobApplication, Job } from '@/types';
+import type { Job, JobApplication } from '@/types';
 
-type ApplicationTab = 'all' | 'applied' | 'screening' | 'interviewing' | 'hired' | 'rejected';
+type ActivityTab = 'applied' | 'saved' | 'accepted';
 
-interface EnrichedApplication {
-  application: JobApplication;
-  job: Job | null;
-}
-
-const TABS: { id: ApplicationTab; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'applied', label: 'Applied' },
-  { id: 'screening', label: 'Screening' },
-  { id: 'interviewing', label: 'Interviewing' },
-  { id: 'hired', label: 'Hired' },
-  { id: 'rejected', label: 'Rejected' },
-];
-
-/**
- * Maps any raw database status to the standard UI tab category.
- * Matches Flutter activity_tab.dart mapping.
- */
-function getNormalizedStatusCategory(status: string): ApplicationTab {
-  const s = (status || '').toLowerCase().trim();
-  if (['hired', 'accepted', 'selected'].includes(s)) return 'hired';
-  if (['rejected', 'declined'].includes(s)) return 'rejected';
-  if (['interviewing', 'interview'].includes(s)) return 'interviewing';
-  if (['screening', 'shortlisted'].includes(s)) return 'screening';
-  return 'applied';
-}
-
-/**
- * Returns Tailwind styling and display label for a status badge.
- */
-function getStatusBadgeConfig(status: string): { label: string; className: string } {
-  const s = (status || '').toLowerCase().trim();
-  switch (s) {
-    case 'hired':
-    case 'accepted':
-    case 'selected':
-      return {
-        label: 'HIRED / OFFER',
-        className: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800',
-      };
-    case 'interviewing':
-    case 'interview':
-      return {
-        label: 'INTERVIEWING',
-        className: 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800',
-      };
-    case 'screening':
-    case 'shortlisted':
-      return {
-        label: 'SCREENING',
-        className: 'bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800',
-      };
-    case 'rejected':
-    case 'declined':
-      return {
-        label: 'REJECTED',
-        className: 'bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800',
-      };
-    default:
-      return {
-        label: 'APPLIED',
-        className: 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800',
-      };
-  }
+function formatDate(isoOrDate: string | Date | undefined): string {
+  if (!isoOrDate) return '';
+  const d = new Date(isoOrDate);
+  if (isNaN(d.getTime())) return '';
+  return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
 }
 
 export const ApplicationsPage: React.FC = () => {
-  const { candidate } = useAuth();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { candidate, refreshCandidate } = useAuth();
+  const { unreadChatsCount } = useNotifications();
 
-  const [applications, setApplications] = useState<EnrichedApplication[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // Active Tab state (synced with ?tab= query parameter)
+  const queryTab = (searchParams.get('tab') || '').toLowerCase();
+  const activeTab: ActivityTab = useMemo(() => {
+    if (queryTab === 'saved') return 'saved';
+    if (queryTab === 'accepted') return 'accepted';
+    return 'applied';
+  }, [queryTab]);
 
-  const [activeTab, setActiveTab] = useState<ApplicationTab>('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest');
+  const setActiveTab = (tab: ActivityTab) => {
+    setSearchParams(tab === 'applied' ? {} : { tab });
+  };
 
-  // Real-time subscription to candidate's job applications
+  // Applications & Jobs States
+  const [applications, setApplications] = useState<JobApplication[]>([]);
+  const [loadingApps, setLoadingApps] = useState(true);
+  const [appsError, setAppsError] = useState<string | null>(null);
+
+  // Cached Map of Job details (jobId -> Job)
+  const [jobsMap, setJobsMap] = useState<Map<string, Job>>(new Map());
+
+  // Saved Jobs State
+  const [savedJobs, setSavedJobs] = useState<Job[]>([]);
+  const [loadingSaved, setLoadingSaved] = useState(false);
+
+  // Chat initiation state
+  const [connectingChatId, setConnectingChatId] = useState<string | null>(null);
+
+  // 1. Subscribe to Candidate Applications (Realtime Firestore listener matching Flutter)
   useEffect(() => {
     if (!candidate?.uid) {
-      setLoading(false);
+      setApplications([]);
+      setLoadingApps(false);
       return;
     }
 
-    setLoading(true);
-    const unsubscribe = jobService.subscribeToCandidateApplications(
+    setLoadingApps(true);
+    setAppsError(null);
+
+    const unsub = jobService.subscribeToCandidateApplications(
       candidate.uid,
-      async (rawApps) => {
-        try {
-          // Filter out invites that have not been accepted yet (they live in /invitations)
-          const validApps = rawApps.filter((a) => a.applicationStatus !== 'invited');
+      (apps) => {
+        setApplications(apps);
+        setLoadingApps(false);
 
-          // Enrich each application with current job details
-          const enriched = await Promise.all(
-            validApps.map(async (app) => {
-              try {
-                const job = await jobService.getJobById(app.jobId);
-                return { application: app, job };
-              } catch {
-                return { application: app, job: null };
-              }
-            })
-          );
-
-          setApplications(enriched);
-          setError(null);
-        } catch (err: any) {
-          console.error('Error fetching applications data:', err);
-          setError('Failed to load application details.');
-        } finally {
-          setLoading(false);
+        // Fetch details for any newly discovered job IDs
+        const uniqueJobIds = Array.from(new Set(apps.map((a) => a.jobId))).filter(Boolean);
+        if (uniqueJobIds.length > 0) {
+          jobService.getJobsByIds(uniqueJobIds).then((jobsList) => {
+            setJobsMap((prev) => {
+              const updated = new Map(prev);
+              jobsList.forEach((j) => updated.set(j.jobId, j));
+              return updated;
+            });
+          }).catch((err) => console.error('[Activity] Error fetching application jobs:', err));
         }
       },
       (err) => {
-        console.error('Subscription error for applications:', err);
-        setError('Failed to connect to applications service.');
-        setLoading(false);
+        console.error('[Activity] Error loading applications:', err);
+        setAppsError('Error loading applications. Please tap retry.');
+        setLoadingApps(false);
       }
     );
 
-    return () => unsubscribe();
+    return () => unsub();
   }, [candidate?.uid]);
 
-  // Tab count calculations
-  const tabCounts = useMemo(() => {
-    const counts: Record<ApplicationTab, number> = {
-      all: applications.length,
-      applied: 0,
-      screening: 0,
-      interviewing: 0,
-      hired: 0,
-      rejected: 0,
-    };
+  // 2. Fetch Saved Jobs when candidate changes or Saved tab is opened
+  const fetchSavedJobs = useCallback(async () => {
+    const savedIds = candidate?.savedJobIds || [];
+    if (savedIds.length === 0) {
+      setSavedJobs([]);
+      return;
+    }
 
-    applications.forEach(({ application }) => {
-      const category = getNormalizedStatusCategory(application.applicationStatus);
-      counts[category] = (counts[category] || 0) + 1;
+    setLoadingSaved(true);
+    try {
+      const list = await jobService.getJobsByIds(savedIds);
+      setSavedJobs(list);
+    } catch (err) {
+      console.error('[Activity] Error fetching saved jobs:', err);
+    } finally {
+      setLoadingSaved(false);
+    }
+  }, [candidate?.savedJobIds]);
+
+  useEffect(() => {
+    fetchSavedJobs();
+  }, [fetchSavedJobs]);
+
+  // Filter 1: APPLIED tab (exclude hired and accepted)
+  const appliedApplications = useMemo(() => {
+    return applications.filter((app) => {
+      const st = (app.applicationStatus || '').toLowerCase().trim();
+      return st !== 'hired' && st !== 'accepted';
     });
-
-    return counts;
   }, [applications]);
 
-  // Filtered & sorted applications
-  const filteredApplications = useMemo(() => {
-    let result = applications;
-
-    // 1. Tab filter
-    if (activeTab !== 'all') {
-      result = result.filter(
-        ({ application }) => getNormalizedStatusCategory(application.applicationStatus) === activeTab
-      );
-    }
-
-    // 2. Search query filter (matches role title, company name, or location)
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      result = result.filter(({ application, job }) => {
-        const titleMatch = (job?.title || application.jobTitle || '').toLowerCase().includes(q);
-        const compMatch = (job?.companyName || '').toLowerCase().includes(q);
-        const locMatch = (job?.jobLocation?.city || '').toLowerCase().includes(q);
-        return titleMatch || compMatch || locMatch;
-      });
-    }
-
-    // 3. Sort order
-    result.sort((a, b) => {
-      const dateA = new Date(a.application.appliedAt).getTime() || 0;
-      const dateB = new Date(b.application.appliedAt).getTime() || 0;
-      return sortBy === 'newest' ? dateB - dateA : dateA - dateB;
+  // Filter 2: ACCEPTED tab (only hired and accepted)
+  const acceptedApplications = useMemo(() => {
+    return applications.filter((app) => {
+      const st = (app.applicationStatus || '').toLowerCase().trim();
+      return st === 'hired' || st === 'accepted';
     });
+  }, [applications]);
 
-    return result;
-  }, [applications, activeTab, searchQuery, sortBy]);
+  // Handle Unsave Bookmark
+  const handleUnsaveJob = async (jobId: string) => {
+    if (!candidate?.uid) return;
+    try {
+      await jobService.unsaveJob(candidate.uid, jobId);
+      setSavedJobs((prev) => prev.filter((j) => j.jobId !== jobId));
+      await refreshCandidate();
+    } catch (err) {
+      console.error('[Activity] Error unsaving job:', err);
+    }
+  };
+
+  // Handle Start / Open Chat with Recruiter
+  const handleMessageRecruiter = async (job: Job | null, applicationId: string) => {
+    if (!candidate?.uid) return;
+    if (!job || !job.recruiterId) {
+      alert('Cannot message: Recruiter info is missing for this position.');
+      return;
+    }
+
+    setConnectingChatId(applicationId);
+    try {
+      const chatId = await chatService.getOrCreateChat({
+        jobId: job.jobId,
+        candidateId: candidate.uid,
+        recruiterId: job.recruiterId,
+      });
+      navigate(ROUTES.CHAT, { state: { activeChatId: chatId } });
+    } catch (err) {
+      console.error('[Activity] Error connecting to chat:', err);
+      alert('Error opening recruiter conversation. Please try again.');
+    } finally {
+      setConnectingChatId(null);
+    }
+  };
+
+  // Render Status Chip (matching Flutter _buildStatusChip)
+  const renderStatusChip = (rawStatus: string) => {
+    const status = (rawStatus || '').toLowerCase().trim();
+    let label = rawStatus.toUpperCase();
+    let borderClass = 'border-sky-500 text-sky-600 dark:text-sky-400';
+
+    switch (status) {
+      case 'selected':
+      case 'hired':
+        label = 'SELECTED / HIRED';
+        borderClass = 'border-emerald-500 text-emerald-600 dark:text-emerald-400';
+        break;
+      case 'rejected':
+      case 'declined':
+        label = 'REJECTED';
+        borderClass = 'border-red-500 text-red-600 dark:text-red-400';
+        break;
+      case 'interviewing':
+      case 'interview':
+        label = 'INTERVIEWING';
+        borderClass = 'border-amber-500 text-amber-600 dark:text-amber-400';
+        break;
+      case 'shortlisted':
+      case 'screening':
+        label = 'SHORTLISTED';
+        borderClass = 'border-blue-500 text-blue-600 dark:text-blue-400';
+        break;
+      default:
+        label = 'APPLIED';
+        borderClass = 'border-sky-500 text-sky-600 dark:text-sky-400';
+    }
+
+    return (
+      <div className={`inline-block px-2.5 py-1 text-[10px] font-black tracking-wider uppercase border rounded-none ${borderClass}`}>
+        {label}
+      </div>
+    );
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <PageHeader
-        title="Job Applications"
-        description="Monitor your active submissions, interview stages, and recruiter feedback in real time."
-        badge={
-          <Badge variant="brand" isAi>
-            Application Tracker
-          </Badge>
-        }
-        actions={
-          <div className="flex items-center gap-2">
-            <NavLink to={ROUTES.INVITATIONS}>
-              <Button variant="outline" size="sm">
-                Recruiter Invitations
-              </Button>
-            </NavLink>
-            <NavLink to={ROUTES.JOBS}>
-              <Button variant="primary" size="sm">
-                Explore Jobs
-              </Button>
-            </NavLink>
-          </div>
-        }
-      />
-
-      {error && (
-        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 text-xs flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{error}</span>
-          </div>
-          <button onClick={() => setError(null)} className="font-bold underline text-xs">
-            Dismiss
-          </button>
-        </div>
-      )}
-
-      {/* Tabs Navigation & Filters */}
-      <div className="space-y-4">
-        {/* Status Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-          {TABS.map((tab) => {
-            const count = tabCounts[tab.id];
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                  isActive
-                    ? 'bg-brand-600 text-white shadow-sm shadow-brand-500/25 ring-2 ring-brand-500/20'
-                    : 'bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-dark-hover'
-                }`}
-              >
-                <span>{tab.label}</span>
-                <span
-                  className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
-                    isActive
-                      ? 'bg-white/20 text-white'
-                      : 'bg-gray-100 dark:bg-dark-hover text-gray-600 dark:text-gray-400'
-                  }`}
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+    <div className="space-y-6 max-w-5xl mx-auto pb-16">
+      {/* 1. Custom Header: Title & Direct Messages Navigation Icon (matching Flutter activity_tab.dart) */}
+      <div className="flex items-center justify-between pt-2 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-widest font-sans uppercase">
+            MY ACTIVITY
+          </h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold tracking-wider uppercase mt-0.5">
+            Track your applications, saved vacancies and offers
+          </p>
         </div>
 
-        {/* Search & Sort Bar */}
-        <div className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-3 shadow-soft flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="relative flex-1 w-full">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by job title, company, or city..."
-              className="w-full pl-9 pr-3.5 py-2 text-xs rounded-xl border border-gray-200 dark:border-dark-border bg-gray-50/50 dark:bg-dark-hover/50 text-gray-900 dark:text-white focus:bg-white dark:focus:bg-dark-card focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
-            />
-          </div>
-
-          <div className="flex items-center gap-2 self-end sm:self-auto shrink-0 text-xs">
-            <span className="text-gray-500 flex items-center gap-1">
-              <Filter className="w-3.5 h-3.5" /> Sort:
+        {/* Mail / Chat Icon with Live Unread Badge */}
+        <Link
+          to={ROUTES.CHAT}
+          className="relative p-2.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-600 transition"
+          title="Direct Messages"
+        >
+          <Mail className="w-5 h-5" />
+          {unreadChatsCount > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-teal-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+              {unreadChatsCount > 9 ? '9+' : unreadChatsCount}
             </span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest')}
-              className="px-3 py-1.5 rounded-xl border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-hover text-gray-900 dark:text-white"
-            >
-              <option value="newest">Newest Submitted</option>
-              <option value="oldest">Oldest First</option>
-            </select>
-          </div>
+          )}
+        </Link>
+      </div>
+
+      {/* 2. Three Tabs: APPLIED, SAVED, ACCEPTED (matching Flutter activity_tab.dart TabBar) */}
+      <div className="border-b border-slate-200 dark:border-slate-800">
+        <div className="flex gap-8">
+          {/* Applied Tab */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('applied')}
+            className={`pb-3 text-xs sm:text-sm font-black tracking-widest uppercase transition-all relative ${
+              activeTab === 'applied'
+                ? 'text-teal-600 dark:text-teal-400 border-b-2 border-teal-600 dark:border-teal-400 -mb-[1px]'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+          >
+            APPLIED
+            {appliedApplications.length > 0 && (
+              <span className="ml-2 text-xs font-bold text-slate-400">
+                ({appliedApplications.length})
+              </span>
+            )}
+          </button>
+
+          {/* Saved Tab */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('saved')}
+            className={`pb-3 text-xs sm:text-sm font-black tracking-widest uppercase transition-all relative ${
+              activeTab === 'saved'
+                ? 'text-teal-600 dark:text-teal-400 border-b-2 border-teal-600 dark:border-teal-400 -mb-[1px]'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+          >
+            SAVED
+            {(candidate?.savedJobIds?.length || 0) > 0 && (
+              <span className="ml-2 text-xs font-bold text-slate-400">
+                ({candidate?.savedJobIds?.length || 0})
+              </span>
+            )}
+          </button>
+
+          {/* Accepted Tab */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('accepted')}
+            className={`pb-3 text-xs sm:text-sm font-black tracking-widest uppercase transition-all relative ${
+              activeTab === 'accepted'
+                ? 'text-teal-600 dark:text-teal-400 border-b-2 border-teal-600 dark:border-teal-400 -mb-[1px]'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+          >
+            ACCEPTED
+            {acceptedApplications.length > 0 && (
+              <span className="ml-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                ({acceptedApplications.length})
+              </span>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Main Content Area */}
-      {loading ? (
-        <div className="py-20 text-center space-y-3">
-          <div className="w-10 h-10 border-3 border-brand-600 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs text-gray-500">Loading your applications...</p>
-        </div>
-      ) : filteredApplications.length === 0 ? (
-        /* Empty State */
-        <div className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-12 text-center space-y-4 shadow-soft">
-          <div className="w-14 h-14 rounded-2xl bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 flex items-center justify-center mx-auto">
-            <FileCheck2 className="w-7 h-7" />
-          </div>
+      {/* 3. TAB CONTENT */}
 
-          <div className="space-y-1.5 max-w-md mx-auto">
-            <h3 className="text-base font-bold text-gray-900 dark:text-white">
-              {activeTab === 'all'
-                ? 'No Applications Submitted Yet'
-                : `No Applications in "${TABS.find((t) => t.id === activeTab)?.label}"`}
-            </h3>
-            <p className="text-xs text-gray-500 leading-relaxed">
-              {activeTab === 'all'
-                ? 'Discover matched opportunities and submit your profile to begin tracking applications here.'
-                : `None of your applications are currently in the ${activeTab} stage.`}
-            </p>
-          </div>
-
-          <div className="pt-2">
-            <NavLink to={ROUTES.JOBS}>
-              <Button variant="primary" size="sm">
-                Explore Open Positions
-              </Button>
-            </NavLink>
-          </div>
-        </div>
-      ) : (
-        /* Applications Listing */
+      {/* TAB 1: APPLIED (Matching Flutter _AppliedJobsView) */}
+      {activeTab === 'applied' && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between text-xs text-gray-500 pb-1">
-            <span>
-              Showing <strong className="text-gray-900 dark:text-white">{filteredApplications.length}</strong> application{filteredApplications.length > 1 ? 's' : ''}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4">
-            {filteredApplications.map(({ application, job }) => {
-              const companyName = job?.companyName || 'Verified Employer';
-              const companyLogo = job?.companyLogoUrl;
-              const formattedDate = application.appliedAt
-                ? new Date(application.appliedAt).toLocaleDateString(undefined, {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })
-                : 'Recent';
-
-              const salaryText =
-                job?.salary && (job.salary.min || job.salary.max)
-                  ? `${job.salary.currency || '₹'} ${(job.salary.min / 100000).toFixed(1)}L - ${(job.salary.max / 100000).toFixed(1)}L`
-                  : null;
-
-              const badge = getStatusBadgeConfig(application.applicationStatus);
-              const isInterviewingOrScreening = ['interviewing', 'interview', 'screening', 'shortlisted'].includes(
-                (application.applicationStatus || '').toLowerCase()
-              );
-
-              return (
-                <div
-                  key={application.applicationId}
-                  className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-6 shadow-soft hover:border-brand-200 dark:hover:border-brand-800 transition-all space-y-4"
+          {loadingApps ? (
+            <div className="py-20 flex justify-center">
+              <LoadingSpinner size="md" label="Loading applications..." />
+            </div>
+          ) : appsError ? (
+            <div className="py-16 text-center space-y-3">
+              <AlertCircle className="w-10 h-10 text-red-500 mx-auto" />
+              <p className="text-sm font-bold text-slate-900 dark:text-white">{appsError}</p>
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-teal-600 text-white text-xs font-bold uppercase tracking-wider hover:bg-teal-700 transition"
+              >
+                <RefreshCw className="w-3.5 h-3.5" /> RETRY
+              </button>
+            </div>
+          ) : appliedApplications.length === 0 ? (
+            /* Empty State (matching Flutter) */
+            <div className="py-20 text-center border border-dashed border-slate-300 dark:border-slate-800 bg-white/50 dark:bg-[#111827]/50 p-8 space-y-3">
+              <div className="w-14 h-14 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                <Briefcase className="w-7 h-7" />
+              </div>
+              <h3 className="text-base font-black text-slate-900 dark:text-white tracking-wider uppercase">
+                NO APPLICATIONS YET
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+                Start applying to track them here
+              </p>
+              <div className="pt-2">
+                <Link
+                  to={ROUTES.JOBS}
+                  className="inline-block px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold uppercase tracking-wider hover:opacity-90 transition"
                 >
-                  {/* Top Bar: Company, Role & Status Badge */}
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                    <div className="flex items-start gap-3.5">
-                      {companyLogo ? (
-                        <img
-                          src={companyLogo}
-                          alt={companyName}
-                          className="w-12 h-12 rounded-xl object-contain bg-gray-50 dark:bg-dark-hover p-1 border border-gray-100 dark:border-dark-border shrink-0"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center shrink-0 border border-brand-100 dark:border-brand-900/50">
-                          <Building2 className="w-6 h-6" />
-                        </div>
-                      )}
+                  Explore Jobs
+                </Link>
+              </div>
+            </div>
+          ) : (
+            /* Applied Applications List */
+            <div className="space-y-4">
+              {appliedApplications.map((app) => {
+                const job = jobsMap.get(app.jobId) || null;
+                const isShortlisted = (app.applicationStatus || '').toLowerCase().trim() === 'shortlisted';
+                const isConnecting = connectingChatId === app.applicationId;
 
-                      <div className="space-y-1">
-                        <h4 className="text-base font-bold text-gray-900 dark:text-white">
-                          {job?.title || application.jobTitle || 'Applied Role'}
-                        </h4>
+                return (
+                  <div
+                    key={app.applicationId || app.id}
+                    className="p-5 sm:p-6 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700 transition space-y-4"
+                  >
+                    {/* Top Row: Company Logo & Details */}
+                    <div className="flex items-start gap-4">
+                      {/* Logo (48x48) */}
+                      <div className="w-12 h-12 rounded-none border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 overflow-hidden shrink-0 flex items-center justify-center p-1">
+                        {job?.companyLogoUrl ? (
+                          <img
+                            src={job.companyLogoUrl}
+                            alt={job.companyName || 'Company'}
+                            className="w-full h-full object-contain"
+                            onError={(e) => {
+                              (e.target as HTMLElement).style.display = 'none';
+                            }}
+                          />
+                        ) : (
+                          <Building2 className="w-6 h-6 text-slate-600 dark:text-slate-400" />
+                        )}
+                      </div>
 
-                        <div className="flex flex-wrap items-center gap-x-2 text-xs text-gray-600 dark:text-gray-400">
-                          <span className="font-semibold text-gray-800 dark:text-gray-200">
-                            {companyName}
-                          </span>
-                          {job?.isVerifiedCompany && (
-                            <span className="inline-flex items-center text-brand-600 text-[11px] gap-0.5">
-                              <ShieldCheck className="w-3.5 h-3.5" /> Verified
-                            </span>
-                          )}
-                          <span>•</span>
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-gray-400" />
-                            Applied on {formattedDate}
-                          </span>
+                      {/* Job Title & Company */}
+                      <div className="flex-1 min-w-0">
+                        <Link
+                          to={`/jobs/${app.jobId}`}
+                          className="text-sm sm:text-base font-black text-slate-900 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 transition tracking-wide uppercase line-clamp-1"
+                        >
+                          {job?.title || job?.roleName || app.jobTitle || 'Role Details'}
+                        </Link>
+                        <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase mt-0.5 tracking-wide">
+                          {job?.companyName || 'Company'}
+                        </p>
+                        <div className="mt-3">
+                          {renderStatusChip(app.applicationStatus)}
                         </div>
                       </div>
                     </div>
 
-                    {/* Status Badge */}
-                    <span
-                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold border self-start ${badge.className}`}
-                    >
-                      {badge.label}
-                    </span>
-                  </div>
+                    {/* Divider */}
+                    <div className="border-t border-slate-100 dark:border-slate-800" />
 
-                  {/* Metadata Chips */}
-                  {job && (
-                    <div className="flex flex-wrap items-center gap-2 text-xs pt-1">
-                      {job.workMode && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-dark-hover text-gray-700 dark:text-gray-300">
-                          <Briefcase className="w-3.5 h-3.5 text-gray-400" />
-                          {job.workMode}
-                        </span>
-                      )}
+                    {/* Bottom Row: Applied Date & Conditional MESSAGE Action */}
+                    <div className="flex items-center justify-between text-xs font-semibold">
+                      <span className="text-slate-500 dark:text-slate-400 tracking-wider uppercase text-[11px]">
+                        APPLIED {formatDate(app.appliedAt)}
+                      </span>
 
-                      {job.jobLocation?.city && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-dark-hover text-gray-700 dark:text-gray-300">
-                          <MapPin className="w-3.5 h-3.5 text-gray-400" />
-                          {[job.jobLocation.city, job.jobLocation.country].filter(Boolean).join(', ')}
-                        </span>
-                      )}
-
-                      {salaryText && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-dark-hover text-gray-700 dark:text-gray-300">
-                          <DollarSign className="w-3.5 h-3.5 text-gray-400" />
-                          {salaryText}
-                        </span>
-                      )}
-
-                      {job.employmentType && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-dark-hover text-gray-700 dark:text-gray-300">
-                          {job.employmentType}
+                      {/* Only clickable if Shortlisted (matching Flutter line 559-640) */}
+                      {isShortlisted ? (
+                        <button
+                          type="button"
+                          disabled={isConnecting}
+                          onClick={() => handleMessageRecruiter(job, app.applicationId)}
+                          className="text-xs font-black tracking-wider uppercase text-slate-900 dark:text-white underline hover:text-teal-600 dark:hover:text-teal-400 transition cursor-pointer"
+                        >
+                          {isConnecting ? 'CONNECTING...' : 'MESSAGE'}
+                        </button>
+                      ) : (
+                        <span className="text-xs font-bold tracking-wider uppercase text-slate-400 dark:text-slate-600 cursor-not-allowed select-none">
+                          MESSAGE
                         </span>
                       )}
                     </div>
-                  )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
 
-                  {/* Action Bar */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-gray-100 dark:border-dark-border">
-                    <span className="text-[11px] text-gray-400 font-mono">
-                      Ref: {application.applicationId}
-                    </span>
+      {/* TAB 2: SAVED (Matching Flutter _SavedJobsView) */}
+      {activeTab === 'saved' && (
+        <div className="space-y-4">
+          {loadingSaved ? (
+            <div className="py-20 flex justify-center">
+              <LoadingSpinner size="md" label="Loading saved vacancies..." />
+            </div>
+          ) : savedJobs.length === 0 ? (
+            /* Empty State (matching Flutter) */
+            <div className="py-20 text-center border border-dashed border-slate-300 dark:border-slate-800 bg-white/50 dark:bg-[#111827]/50 p-8 space-y-3">
+              <div className="w-14 h-14 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                <Bookmark className="w-7 h-7" />
+              </div>
+              <h3 className="text-base font-black text-slate-900 dark:text-white tracking-wider uppercase">
+                NO SAVED JOBS
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+                Save jobs to view them here
+              </p>
+              <div className="pt-2">
+                <Link
+                  to={ROUTES.JOBS}
+                  className="inline-block px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold uppercase tracking-wider hover:opacity-90 transition"
+                >
+                  Browse Vacancies
+                </Link>
+              </div>
+            </div>
+          ) : (
+            /* Saved Jobs List */
+            <div className="space-y-4">
+              {savedJobs.map((job) => (
+                <JobCard
+                  key={job.jobId}
+                  job={job}
+                  candidateSkills={candidate?.skills || []}
+                  isSaved={true}
+                  onSaveToggle={() => handleUnsaveJob(job.jobId)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
-                    <div className="flex items-center gap-2 self-end sm:self-auto">
-                      {isInterviewingOrScreening && (
-                        <NavLink to={ROUTES.CHAT}>
-                          <Button variant="secondary" size="sm">
-                            <MessageSquare className="w-3.5 h-3.5 mr-1" />
-                            Message Recruiter
-                          </Button>
-                        </NavLink>
-                      )}
+      {/* TAB 3: ACCEPTED (Matching Flutter _AcceptedJobsView) */}
+      {activeTab === 'accepted' && (
+        <div className="space-y-4">
+          {loadingApps ? (
+            <div className="py-20 flex justify-center">
+              <LoadingSpinner size="md" label="Loading accepted opportunities..." />
+            </div>
+          ) : acceptedApplications.length === 0 ? (
+            /* Empty State (matching Flutter) */
+            <div className="py-20 text-center border border-dashed border-slate-300 dark:border-slate-800 bg-white/50 dark:bg-[#111827]/50 p-8 space-y-3">
+              <div className="w-14 h-14 mx-auto rounded-full bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                <CheckCircle2 className="w-7 h-7" />
+              </div>
+              <h3 className="text-base font-black text-slate-900 dark:text-white tracking-wider uppercase">
+                NO ACCEPTED JOBS YET
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+                Jobs you are accepted for will appear here
+              </p>
+            </div>
+          ) : (
+            /* Accepted Applications List (Distinct Green Border matching Flutter) */
+            <div className="space-y-4">
+              {acceptedApplications.map((app) => {
+                const job = jobsMap.get(app.jobId) || null;
+                const isConnecting = connectingChatId === app.applicationId;
 
-                      <Link to={ROUTES.JOB_DETAILS.replace(':id', application.jobId)}>
-                        <Button variant="outline" size="sm">
-                          View Job Details <ExternalLink className="w-3 h-3 ml-1" />
-                        </Button>
-                      </Link>
+                return (
+                  <div
+                    key={app.applicationId || app.id}
+                    className="p-5 sm:p-6 bg-white dark:bg-[#111827] border-2 border-emerald-500 dark:border-emerald-500 transition space-y-4 shadow-xs"
+                  >
+                    {/* Top Row: Company Logo & Details */}
+                    <div className="flex items-start gap-4">
+                      {/* Logo (48x48) */}
+                      <div className="w-12 h-12 rounded-none border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 overflow-hidden shrink-0 flex items-center justify-center p-1">
+                        {job?.companyLogoUrl ? (
+                          <img
+                            src={job.companyLogoUrl}
+                            alt={job.companyName || 'Company'}
+                            className="w-full h-full object-contain"
+                            onError={(e) => {
+                              (e.target as HTMLElement).style.display = 'none';
+                            }}
+                          />
+                        ) : (
+                          <Building2 className="w-6 h-6 text-slate-600 dark:text-slate-400" />
+                        )}
+                      </div>
+
+                      {/* Job Title & Company */}
+                      <div className="flex-1 min-w-0">
+                        <Link
+                          to={`/jobs/${app.jobId}`}
+                          className="text-sm sm:text-base font-black text-slate-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition tracking-wide uppercase line-clamp-1"
+                        >
+                          {job?.title || job?.roleName || app.jobTitle || 'Role Details'}
+                        </Link>
+                        <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase mt-0.5 tracking-wide">
+                          {job?.companyName || 'Company'}
+                        </p>
+                        <div className="mt-3">
+                          <div className="inline-block px-3 py-1 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500 text-emerald-600 dark:text-emerald-400 text-[10px] font-black tracking-wider uppercase rounded-none">
+                            ACCEPTED / HIRED
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-t border-slate-100 dark:border-slate-800" />
+
+                    {/* Bottom Row: Accepted Date & MESSAGE Action */}
+                    <div className="flex items-center justify-between text-xs font-semibold">
+                      <span className="text-slate-500 dark:text-slate-400 tracking-wider uppercase text-[11px]">
+                        ACCEPTED ON {formatDate(app.updatedAt || app.appliedAt)}
+                      </span>
+
+                      <button
+                        type="button"
+                        disabled={isConnecting}
+                        onClick={() => handleMessageRecruiter(job, app.applicationId)}
+                        className="text-xs font-black tracking-wider uppercase text-slate-900 dark:text-white underline hover:text-emerald-600 dark:hover:text-emerald-400 transition cursor-pointer"
+                      >
+                        {isConnecting ? 'CONNECTING...' : 'MESSAGE'}
+                      </button>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 };
-
-export default ApplicationsPage;

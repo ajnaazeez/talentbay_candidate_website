@@ -21,6 +21,7 @@ export interface JobApplication {
   coverLetter?: string;
   applicationStatus: ApplicationStatus;
   appliedAt: string | Date | any;
+  updatedAt?: string | Date | any;
   source: string;
 
   // Enriched & Candidate metadata
