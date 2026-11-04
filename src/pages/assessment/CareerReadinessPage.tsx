@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Target,
   Sparkles,
@@ -26,6 +26,8 @@ import type { Job } from '@/types/job';
 export const CareerReadinessPage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const urlJobId = searchParams.get('jobId');
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -34,7 +36,7 @@ export const CareerReadinessPage: React.FC = () => {
   const [candidate, setCandidate] = useState<CandidateModel | null>(null);
   const [assessmentResults, setAssessmentResults] = useState<AssessmentResult[]>([]);
   const [availableJobs, setAvailableJobs] = useState<Job[]>([]);
-  const [selectedJobId, setSelectedJobId] = useState<string>('custom');
+  const [selectedJobId, setSelectedJobId] = useState<string>(urlJobId || 'custom');
   const [customJobTitle, setCustomJobTitle] = useState<string>('');
 
   const [guidance, setGuidance] = useState<CareerReadinessGuidance | null>(null);
@@ -57,16 +59,27 @@ export const CareerReadinessPage: React.FC = () => {
       setAvailableJobs(jobsData);
 
       // Default target job role
-      const defaultTitle = candData?.jobPreference?.role || candData?.bio || 'Software Engineer';
-      setCustomJobTitle(defaultTitle);
+      let targetTitle = candData?.jobPreference?.role || candData?.bio || 'Software Engineer';
+      let targetSkills = candData?.skills?.map((s) => s.name).slice(0, 5) || [];
+
+      if (urlJobId) {
+        const matchingJob = jobsData.find((j) => j.id === urlJobId || j.jobId === urlJobId);
+        if (matchingJob) {
+          setSelectedJobId(matchingJob.id || matchingJob.jobId);
+          targetTitle = matchingJob.roleName || matchingJob.title || targetTitle;
+          targetSkills = [...(matchingJob.skillsRequired || []), ...(matchingJob.mustHaveSkills || [])];
+        }
+      }
+
+      setCustomJobTitle(targetTitle);
 
       const latestScores = assessmentService.extractLatestSkillScores(resultsData);
 
       // Generate Career Readiness guidance
       const res = await assessmentService.getCareerReadiness({
         skillScores: latestScores,
-        targetJobTitle: defaultTitle,
-        targetJobSkills: candData?.skills?.map((s) => s.name).slice(0, 5) || [],
+        targetJobTitle: targetTitle,
+        targetJobSkills: targetSkills,
         forceRefresh: false,
       });
 
@@ -77,7 +90,7 @@ export const CareerReadinessPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [user?.uid]);
+  }, [user?.uid, urlJobId]);
 
   useEffect(() => {
     loadInitialData();

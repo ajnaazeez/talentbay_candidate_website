@@ -1,61 +1,54 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
-  GraduationCap,
   Sparkles,
-  Plus,
-  Search,
-  Zap,
-  RotateCcw,
-  BookOpen,
-  Award,
+  BarChart2,
+  ArrowRight,
+  CheckCircle,
+  Lock,
+  X,
+  AlertCircle,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { candidateService } from '@/services/candidateService';
-import { assessmentService, POPULAR_ASSESSMENT_SKILLS } from '@/services/assessmentService';
-import { Button } from '@/components/common/Button';
-import { Badge } from '@/components/common/Badge';
+import { assessmentService } from '@/services/assessmentService';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
-import { EmptyState } from '@/components/common/EmptyState';
-import { SkillSelectorModal } from '@/components/assessment/SkillSelectorModal';
 import { AssessmentQuiz } from '@/components/assessment/AssessmentQuiz';
 import { AssessmentResultSummary } from '@/components/assessment/AssessmentResultSummary';
-import { SkillPerformanceDashboard } from '@/components/assessment/SkillPerformanceDashboard';
+import { ROUTES } from '@/utils/constants';
 import type {
   AssessmentDifficulty,
   AssessmentQuestion,
   AssessmentResult,
-  SkillPerformanceSummary,
 } from '@/types/assessment';
 import type { CandidateModel } from '@/types/candidate';
 
-type PageViewMode = 'dashboard' | 'quiz' | 'result';
+type ViewMode = 'list' | 'generating' | 'quiz' | 'result';
 
 export const AssessmentsPage: React.FC = () => {
   const { user } = useAuth();
-  const { skill: routeSkill } = useParams<{ skill?: string }>();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const [activeTab, setActiveTab] = useState<'browse' | 'performance'>('browse');
-  const [candidate, setCandidate] = useState<CandidateModel | null>(null);
-  const [assessmentResults, setAssessmentResults] = useState<AssessmentResult[]>([]);
-  const [performanceSummary, setPerformanceSummary] = useState<SkillPerformanceSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Modal & Quiz runner states
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<PageViewMode>('dashboard');
-  const [currentSkill, setCurrentSkill] = useState('');
-  const [currentDifficulty, setCurrentDifficulty] = useState<AssessmentDifficulty>('Medium');
-  const [quizQuestions, setQuizQuestions] = useState<AssessmentQuestion[]>([]);
-  const [generatingQuestions, setGeneratingQuestions] = useState(false);
+  const [candidate, setCandidate] = useState<CandidateModel | null>(null);
+  const [assessmentResults, setAssessmentResults] = useState<AssessmentResult[]>([]);
+  const [relatedSkills, setRelatedSkills] = useState<string[]>([]);
+  const [loadingRelated, setLoadingRelated] = useState(false);
+
+  // Difficulty Selection Modal State
+  const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
+
+  // Quiz & Result State
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [activeSkill, setActiveSkill] = useState('');
+  const [activeDifficulty, setActiveDifficulty] = useState<AssessmentDifficulty>('Medium');
+  const [questions, setQuestions] = useState<AssessmentQuestion[]>([]);
   const [latestResult, setLatestResult] = useState<AssessmentResult | null>(null);
 
-  // Search filter for available skills
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Load candidate profile & assessments
+  // Load candidate and assessments
   const loadData = useCallback(async () => {
     if (!user?.uid) return;
     try {
@@ -70,11 +63,19 @@ export const AssessmentsPage: React.FC = () => {
       setCandidate(candData);
       setAssessmentResults(resultsData);
 
-      const summary = assessmentService.calculateSkillPerformanceSummary(candData, resultsData);
-      setPerformanceSummary(summary);
+      // Load related skills
+      const candSkillNames = (candData?.skills || []).map((s) => s.name);
+      if (candSkillNames.length > 0) {
+        setLoadingRelated(true);
+        assessmentService
+          .getRelatedSkills(candSkillNames)
+          .then((rel) => setRelatedSkills(rel))
+          .catch((e) => console.warn('Failed to load related skills:', e))
+          .finally(() => setLoadingRelated(false));
+      }
     } catch (err: any) {
-      console.error('Error loading assessments data:', err);
-      setError('Unable to load assessment records. Please refresh the page.');
+      console.error('Error loading assessments:', err);
+      setError('Unable to load assessments data. Please refresh.');
     } finally {
       setLoading(false);
     }
@@ -84,343 +85,531 @@ export const AssessmentsPage: React.FC = () => {
     loadData();
   }, [loadData]);
 
-  // Handle route param or query param /assessments/:skill
+  // Handle URL skill param if any
   useEffect(() => {
-    const targetSkill = routeSkill || searchParams.get('skill');
-    if (targetSkill && viewMode === 'dashboard') {
-      setCurrentSkill(decodeURIComponent(targetSkill));
-      setIsModalOpen(true);
+    const urlSkill = searchParams.get('skill');
+    if (urlSkill && viewMode === 'list') {
+      setSelectedSkill(decodeURIComponent(urlSkill));
     }
-  }, [routeSkill, searchParams, viewMode]);
+  }, [searchParams, viewMode]);
 
-  // Start assessment handler
-  const handleStartAssessment = async (skillToTest: string, diff: AssessmentDifficulty = 'Medium') => {
-    if (!user?.uid) return;
+  // Group assessments by skill (case-insensitive)
+  const assessmentMap: Record<string, AssessmentResult[]> = {};
+  assessmentResults.forEach((a) => {
+    const key = a.skill.toLowerCase().trim();
+    if (!assessmentMap[key]) {
+      assessmentMap[key] = [];
+    }
+    assessmentMap[key].push(a);
+  });
+
+  // Best assessment helper for a skill
+  const getResultPercentage = (a: AssessmentResult): number => {
+    if (typeof a.percentage === 'number') return Math.round(a.percentage);
+    return Math.round((a.score / Math.max(a.totalQuestions, 1)) * 100);
+  };
+
+  // Calculate statistics
+  const completedCount = assessmentResults.length;
+  const averageScore =
+    completedCount === 0
+      ? 0
+      : Math.round(
+          assessmentResults.reduce((acc, a) => acc + getResultPercentage(a), 0) /
+            completedCount
+        );
+
+  const candidateSkills = candidate?.skills || [];
+  const skillsCount = candidateSkills.length;
+
+  // Best assessment helper for a skill
+  const getBestAssessment = (skillName: string): AssessmentResult | undefined => {
+    const list = assessmentMap[skillName.toLowerCase().trim()] || [];
+    if (list.length === 0) return undefined;
+
+    // Difficulty ordering: Mixed > Hard > Medium > Easy
+    const difficultyOrder: Record<string, number> = {
+      mixed: 4,
+      hard: 3,
+      medium: 2,
+      easy: 1,
+    };
+
+    const sorted = [...list].sort((a, b) => {
+      const diffA = difficultyOrder[a.difficulty.toLowerCase()] || 0;
+      const diffB = difficultyOrder[b.difficulty.toLowerCase()] || 0;
+      return diffB - diffA;
+    });
+
+    return sorted[0];
+  };
+
+  // Helper color for score
+  const getScoreColorClass = (score: number): string => {
+    if (score >= 75) return 'text-emerald-500';
+    if (score >= 50) return 'text-amber-500';
+    return 'text-rose-500';
+  };
+
+  // Open difficulty selection for a skill
+  const handleOpenDifficulty = (skill: string) => {
+    if (candidate && !candidate.isPremium) {
+      navigate(ROUTES.SUBSCRIPTION);
+      return;
+    }
+    setSelectedSkill(skill);
+  };
+
+  // Start assessment quiz
+  const handleStartQuiz = async (skill: string, difficulty: AssessmentDifficulty) => {
+    setSelectedSkill(null);
+    setActiveSkill(skill);
+    setActiveDifficulty(difficulty);
+    setViewMode('generating');
+    setError(null);
+
     try {
-      setGeneratingQuestions(true);
-      setError(null);
-      setCurrentSkill(skillToTest);
-      setCurrentDifficulty(diff);
-
-      const questions = await assessmentService.generateQuestions(skillToTest, diff, 10);
-      setQuizQuestions(questions);
-      setIsModalOpen(false);
+      const generatedQuestions = await assessmentService.generateQuestions(skill, difficulty, 15);
+      setQuestions(generatedQuestions);
       setViewMode('quiz');
     } catch (err: any) {
+      console.error('Failed to generate questions:', err);
       setError(err?.message || 'Failed to generate assessment questions. Please try again.');
-    } finally {
-      setGeneratingQuestions(false);
+      setViewMode('list');
     }
   };
 
-  // Submit assessment handler
-  const handleSubmitQuiz = async (userAnswers: number[]) => {
+  // Submit assessment quiz
+  const handleSubmitQuiz = async (answers: number[]) => {
     if (!user?.uid) return;
     try {
-      // Calculate score
       let score = 0;
-      quizQuestions.forEach((q, idx) => {
-        if (userAnswers[idx] === q.correctAnswerIndex) {
+      questions.forEach((q, idx) => {
+        if (answers[idx] === q.correctAnswerIndex) {
           score += 1;
         }
       });
 
-      const savedResult = await assessmentService.saveAssessmentResult({
+      const res = await assessmentService.saveAssessmentResult({
         candidateId: user.uid,
-        skill: currentSkill,
-        questions: quizQuestions,
-        userAnswers,
+        skill: activeSkill,
+        questions,
+        userAnswers: answers,
         score,
-        totalQuestions: quizQuestions.length,
-        difficulty: currentDifficulty,
+        totalQuestions: questions.length,
+        difficulty: activeDifficulty,
       });
 
-      setLatestResult(savedResult);
+      setLatestResult(res);
       setViewMode('result');
-      // Refresh background data
+      // Refresh assessments list in background
       loadData();
     } catch (err: any) {
-      console.error('Error submitting assessment:', err);
-      setError(err?.message || 'Failed to save assessment results.');
+      console.error('Failed to save assessment result:', err);
+      setError(err?.message || 'Failed to submit assessment results.');
     }
   };
 
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <LoadingSpinner size="lg" label="Loading Skill Assessments..." />
+        <LoadingSpinner size="lg" label="Loading Assessments..." />
       </div>
     );
   }
 
-  // Render Active Quiz
-  if (viewMode === 'quiz' && quizQuestions.length > 0) {
+  // View: Generating questions
+  if (viewMode === 'generating') {
     return (
-      <div className="py-6">
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center space-y-4">
+        <LoadingSpinner size="lg" />
+        <h3 className="text-base font-bold uppercase tracking-wider text-slate-900 dark:text-white">
+          Generating your assessment questions...
+        </h3>
+        <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
+          Curating custom multiple-choice questions for {activeSkill} ({activeDifficulty})
+        </p>
+      </div>
+    );
+  }
+
+  // View: Active Quiz
+  if (viewMode === 'quiz' && questions.length > 0) {
+    return (
+      <div className="py-4">
         <AssessmentQuiz
-          skill={currentSkill}
-          difficulty={currentDifficulty}
-          questions={quizQuestions}
+          skill={activeSkill}
+          difficulty={activeDifficulty}
+          questions={questions}
           onSubmit={handleSubmitQuiz}
-          onCancel={() => setViewMode('dashboard')}
+          onCancel={() => setViewMode('list')}
         />
       </div>
     );
   }
 
-  // Render Result Summary
+  // View: Result Screen
   if (viewMode === 'result' && latestResult) {
     return (
-      <div className="py-6">
+      <div className="py-4">
         <AssessmentResultSummary
           result={latestResult}
-          onRetake={() => handleStartAssessment(latestResult.skill, latestResult.difficulty)}
+          onRetake={() => handleStartQuiz(latestResult.skill, latestResult.difficulty)}
         />
       </div>
     );
   }
 
-  const candidateSkills = Array.isArray(candidate?.skills) ? candidate.skills : [];
-  const latestScores = performanceSummary?.skillScores || {};
+  // Completed difficulties for selected skill in modal
+  const selectedSkillAssessments = selectedSkill
+    ? assessmentMap[selectedSkill.toLowerCase().trim()] || []
+    : [];
 
-  // Skills filtered by search
-  const filteredCandidateSkills = candidateSkills.filter((s) =>
-    s.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const isLevelCompleted = (diff: string): boolean => {
+    return selectedSkillAssessments.some(
+      (a) => a.difficulty.toLowerCase() === diff.toLowerCase()
+    );
+  };
 
-  const availablePopularSkills = POPULAR_ASSESSMENT_SKILLS.filter(
-    (s) =>
-      s.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      !candidateSkills.some((cs) => cs.name.toLowerCase() === s.toLowerCase())
-  );
+  const isEasyDone = isLevelCompleted('Easy');
+  const isMediumDone = isLevelCompleted('Medium');
+  const isHardDone = isLevelCompleted('Hard');
+  const isMixedDone = isLevelCompleted('Mixed');
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-3">
-            <GraduationCap className="w-8 h-8 text-brand-600 dark:text-brand-400" />
-            AI Skill Assessments
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Validate your technical proficiency with AI-evaluated tests and showcase verified badges to recruiters
-          </p>
-        </div>
-
-        <Button
-          variant="primary"
-          onClick={() => setIsModalOpen(true)}
-          leftIcon={<Plus className="w-4 h-4" />}
-        >
-          Take New Assessment
-        </Button>
+    <div className="max-w-4xl mx-auto space-y-8 pb-16 animate-in fade-in duration-300">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-black uppercase tracking-[2px] text-slate-900 dark:text-white font-futura">
+          ASSESSMENTS
+        </h1>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 text-sm flex items-center justify-between">
-          <span>{error}</span>
+        <div className="p-4 rounded-none bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 text-xs flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
           <button
             onClick={() => setError(null)}
-            className="text-xs underline hover:text-rose-800 dark:hover:text-rose-200"
+            className="text-xs uppercase font-bold underline hover:text-rose-900 dark:hover:text-rose-100"
           >
             Dismiss
           </button>
         </div>
       )}
 
-      {/* Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-[#1f293d]">
-        <button
-          onClick={() => setActiveTab('browse')}
-          className={`pb-3.5 px-4 text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
-            activeTab === 'browse'
-              ? 'border-brand-600 text-brand-600 dark:text-brand-400'
-              : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
-          }`}
-        >
-          <BookOpen className="w-4 h-4" />
-          Available Skills ({candidateSkills.length + POPULAR_ASSESSMENT_SKILLS.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('performance')}
-          className={`pb-3.5 px-4 text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
-            activeTab === 'performance'
-              ? 'border-brand-600 text-brand-600 dark:text-brand-400'
-              : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
-          }`}
-        >
-          <Award className="w-4 h-4" />
-          Skill Performance & History ({assessmentResults.length})
-        </button>
+      {/* Assessment Stats Box (Matching Flutter exactly) */}
+      <div className="border border-teal-500/20 bg-teal-500/[0.02] dark:bg-slate-900/40 p-6 md:p-8 space-y-6">
+        <div className="grid grid-cols-3 text-center divide-x divide-slate-100 dark:divide-slate-800">
+          <div>
+            <div className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
+              {completedCount}
+            </div>
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
+              COMPLETED
+            </div>
+          </div>
+
+          <div>
+            <div className={`text-3xl md:text-4xl font-black tracking-tight ${getScoreColorClass(averageScore)}`}>
+              {averageScore}%
+            </div>
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
+              AVG SCORE
+            </div>
+          </div>
+
+          <div>
+            <div className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
+              {skillsCount}
+            </div>
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
+              SKILLS
+            </div>
+          </div>
+        </div>
+
+        {/* AI-POWERED ASSESSMENTS ACTIVE Banner */}
+        <div className="border border-teal-500/30 p-2.5 flex items-center justify-center gap-2 text-center">
+          <Sparkles className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
+          <span className="text-[10px] font-black uppercase tracking-[1.5px] text-slate-800 dark:text-slate-200">
+            AI-POWERED ASSESSMENTS ACTIVE
+          </span>
+        </div>
+
+        {/* HOW AM I PERFORMING? Button */}
+        <div>
+          <button
+            type="button"
+            onClick={() => navigate(ROUTES.CAREER_READINESS)}
+            className="w-full py-2.5 px-4 rounded-full border border-teal-600/50 hover:border-teal-600 text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/20 transition flex items-center justify-center gap-2 text-xs font-black tracking-wider uppercase cursor-pointer"
+          >
+            <BarChart2 className="w-4 h-4" />
+            HOW AM I PERFORMING?
+          </button>
+        </div>
       </div>
 
-      {/* TAB 1: BROWSE AVAILABLE SKILLS */}
-      {activeTab === 'browse' && (
-        <div className="space-y-8">
-          {/* Search bar */}
-          <div className="relative max-w-md">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search skills to assess..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1f293d] text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all placeholder:text-slate-400 shadow-sm"
-            />
-          </div>
+      {/* YOUR SKILLS Section */}
+      <div className="space-y-3">
+        <h2 className="text-xs font-black uppercase tracking-wider text-slate-400">
+          YOUR SKILLS
+        </h2>
 
-          {/* Section: Your Profile Skills */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
-                  Skills from Your Profile
-                </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Assess and verify the skills listed on your candidate profile
-                </p>
-              </div>
-            </div>
+        {candidateSkills.length > 0 ? (
+          <div className="space-y-3">
+            {candidateSkills.map((sk) => {
+              const skillName = sk.name;
+              const bestAssessment = getBestAssessment(skillName);
+              const hasAssessment = Boolean(bestAssessment);
 
-            {filteredCandidateSkills.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredCandidateSkills.map((skill) => {
-                  const score = latestScores[skill.name.trim()];
-                  const isAssessed = typeof score === 'number';
-
-                  return (
-                    <div
-                      key={skill.name}
-                      className="bg-white dark:bg-[#111827] p-5 rounded-2xl border border-slate-200 dark:border-[#1f293d] shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
-                    >
-                      <div className="space-y-2">
-                        <div className="flex items-start justify-between gap-2">
-                          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base">
-                            {skill.name}
-                          </h3>
-                          {isAssessed ? (
-                            <Badge variant={score >= 75 ? 'success' : score >= 60 ? 'warning' : 'danger'} size="sm">
-                              {score}%
-                            </Badge>
-                          ) : (
-                            <span className="text-xs text-slate-400 font-medium">Unverified</span>
-                          )}
-                        </div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
-                          {skill.type || 'Technical'} • Profile level: {skill.level || 'Intermediate'}
-                        </p>
-                      </div>
-
-                      <div className="pt-5 border-t border-slate-100 dark:border-[#1f293d] mt-4 flex items-center justify-between">
-                        <span className="text-xs text-slate-400">10 MCQ questions</span>
-                        <Button
-                          variant={isAssessed ? 'secondary' : 'primary'}
-                          size="sm"
-                          onClick={() => {
-                            setCurrentSkill(skill.name);
-                            setIsModalOpen(true);
-                          }}
-                          leftIcon={isAssessed ? <RotateCcw className="w-3.5 h-3.5" /> : <Zap className="w-3.5 h-3.5" />}
-                        >
-                          {isAssessed ? 'Retake' : 'Start Assessment'}
-                        </Button>
-                      </div>
+              return (
+                <div
+                  key={skillName}
+                  onClick={() => handleOpenDifficulty(skillName)}
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 hover:border-slate-300 dark:hover:border-slate-700 transition cursor-pointer flex items-center justify-between group"
+                >
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                        {skillName}
+                      </span>
+                      <span className="bg-teal-600 text-white text-[9px] font-bold uppercase px-1.5 py-0.5 tracking-wider">
+                        ADDED
+                      </span>
                     </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <EmptyState
-                icon={<BookOpen className="w-8 h-8 text-slate-400" />}
-                title="No profile skills matched"
-                description="Try another search term or explore in-demand skills below."
-              />
-            )}
+
+                    {hasAssessment && bestAssessment ? (
+                      <div className="flex items-center gap-2 text-[11px] font-bold">
+                        <span className="uppercase text-slate-700 dark:text-slate-300">
+                          {bestAssessment.proficiencyLevel}
+                        </span>
+                        <span className="text-slate-400">•</span>
+                        <span className={getScoreColorClass(getResultPercentage(bestAssessment))}>
+                          {getResultPercentage(bestAssessment)}% SCORE
+                        </span>
+                        <span className="border border-slate-300 dark:border-slate-700 uppercase px-1 py-0.5 text-[8px] font-black text-slate-700 dark:text-slate-300">
+                          {bestAssessment.difficulty}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                        15 QUESTIONS • ~10 MIN
+                      </div>
+                    )}
+                  </div>
+
+                  <ArrowRight className="w-4 h-4 text-slate-900 dark:text-white group-hover:translate-x-1 transition-transform" />
+                </div>
+              );
+            })}
           </div>
+        ) : (
+          <div className="p-8 border border-dashed border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500">
+            No profile skills added yet. Add skills to your profile to take assessments.
+          </div>
+        )}
+      </div>
 
-          {/* Section: In-Demand Tech Skills */}
-          <div className="space-y-4 pt-4">
-            <div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-500" />
-                Popular Technical Skills
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Take assessments in high-demand technologies to boost your employer profile
-              </p>
+      {/* RECOMMENDED FOR YOU (Related Skills) Section */}
+      {(relatedSkills.length > 0 || loadingRelated) && (
+        <div className="space-y-3 pt-2">
+          <h2 className="text-xs font-black uppercase tracking-wider text-slate-400">
+            RECOMMENDED FOR YOU
+          </h2>
+
+          {loadingRelated ? (
+            <div className="py-6 flex justify-center">
+              <LoadingSpinner size="sm" label="Loading related skills..." />
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {availablePopularSkills.map((skill) => {
-                const score = latestScores[skill.trim()];
-                const isAssessed = typeof score === 'number';
+          ) : (
+            <div className="space-y-3">
+              {relatedSkills.map((relSkill) => {
+                const bestAssessment = getBestAssessment(relSkill);
+                const hasAssessment = Boolean(bestAssessment);
 
                 return (
                   <div
-                    key={skill}
-                    className="bg-white dark:bg-[#111827] p-5 rounded-2xl border border-slate-200 dark:border-[#1f293d] shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+                    key={relSkill}
+                    onClick={() => handleOpenDifficulty(relSkill)}
+                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 hover:border-slate-300 dark:hover:border-slate-700 transition cursor-pointer flex items-center justify-between group"
                   >
-                    <div className="space-y-2">
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base">
-                          {skill}
-                        </h3>
-                        {isAssessed && (
-                          <Badge variant="default" size="sm">
-                            {score}%
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
-                        In-demand competency requested by top recruiters
-                      </p>
+                    <div className="space-y-1.5">
+                      <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                        {relSkill}
+                      </span>
+
+                      {hasAssessment && bestAssessment ? (
+                        <div className="flex items-center gap-2 text-[11px] font-bold">
+                          <span className="uppercase text-slate-700 dark:text-slate-300">
+                            {bestAssessment.proficiencyLevel}
+                          </span>
+                          <span className="text-slate-400">•</span>
+                          <span className={getScoreColorClass(getResultPercentage(bestAssessment))}>
+                            {getResultPercentage(bestAssessment)}% SCORE
+                          </span>
+                          <span className="border border-slate-300 dark:border-slate-700 uppercase px-1 py-0.5 text-[8px] font-black text-slate-700 dark:text-slate-300">
+                            {bestAssessment.difficulty}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                          15 QUESTIONS • ~10 MIN
+                        </div>
+                      )}
                     </div>
 
-                    <div className="pt-5 border-t border-slate-100 dark:border-[#1f293d] mt-4 flex items-center justify-between">
-                      <span className="text-xs text-slate-400">10 Questions • Timed</span>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => {
-                          setCurrentSkill(skill);
-                          setIsModalOpen(true);
-                        }}
-                        leftIcon={<Zap className="w-3.5 h-3.5" />}
-                      >
-                        Assess Skill
-                      </Button>
-                    </div>
+                    <ArrowRight className="w-4 h-4 text-slate-900 dark:text-white group-hover:translate-x-1 transition-transform" />
                   </div>
                 );
               })}
             </div>
-          </div>
+          )}
         </div>
       )}
 
-      {/* TAB 2: SKILL PERFORMANCE & HISTORY DASHBOARD */}
-      {activeTab === 'performance' && performanceSummary && (
-        <SkillPerformanceDashboard
-          summary={performanceSummary}
-          results={assessmentResults}
-          onStartAssessment={(s) => {
-            setCurrentSkill(s);
-            setIsModalOpen(true);
-          }}
-        />
-      )}
+      {/* SELECT DIFFICULTY Modal */}
+      {selectedSkill && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-lg p-6 sm:p-8 space-y-6 relative shadow-2xl">
+            {/* Close button */}
+            <button
+              type="button"
+              onClick={() => setSelectedSkill(null)}
+              className="absolute top-6 right-6 text-slate-400 hover:text-slate-900 dark:hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
 
-      {/* Skill Selector Modal */}
-      <SkillSelectorModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onStartAssessment={handleStartAssessment}
-        candidate={candidate}
-        assessedScores={latestScores}
-        loading={generatingQuestions}
-      />
+            <div className="space-y-1">
+              <div className="text-xs font-black uppercase tracking-[1.5px] text-slate-400">
+                {selectedSkill}
+              </div>
+              <h3 className="text-2xl font-black uppercase tracking-tight text-slate-900 dark:text-white font-futura">
+                SELECT DIFFICULTY
+              </h3>
+            </div>
+
+            <div className="divide-y divide-slate-100 dark:divide-slate-800 pt-2">
+              {/* Easy */}
+              <div
+                onClick={() => !isEasyDone && handleStartQuiz(selectedSkill, 'Easy')}
+                className={`py-4 flex items-center justify-between ${
+                  isEasyDone ? 'opacity-60 cursor-default' : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer'
+                }`}
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                      EASY
+                    </span>
+                    {isEasyDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    Perfect for beginners starting their journey.
+                  </p>
+                </div>
+                {!isEasyDone && <ArrowRight className="w-4 h-4 text-slate-900 dark:text-white" />}
+              </div>
+
+              {/* Medium */}
+              <div
+                onClick={() =>
+                  isEasyDone && !isMediumDone && handleStartQuiz(selectedSkill, 'Medium')
+                }
+                className={`py-4 flex items-center justify-between ${
+                  !isEasyDone
+                    ? 'opacity-40 cursor-not-allowed'
+                    : isMediumDone
+                    ? 'opacity-60 cursor-default'
+                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer'
+                }`}
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                      MEDIUM
+                    </span>
+                    {isMediumDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
+                    {!isEasyDone && <Lock className="w-3.5 h-3.5 text-slate-400" />}
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    Test your core knowledge and practical skills.
+                  </p>
+                </div>
+                {isEasyDone && !isMediumDone && (
+                  <ArrowRight className="w-4 h-4 text-slate-900 dark:text-white" />
+                )}
+              </div>
+
+              {/* Hard */}
+              <div
+                onClick={() =>
+                  isMediumDone && !isHardDone && handleStartQuiz(selectedSkill, 'Hard')
+                }
+                className={`py-4 flex items-center justify-between ${
+                  !isMediumDone
+                    ? 'opacity-40 cursor-not-allowed'
+                    : isHardDone
+                    ? 'opacity-60 cursor-default'
+                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer'
+                }`}
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                      HARD
+                    </span>
+                    {isHardDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
+                    {!isMediumDone && <Lock className="w-3.5 h-3.5 text-slate-400" />}
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    Challenge yourself with advanced complex concepts.
+                  </p>
+                </div>
+                {isMediumDone && !isHardDone && (
+                  <ArrowRight className="w-4 h-4 text-slate-900 dark:text-white" />
+                )}
+              </div>
+
+              {/* Mixed */}
+              <div
+                onClick={() =>
+                  isHardDone && !isMixedDone && handleStartQuiz(selectedSkill, 'Mixed')
+                }
+                className={`py-4 flex items-center justify-between ${
+                  !isHardDone
+                    ? 'opacity-40 cursor-not-allowed'
+                    : isMixedDone
+                    ? 'opacity-60 cursor-default'
+                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer'
+                }`}
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                      MIXED
+                    </span>
+                    {isMixedDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
+                    {!isHardDone && <Lock className="w-3.5 h-3.5 text-slate-400" />}
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    A balanced set of questions across all levels.
+                  </p>
+                </div>
+                {isHardDone && !isMixedDone && (
+                  <ArrowRight className="w-4 h-4 text-slate-900 dark:text-white" />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
+export default AssessmentsPage;

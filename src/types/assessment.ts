@@ -1,6 +1,6 @@
 export type ProficiencyLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
 
-export type AssessmentDifficulty = 'Easy' | 'Medium' | 'Hard';
+export type AssessmentDifficulty = 'Easy' | 'Medium' | 'Hard' | 'Mixed';
 
 export interface AssessmentQuestion {
   id: string;
@@ -19,6 +19,7 @@ export interface AssessmentResult {
   userAnswers: number[];
   score: number;
   totalQuestions: number;
+  percentage?: number;
   completedAt: string;
   proficiencyLevel: ProficiencyLevel;
   difficulty: AssessmentDifficulty;

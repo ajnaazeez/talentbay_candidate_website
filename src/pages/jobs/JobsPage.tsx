@@ -1,63 +1,61 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Briefcase } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { jobService } from '@/services/jobService';
-import type { Job, JobFilterOptions, JobApplication } from '@/types';
 import { JobCard } from '@/components/jobs/JobCard';
-import { JobFilters } from '@/components/jobs/JobFilters';
-import { ApplyJobModal } from '@/components/jobs/ApplyJobModal';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
-import { EmptyState } from '@/components/common/EmptyState';
-import { Briefcase, Sparkles, AlertCircle } from 'lucide-react';
+import { ROUTES } from '@/utils/constants';
+import type { Job, JobApplication } from '@/types';
+
+const CATEGORIES = ['All', 'Remote', 'Full-time', 'Part-time', 'Contract'];
 
 export const JobsPage: React.FC = () => {
+  const navigate = useNavigate();
   const { candidate, refreshCandidate } = useAuth();
 
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [appliedJobIds, setAppliedJobIds] = useState<Set<string>>(new Set());
+  const [applications, setApplications] = useState<JobApplication[]>([]);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
-  // Filter state
-  const [filters, setFilters] = useState<JobFilterOptions>({
-    searchQuery: '',
-    location: '',
-    workMode: 'all',
-    employmentType: 'all',
-    minSalary: 0,
-    minExperience: -1,
-    sortBy: 'newest',
-  });
+  // Load recent searches from localStorage
+  const loadRecentSearches = useCallback(() => {
+    try {
+      const raw = localStorage.getItem('search_history');
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        const queries = parsed
+          .map((item) => (typeof item === 'string' ? item : item?.query || ''))
+          .filter(Boolean);
+        setRecentSearches(queries);
+      }
+    } catch (e) {
+      console.warn('Failed to parse search history:', e);
+    }
+  }, []);
 
-  // Selected job for apply modal
-  const [selectedJobToApply, setSelectedJobToApply] = useState<Job | null>(null);
-
-  // Pagination / Incremental loading
-  const [visibleCount, setVisibleCount] = useState(12);
-
-  // Fetch jobs and user's applied status
+  // Fetch all jobs and candidate's applications
   useEffect(() => {
-    let isMounted = true;
+    loadRecentSearches();
 
+    let isMounted = true;
     async function loadData() {
       setLoading(true);
-      setError(null);
       try {
-        const fetchedJobs = await jobService.getJobs(filters);
+        const [jobsData, appsData] = await Promise.all([
+          jobService.getJobs(),
+          candidate?.uid ? jobService.getCandidateApplications(candidate.uid) : Promise.resolve([]),
+        ]);
 
         if (isMounted) {
-          setJobs(fetchedJobs);
-
-          // If logged in, fetch candidate's applications
-          if (candidate?.uid) {
-            const apps = await jobService.getCandidateApplications(candidate.uid);
-            const idSet = new Set(apps.map((a) => a.jobId));
-            setAppliedJobIds(idSet);
-          }
+          setJobs(jobsData);
+          setApplications(appsData);
         }
-      } catch (err: any) {
-        if (isMounted) {
-          setError(err?.message || 'Failed to load jobs. Please try refreshing.');
-        }
+      } catch (err) {
+        console.error('Error loading all jobs:', err);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -68,9 +66,9 @@ export const JobsPage: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [filters, candidate?.uid]);
+  }, [candidate?.uid, loadRecentSearches]);
 
-  // Handle bookmark save/unsave toggle
+  // Bookmark save / unsave handler
   const handleSaveToggle = async (jobId: string, currentSaved: boolean) => {
     if (!candidate?.uid) return;
     if (currentSaved) {
@@ -81,129 +79,212 @@ export const JobsPage: React.FC = () => {
     await refreshCandidate();
   };
 
-  const handleApplicationSuccess = (app: JobApplication) => {
-    setAppliedJobIds((prev) => new Set([...prev, app.jobId]));
-  };
+  // Exclude and Applied IDs logic (matching Flutter all_jobs_screen.dart lines 87-98)
+  const { appliedJobIds, validJobs } = useMemo(() => {
+    const excluded = new Set(
+      applications
+        .filter((a) => {
+          const status = (a.applicationStatus || '').toLowerCase();
+          return status === 'hired' || status === 'accepted' || status === 'rejected';
+        })
+        .map((a) => a.jobId)
+    );
 
-  const visibleJobs = useMemo(() => {
-    return jobs.slice(0, visibleCount);
-  }, [jobs, visibleCount]);
+    const applied = new Set(
+      applications
+        .filter((a) => !excluded.has(a.jobId))
+        .map((a) => a.jobId)
+    );
+
+    // Filter jobs by active status and excluded IDs
+    let list = jobs.filter((j) => !excluded.has(j.jobId));
+
+    // Apply category filter if selected
+    if (selectedCategory === 'Remote') {
+      list = list.filter((j) => (j.workMode || '').toLowerCase().includes('remote'));
+    } else if (selectedCategory !== 'All') {
+      list = list.filter(
+        (j) => (j.employmentType || '').toLowerCase() === selectedCategory.toLowerCase()
+      );
+    }
+
+    return {
+      excludedJobIds: excluded,
+      appliedJobIds: applied,
+      validJobs: list,
+    };
+  }, [jobs, applications, selectedCategory]);
+
+  // Split into Recommended and All Available (matching Flutter all_jobs_screen.dart lines 103-148)
+  const { recommendedJobs, otherJobs } = useMemo(() => {
+    const recommended: Job[] = [];
+    const others: Job[] = [];
+
+    const candidateDesignation = (candidate?.designation || '').toLowerCase();
+    const candidateSkills = (candidate?.skills || []).map((s) => s.name.toLowerCase());
+
+    for (const job of validJobs) {
+      let matchesProfile = false;
+
+      // 1. Match designation
+      if (candidateDesignation) {
+        if (
+          (job.roleName || '').toLowerCase().includes(candidateDesignation) ||
+          (job.designationName || '').toLowerCase().includes(candidateDesignation)
+        ) {
+          matchesProfile = true;
+        }
+      }
+
+      // 2. Match skills
+      if (!matchesProfile && candidateSkills.length > 0) {
+        const jobSkills = [
+          ...(job.skillsRequired || []),
+          ...(job.mustHaveSkills || []),
+          ...(job.niceToHaveSkills || []),
+        ].map((s) => s.toLowerCase());
+
+        for (const skill of candidateSkills) {
+          if (jobSkills.some((js) => js.includes(skill))) {
+            matchesProfile = true;
+            break;
+          }
+        }
+      }
+
+      // 3. Match recent search queries
+      let matchesSearch = false;
+      if (!matchesProfile && recentSearches.length > 0) {
+        for (const query of recentSearches) {
+          const q = query.toLowerCase();
+          if (
+            (job.roleName || '').toLowerCase().includes(q) ||
+            (job.designationName || '').toLowerCase().includes(q) ||
+            (job.companyName || '').toLowerCase().includes(q) ||
+            (job.skillsRequired || []).some((s) => s.toLowerCase().includes(q))
+          ) {
+            matchesSearch = true;
+            break;
+          }
+        }
+      }
+
+      if (matchesProfile || matchesSearch) {
+        recommended.push(job);
+      } else {
+        others.push(job);
+      }
+    }
+
+    return {
+      recommendedJobs: recommended,
+      otherJobs: others,
+    };
+  }, [validJobs, candidate?.designation, candidate?.skills, recentSearches]);
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-16">
-      {/* Header Banner */}
-      <div className="relative rounded-3xl bg-gradient-to-r from-brand-700 via-indigo-700 to-purple-800 text-white p-6 sm:p-10 shadow-lg overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
-        <div className="relative z-10 max-w-2xl space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/15 backdrop-blur-md text-white border border-white/20">
-            <Sparkles className="w-3.5 h-3.5 text-brand-300" />
-            AI-Powered Job Recommendations
-          </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-            Find Your Dream Opportunity
-          </h1>
-          <p className="text-xs sm:text-sm text-brand-100 font-normal leading-relaxed">
-            Discover verified openings curated for your skills, experience, and career ambitions.
-          </p>
+    <div className="max-w-5xl mx-auto space-y-6 pb-20 animate-in fade-in duration-300">
+      {/* Header Row */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+        <h1 className="text-2xl font-black uppercase tracking-[1.5px] text-slate-900 dark:text-white font-futura">
+          ALL JOBS
+        </h1>
+
+        {/* Quick Search Shortcut */}
+        <div
+          onClick={() => navigate(ROUTES.SEARCH)}
+          className="flex items-center gap-2 px-4 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:border-slate-400 transition cursor-pointer text-xs font-semibold"
+        >
+          <Search className="w-4 h-4 text-slate-400" />
+          <span>Search jobs, companies, skills...</span>
         </div>
       </div>
 
-      {/* Filter Component */}
-      <JobFilters
-        filters={filters}
-        onChange={setFilters}
-        onReset={() =>
-          setFilters({
-            searchQuery: '',
-            location: '',
-            workMode: 'all',
-            employmentType: 'all',
-            minSalary: 0,
-            minExperience: -1,
-            sortBy: 'newest',
-          })
-        }
-        totalResults={jobs.length}
-      />
+      {/* Category Filter Chips (Matching Flutter) */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        {CATEGORIES.map((cat) => {
+          const isSelected = selectedCategory === cat;
+          return (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-5 py-2 text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
+                isSelected
+                  ? 'bg-teal-600 text-white border-teal-600'
+                  : 'bg-transparent text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500'
+              }`}
+            >
+              {cat.toUpperCase()}
+            </button>
+          );
+        })}
+      </div>
 
-      {/* Error state */}
-      {error && (
-        <div className="p-4 rounded-2xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 text-xs sm:text-sm text-red-600 flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 flex-shrink-0" />
-          <span>{error}</span>
-        </div>
-      )}
-
-      {/* Job Listings Grid */}
+      {/* Loading state */}
       {loading ? (
-        <div className="py-20 flex justify-center">
-          <LoadingSpinner size="lg" label="Discovering active openings..." />
+        <div className="py-24 flex justify-center">
+          <LoadingSpinner size="lg" label="Loading opportunities..." />
         </div>
-      ) : jobs.length === 0 ? (
-        <EmptyState
-          icon={<Briefcase className="w-7 h-7 text-slate-400" />}
-          title="No Matching Jobs Found"
-          description="Try broadening your search query, clearing filters, or switching work modes to view more vacancies."
-          actionLabel="Reset Filters"
-          onAction={() =>
-            setFilters({
-              searchQuery: '',
-              location: '',
-              workMode: 'all',
-              employmentType: 'all',
-              minSalary: 0,
-              minExperience: -1,
-              sortBy: 'newest',
-            })
-          }
-        />
-      ) : (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 gap-4">
-            {visibleJobs.map((job) => {
-              const isApplied = appliedJobIds.has(job.jobId);
-              const isSaved = candidate?.savedJobIds?.includes(job.jobId);
-
-              return (
-                <JobCard
-                  key={job.jobId}
-                  job={job}
-                  candidateSkills={candidate?.skills || []}
-                  isApplied={isApplied}
-                  isSaved={isSaved}
-                  onSaveToggle={handleSaveToggle}
-                  onApplyClick={(j) => setSelectedJobToApply(j)}
-                />
-              );
-            })}
+      ) : validJobs.length === 0 ? (
+        <div className="py-24 text-center space-y-3">
+          <Briefcase className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto" />
+          <div className="text-base font-bold text-slate-800 dark:text-slate-200">
+            No jobs available
           </div>
+          <p className="text-xs text-slate-500">
+            Check back later or try clearing selected category filters.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-8">
+          {/* Section 1: RECOMMENDED FOR YOU */}
+          {recommendedJobs.length > 0 && (
+            <div className="space-y-4">
+              <h2 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                RECOMMENDED FOR YOU
+              </h2>
 
-          {/* Load More Button */}
-          {visibleCount < jobs.length && (
-            <div className="pt-6 text-center">
-              <button
-                type="button"
-                onClick={() => setVisibleCount((prev) => prev + 12)}
-                className="px-6 py-2.5 rounded-xl border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-card text-xs font-bold text-gray-700 dark:text-gray-300 hover:border-brand-500 shadow-2xs transition-colors"
-              >
-                Load More Opportunities ({jobs.length - visibleCount} remaining)
-              </button>
+              <div className="space-y-4">
+                {recommendedJobs.map((job) => (
+                  <JobCard
+                    key={job.jobId}
+                    job={job}
+                    candidateSkills={candidate?.skills || []}
+                    isApplied={appliedJobIds.has(job.jobId)}
+                    isSaved={candidate?.savedJobIds?.includes(job.jobId)}
+                    onSaveToggle={handleSaveToggle}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Section 2: ALL AVAILABLE JOBS */}
+          {otherJobs.length > 0 && (
+            <div className="space-y-4">
+              <h2 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                ALL AVAILABLE JOBS
+              </h2>
+
+              <div className="space-y-4">
+                {otherJobs.map((job) => (
+                  <JobCard
+                    key={job.jobId}
+                    job={job}
+                    candidateSkills={candidate?.skills || []}
+                    isApplied={appliedJobIds.has(job.jobId)}
+                    isSaved={candidate?.savedJobIds?.includes(job.jobId)}
+                    onSaveToggle={handleSaveToggle}
+                  />
+                ))}
+              </div>
             </div>
           )}
         </div>
       )}
-
-      {/* Apply Job Modal */}
-      {selectedJobToApply && candidate && (
-        <ApplyJobModal
-          isOpen={Boolean(selectedJobToApply)}
-          onClose={() => setSelectedJobToApply(null)}
-          job={selectedJobToApply}
-          candidate={candidate}
-          onSuccess={handleApplicationSuccess}
-        />
-      )}
     </div>
   );
 };
+
 export default JobsPage;

@@ -50,7 +50,9 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`${ROUTES.JOBS}?q=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(`${ROUTES.SEARCH}?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate(ROUTES.SEARCH);
     }
   };
 

@@ -5,6 +5,7 @@ import {
   query,
   setDoc,
   where,
+  writeBatch,
 } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import { db, functions } from '@/lib/firebase';
@@ -108,6 +109,36 @@ export const assessmentService = {
   },
 
   /**
+   * Suggests related skills based on current candidate skills via `getRelatedSkills` Cloud Function.
+   */
+  async getRelatedSkills(currentSkills: string[]): Promise<string[]> {
+    if (!currentSkills || currentSkills.length === 0) return [];
+
+    try {
+      const callable = httpsCallable<
+        { currentSkills: string[] },
+        { relatedSkills?: string[] }
+      >(functions, 'getRelatedSkills');
+
+      const response = await callable({ currentSkills });
+      const rawRelated = response.data?.relatedSkills;
+
+      if (Array.isArray(rawRelated)) {
+        const lowerCurrent = new Set(currentSkills.map((s) => s.toLowerCase().trim()));
+        const related = rawRelated
+          .map((s) => String(s).trim())
+          .filter((s) => s.length > 0 && !lowerCurrent.has(s.toLowerCase()));
+
+        return related.slice(0, 5);
+      }
+      return [];
+    } catch (e) {
+      console.warn('[assessmentService] getRelatedSkills error:', e);
+      return [];
+    }
+  },
+
+  /**
    * Saves an assessment result to the `assessmentResults` collection and syncs to candidate profile.
    */
   async saveAssessmentResult(params: {
@@ -127,6 +158,24 @@ export const assessmentService = {
     const percentage = Math.round((score / Math.max(totalQuestions, 1)) * 100);
     const proficiencyLevel = calculateProficiencyLevel(percentage);
     const completedAt = new Date().toISOString();
+
+    // Check if an assessment for this skill AND difficulty already exists, and clean it up
+    try {
+      const existingQuery = query(
+        collection(db, COLLECTIONS.ASSESSMENT_RESULTS),
+        where('candidateId', '==', candidateId),
+        where('skill', '==', skill.trim()),
+        where('difficulty', '==', difficulty)
+      );
+      const existingDocs = await getDocs(existingQuery);
+      if (!existingDocs.empty) {
+        const batch = writeBatch(db);
+        existingDocs.forEach((d) => batch.delete(d.ref));
+        await batch.commit();
+      }
+    } catch (cleanErr) {
+      console.warn('[assessmentService] cleanup existing assessment error:', cleanErr);
+    }
 
     const resultDocRef = doc(collection(db, COLLECTIONS.ASSESSMENT_RESULTS));
     const resultId = resultDocRef.id;

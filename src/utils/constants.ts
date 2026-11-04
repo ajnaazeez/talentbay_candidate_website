@@ -31,6 +31,7 @@ export const ROUTES = {
   // Jobs
   JOBS: '/jobs',
   JOB_DETAILS: '/jobs/:jobId',
+  SEARCH: '/search',
   SAVED_JOBS: '/saved-jobs',
   APPLICATIONS: '/applications',
   INVITATIONS: '/invitations',

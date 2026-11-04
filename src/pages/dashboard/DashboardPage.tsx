@@ -145,16 +145,20 @@ export const DashboardPage: React.FC = () => {
     e.preventDefault();
     const query = searchQuery.trim();
     if (!query) {
-      navigate(ROUTES.JOBS);
+      navigate(ROUTES.SEARCH);
       return;
     }
-    // Save to search_history
+    // Save to search_history with timestamp
     try {
-      const existing = recentSearches.filter((q) => q.toLowerCase() !== query.toLowerCase());
-      const updated = [query, ...existing].slice(0, 20);
+      const raw = localStorage.getItem('search_history');
+      const existing = raw ? JSON.parse(raw) : [];
+      const filtered = Array.isArray(existing)
+        ? existing.filter((item: any) => (item?.query || item || '').toLowerCase() !== query.toLowerCase())
+        : [];
+      const updated = [{ query, timestamp: new Date().toISOString() }, ...filtered].slice(0, 20);
       localStorage.setItem('search_history', JSON.stringify(updated));
     } catch {}
-    navigate(`${ROUTES.JOBS}?q=${encodeURIComponent(query)}`);
+    navigate(`${ROUTES.SEARCH}?q=${encodeURIComponent(query)}`);
   };
 
   // Excluded, Invited, and Applied Job ID sets (matching Flutter home_tab.dart)

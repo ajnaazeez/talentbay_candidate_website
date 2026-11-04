@@ -16,6 +16,7 @@ import { ProfilePage } from '@/pages/profile/ProfilePage';
 import { ResumeBuilderPage } from '@/pages/profile/ResumeBuilderPage';
 import { JobsPage } from '@/pages/jobs/JobsPage';
 import { JobDetailsPage } from '@/pages/jobs/JobDetailsPage';
+import { SearchPage } from '@/pages/search/SearchPage';
 import { SavedJobsPage } from '@/pages/jobs/SavedJobsPage';
 import { ApplicationsPage } from '@/pages/applications/ApplicationsPage';
 import { InvitationsPage } from '@/pages/invitations/InvitationsPage';
@@ -78,6 +79,7 @@ export const AppRoutes: React.FC = () => {
           {/* Jobs & Discovery */}
           <Route path={ROUTES.JOBS} element={<JobsPage />} />
           <Route path={ROUTES.JOB_DETAILS} element={<JobDetailsPage />} />
+          <Route path={ROUTES.SEARCH} element={<SearchPage />} />
           <Route path={ROUTES.SAVED_JOBS} element={<SavedJobsPage />} />
           <Route path={ROUTES.APPLICATIONS} element={<ApplicationsPage />} />
           <Route path={ROUTES.INVITATIONS} element={<InvitationsPage />} />

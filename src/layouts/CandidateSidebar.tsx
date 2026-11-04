@@ -20,6 +20,7 @@ import {
   ChevronRight,
   X,
   Mail,
+  Search,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/utils/constants';
@@ -64,6 +65,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
       items: [
         { title: 'Overview', to: ROUTES.DASHBOARD, icon: LayoutDashboard },
         { title: 'Browse Jobs', to: ROUTES.JOBS, icon: Briefcase },
+        { title: 'Search Jobs', to: ROUTES.SEARCH, icon: Search },
         { title: 'Applications', to: ROUTES.APPLICATIONS, icon: FileCheck2 },
         {
           title: 'Invitations',
