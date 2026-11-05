@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Briefcase,
@@ -8,6 +8,8 @@ import {
   Building2,
   RefreshCw,
   AlertCircle,
+  MessageSquare,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -80,13 +82,16 @@ export const ApplicationsPage: React.FC = () => {
         // Fetch details for any newly discovered job IDs
         const uniqueJobIds = Array.from(new Set(apps.map((a) => a.jobId))).filter(Boolean);
         if (uniqueJobIds.length > 0) {
-          jobService.getJobsByIds(uniqueJobIds).then((jobsList) => {
-            setJobsMap((prev) => {
-              const updated = new Map(prev);
-              jobsList.forEach((j) => updated.set(j.jobId, j));
-              return updated;
-            });
-          }).catch((err) => console.error('[Activity] Error fetching application jobs:', err));
+          jobService
+            .getJobsByIds(uniqueJobIds)
+            .then((jobsList) => {
+              setJobsMap((prev) => {
+                const updated = new Map(prev);
+                jobsList.forEach((j) => updated.set(j.jobId, j));
+                return updated;
+              });
+            })
+            .catch((err) => console.error('[Activity] Error fetching application jobs:', err));
         }
       },
       (err) => {
@@ -99,205 +104,189 @@ export const ApplicationsPage: React.FC = () => {
     return () => unsub();
   }, [candidate?.uid]);
 
-  // 2. Fetch Saved Jobs when candidate changes or Saved tab is opened
-  const fetchSavedJobs = useCallback(async () => {
+  // 2. Fetch Saved Jobs when "saved" tab becomes active
+  useEffect(() => {
+    if (activeTab !== 'saved') return;
     const savedIds = candidate?.savedJobIds || [];
     if (savedIds.length === 0) {
       setSavedJobs([]);
       return;
     }
 
+    let isMounted = true;
     setLoadingSaved(true);
-    try {
-      const list = await jobService.getJobsByIds(savedIds);
-      setSavedJobs(list);
-    } catch (err) {
-      console.error('[Activity] Error fetching saved jobs:', err);
-    } finally {
-      setLoadingSaved(false);
-    }
-  }, [candidate?.savedJobIds]);
 
-  useEffect(() => {
-    fetchSavedJobs();
-  }, [fetchSavedJobs]);
+    jobService
+      .getJobsByIds(savedIds)
+      .then((res) => {
+        if (isMounted) setSavedJobs(res);
+      })
+      .catch((err) => console.error('[Activity] Error loading saved jobs:', err))
+      .finally(() => {
+        if (isMounted) setLoadingSaved(false);
+      });
 
-  // Filter 1: APPLIED tab (exclude hired and accepted)
+    return () => {
+      isMounted = false;
+    };
+  }, [activeTab, candidate?.savedJobIds]);
+
+  // Filter: Applied Applications (excluding invited, matching Flutter line 265-276)
   const appliedApplications = useMemo(() => {
     return applications.filter((app) => {
-      const st = (app.applicationStatus || '').toLowerCase().trim();
-      return st !== 'hired' && st !== 'accepted';
+      const status = (app.applicationStatus || '').toLowerCase().trim();
+      return status !== 'invited';
     });
   }, [applications]);
 
-  // Filter 2: ACCEPTED tab (only hired and accepted)
+  // Filter: Accepted / Hired Applications (matching Flutter line 290-302)
   const acceptedApplications = useMemo(() => {
     return applications.filter((app) => {
-      const st = (app.applicationStatus || '').toLowerCase().trim();
-      return st === 'hired' || st === 'accepted';
+      const status = (app.applicationStatus || '').toLowerCase().trim();
+      return status === 'hired' || status === 'accepted';
     });
   }, [applications]);
 
-  // Handle Unsave Bookmark
-  const handleUnsaveJob = async (jobId: string) => {
-    if (!candidate?.uid) return;
-    try {
-      await jobService.unsaveJob(candidate.uid, jobId);
-      setSavedJobs((prev) => prev.filter((j) => j.jobId !== jobId));
-      await refreshCandidate();
-    } catch (err) {
-      console.error('[Activity] Error unsaving job:', err);
-    }
-  };
-
-  // Handle Start / Open Chat with Recruiter
+  // Direct Message action (matching Flutter activity_tab.dart lines 559-640)
   const handleMessageRecruiter = async (job: Job | null, applicationId: string) => {
-    if (!candidate?.uid) return;
-    if (!job || !job.recruiterId) {
-      alert('Cannot message: Recruiter info is missing for this position.');
-      return;
-    }
+    if (!candidate?.uid || !job) return;
 
-    setConnectingChatId(applicationId);
     try {
-      const chatId = await chatService.getOrCreateChat({
-        jobId: job.jobId,
+      setConnectingChatId(applicationId);
+      const conversationId = await chatService.getOrCreateChat({
         candidateId: candidate.uid,
-        recruiterId: job.recruiterId,
+        recruiterId: job.recruiterId || 'recruiter_default',
+        jobId: job.jobId,
       });
-      navigate(ROUTES.CHAT, { state: { activeChatId: chatId } });
+
+      navigate(ROUTES.CHAT, { state: { activeChatId: conversationId } });
     } catch (err) {
-      console.error('[Activity] Error connecting to chat:', err);
-      alert('Error opening recruiter conversation. Please try again.');
+      console.error('[Activity] Failed to launch chat with recruiter:', err);
+      navigate(ROUTES.CHAT);
     } finally {
       setConnectingChatId(null);
     }
   };
 
-  // Render Status Chip (matching Flutter _buildStatusChip)
-  const renderStatusChip = (rawStatus: string) => {
-    const status = (rawStatus || '').toLowerCase().trim();
-    let label = rawStatus.toUpperCase();
-    let borderClass = 'border-sky-500 text-sky-600 dark:text-sky-400';
+  // Status Chip Renderer matching Recruiter Web standard
+  const renderStatusChip = (statusRaw?: string) => {
+    const status = (statusRaw || '').toLowerCase().trim();
+    let label = 'APPLIED';
+    let chipClass = 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800';
 
     switch (status) {
-      case 'selected':
       case 'hired':
-        label = 'SELECTED / HIRED';
-        borderClass = 'border-emerald-500 text-emerald-600 dark:text-emerald-400';
+      case 'accepted':
+        label = 'HIRED';
+        chipClass = 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800';
         break;
       case 'rejected':
-      case 'declined':
         label = 'REJECTED';
-        borderClass = 'border-red-500 text-red-600 dark:text-red-400';
+        chipClass = 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800';
         break;
-      case 'interviewing':
       case 'interview':
-        label = 'INTERVIEWING';
-        borderClass = 'border-amber-500 text-amber-600 dark:text-amber-400';
+      case 'interviewing':
+        label = 'INTERVIEW';
+        chipClass = 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800';
         break;
       case 'shortlisted':
       case 'screening':
         label = 'SHORTLISTED';
-        borderClass = 'border-blue-500 text-blue-600 dark:text-blue-400';
+        chipClass = 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800';
         break;
       default:
         label = 'APPLIED';
-        borderClass = 'border-sky-500 text-sky-600 dark:text-sky-400';
+        chipClass = 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800';
     }
 
     return (
-      <div className={`inline-block px-2.5 py-1 text-[10px] font-black tracking-wider uppercase border rounded-none ${borderClass}`}>
+      <span className={`inline-flex items-center px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider rounded-full border ${chipClass}`}>
         {label}
-      </div>
+      </span>
     );
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-16">
-      {/* 1. Custom Header: Title & Direct Messages Navigation Icon (matching Flutter activity_tab.dart) */}
-      <div className="flex items-center justify-between pt-2 border-b border-slate-200 dark:border-slate-800 pb-4">
+    <div className="space-y-6 max-w-5xl mx-auto pb-20 animate-in fade-in duration-300">
+      {/* 1. Header: Title & Direct Messages Icon (matching Flutter activity_tab.dart) */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-widest font-sans uppercase">
-            MY ACTIVITY
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            My Activity
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold tracking-wider uppercase mt-0.5">
-            Track your applications, saved vacancies and offers
+          <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 mt-0.5">
+            Track your job applications, saved opportunities, and offers.
           </p>
         </div>
 
         {/* Mail / Chat Icon with Live Unread Badge */}
         <Link
           to={ROUTES.CHAT}
-          className="relative p-2.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-600 transition"
+          className="relative self-start sm:self-auto p-2.5 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:border-indigo-400 dark:hover:border-indigo-600 transition shadow-xs flex items-center gap-2"
           title="Direct Messages"
         >
-          <Mail className="w-5 h-5" />
+          <Mail className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+          <span className="text-xs font-bold text-slate-900 dark:text-white hidden sm:inline">Messages</span>
           {unreadChatsCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+            <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
               {unreadChatsCount > 9 ? '9+' : unreadChatsCount}
             </span>
           )}
         </Link>
       </div>
 
-      {/* 2. Three Tabs: APPLIED, SAVED, ACCEPTED (matching Flutter activity_tab.dart TabBar) */}
-      <div className="border-b border-slate-200 dark:border-slate-800">
-        <div className="flex gap-8">
-          {/* Applied Tab */}
-          <button
-            type="button"
-            onClick={() => setActiveTab('applied')}
-            className={`pb-3 text-xs sm:text-sm font-black tracking-widest uppercase transition-all relative ${
-              activeTab === 'applied'
-                ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 -mb-[1px]'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-            }`}
-          >
-            APPLIED
-            {appliedApplications.length > 0 && (
-              <span className="ml-2 text-xs font-bold text-slate-400">
-                ({appliedApplications.length})
-              </span>
-            )}
-          </button>
+      {/* 2. Three Tabs: APPLIED, SAVED, ACCEPTED (Segmented Web Navigation) */}
+      <div className="inline-flex p-1.5 rounded-2xl bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 gap-1.5">
+        <button
+          type="button"
+          onClick={() => setActiveTab('applied')}
+          className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold tracking-wide transition-all cursor-pointer flex items-center gap-2 ${
+            activeTab === 'applied'
+              ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <span>Applied</span>
+          {appliedApplications.length > 0 && (
+            <span className="px-2 py-0.5 rounded-full text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+              {appliedApplications.length}
+            </span>
+          )}
+        </button>
 
-          {/* Saved Tab */}
-          <button
-            type="button"
-            onClick={() => setActiveTab('saved')}
-            className={`pb-3 text-xs sm:text-sm font-black tracking-widest uppercase transition-all relative ${
-              activeTab === 'saved'
-                ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 -mb-[1px]'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-            }`}
-          >
-            SAVED
-            {(candidate?.savedJobIds?.length || 0) > 0 && (
-              <span className="ml-2 text-xs font-bold text-slate-400">
-                ({candidate?.savedJobIds?.length || 0})
-              </span>
-            )}
-          </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('saved')}
+          className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold tracking-wide transition-all cursor-pointer flex items-center gap-2 ${
+            activeTab === 'saved'
+              ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <span>Saved</span>
+          {(candidate?.savedJobIds?.length || 0) > 0 && (
+            <span className="px-2 py-0.5 rounded-full text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+              {candidate?.savedJobIds?.length || 0}
+            </span>
+          )}
+        </button>
 
-          {/* Accepted Tab */}
-          <button
-            type="button"
-            onClick={() => setActiveTab('accepted')}
-            className={`pb-3 text-xs sm:text-sm font-black tracking-widest uppercase transition-all relative ${
-              activeTab === 'accepted'
-                ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 -mb-[1px]'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-            }`}
-          >
-            ACCEPTED
-            {acceptedApplications.length > 0 && (
-              <span className="ml-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                ({acceptedApplications.length})
-              </span>
-            )}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setActiveTab('accepted')}
+          className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold tracking-wide transition-all cursor-pointer flex items-center gap-2 ${
+            activeTab === 'accepted'
+              ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <span>Accepted</span>
+          {acceptedApplications.length > 0 && (
+            <span className="px-2 py-0.5 rounded-full text-[11px] bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-bold">
+              {acceptedApplications.length}
+            </span>
+          )}
+        </button>
       </div>
 
       {/* 3. TAB CONTENT */}
@@ -311,32 +300,32 @@ export const ApplicationsPage: React.FC = () => {
             </div>
           ) : appsError ? (
             <div className="py-16 text-center space-y-3">
-              <AlertCircle className="w-10 h-10 text-red-500 mx-auto" />
+              <AlertCircle className="w-10 h-10 text-rose-500 mx-auto" />
               <p className="text-sm font-bold text-slate-900 dark:text-white">{appsError}</p>
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-xs font-bold uppercase tracking-wider hover:bg-indigo-700 transition"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-700 transition"
               >
-                <RefreshCw className="w-3.5 h-3.5" /> RETRY
+                <RefreshCw className="w-3.5 h-3.5" /> Retry
               </button>
             </div>
           ) : appliedApplications.length === 0 ? (
             /* Empty State (matching Flutter) */
-            <div className="py-20 text-center border border-dashed border-slate-300 dark:border-slate-800 bg-white/50 dark:bg-[#111827]/50 p-8 space-y-3">
-              <div className="w-14 h-14 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+            <div className="rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/40 p-12 text-center space-y-3">
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
                 <Briefcase className="w-7 h-7" />
               </div>
-              <h3 className="text-base font-black text-slate-900 dark:text-white tracking-wider uppercase">
-                NO APPLICATIONS YET
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                No Applications Yet
               </h3>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                Start applying to track them here
+                Explore available roles and start applying to track your progress here.
               </p>
               <div className="pt-2">
                 <Link
                   to={ROUTES.JOBS}
-                  className="inline-block px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold uppercase tracking-wider hover:opacity-90 transition"
+                  className="inline-block px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
                 >
                   Explore Jobs
                 </Link>
@@ -353,67 +342,77 @@ export const ApplicationsPage: React.FC = () => {
                 return (
                   <div
                     key={app.applicationId || app.id}
-                    className="p-5 sm:p-6 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700 transition space-y-4"
+                    className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-800 hover:shadow-card-hover transition-all duration-200 space-y-4 shadow-xs"
                   >
                     {/* Top Row: Company Logo & Details */}
-                    <div className="flex items-start gap-4">
-                      {/* Logo (48x48) */}
-                      <div className="w-12 h-12 rounded-none border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 overflow-hidden shrink-0 flex items-center justify-center p-1">
-                        {job?.companyLogoUrl ? (
-                          <img
-                            src={job.companyLogoUrl}
-                            alt={job.companyName || 'Company'}
-                            className="w-full h-full object-contain"
-                            onError={(e) => {
-                              (e.target as HTMLElement).style.display = 'none';
-                            }}
-                          />
-                        ) : (
-                          <Building2 className="w-6 h-6 text-slate-600 dark:text-slate-400" />
-                        )}
-                      </div>
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-4">
+                        {/* Logo (56x56) */}
+                        <div className="w-14 h-14 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 overflow-hidden shrink-0 flex items-center justify-center p-2 shadow-2xs">
+                          {job?.companyLogoUrl ? (
+                            <img
+                              src={job.companyLogoUrl}
+                              alt={job.companyName || 'Company'}
+                              className="w-full h-full object-contain"
+                              onError={(e) => {
+                                (e.target as HTMLElement).style.display = 'none';
+                              }}
+                            />
+                          ) : (
+                            <Building2 className="w-6 h-6 text-slate-400" />
+                          )}
+                        </div>
 
-                      {/* Job Title & Company */}
-                      <div className="flex-1 min-w-0">
-                        <Link
-                          to={`/jobs/${app.jobId}`}
-                          className="text-sm sm:text-base font-black text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition tracking-wide uppercase line-clamp-1"
-                        >
-                          {job?.title || job?.roleName || app.jobTitle || 'Role Details'}
-                        </Link>
-                        <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase mt-0.5 tracking-wide">
-                          {job?.companyName || 'Company'}
-                        </p>
-                        <div className="mt-3">
-                          {renderStatusChip(app.applicationStatus)}
+                        {/* Job Title & Company */}
+                        <div className="space-y-1 min-w-0">
+                          <Link
+                            to={`/jobs/${app.jobId}`}
+                            className="text-base sm:text-lg font-bold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition line-clamp-1"
+                          >
+                            {job?.title || job?.roleName || app.jobTitle || 'Role Details'}
+                          </Link>
+                          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                            {job?.companyName || 'Company'}
+                          </p>
+                          <div className="pt-1.5">
+                            {renderStatusChip(app.applicationStatus)}
+                          </div>
                         </div>
                       </div>
+
+                      {/* Applied Date badge */}
+                      <span className="text-xs font-medium text-slate-400 dark:text-slate-500 shrink-0 hidden sm:inline">
+                        Applied {formatDate(app.appliedAt)}
+                      </span>
                     </div>
 
                     {/* Divider */}
-                    <div className="border-t border-slate-100 dark:border-slate-800" />
+                    <div className="border-t border-slate-100 dark:border-slate-800/80" />
 
-                    {/* Bottom Row: Applied Date & Conditional MESSAGE Action */}
-                    <div className="flex items-center justify-between text-xs font-semibold">
-                      <span className="text-slate-500 dark:text-slate-400 tracking-wider uppercase text-[11px]">
-                        APPLIED {formatDate(app.appliedAt)}
+                    {/* Bottom Row: Applied Date (mobile) & Conditional MESSAGE Action */}
+                    <div className="flex items-center justify-between text-xs font-medium">
+                      <span className="text-slate-400 dark:text-slate-500 text-[11px] sm:hidden">
+                        Applied {formatDate(app.appliedAt)}
                       </span>
 
-                      {/* Only clickable if Shortlisted (matching Flutter line 559-640) */}
-                      {isShortlisted ? (
-                        <button
-                          type="button"
-                          disabled={isConnecting}
-                          onClick={() => handleMessageRecruiter(job, app.applicationId)}
-                          className="text-xs font-black tracking-wider uppercase text-slate-900 dark:text-white underline hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer"
-                        >
-                          {isConnecting ? 'CONNECTING...' : 'MESSAGE'}
-                        </button>
-                      ) : (
-                        <span className="text-xs font-bold tracking-wider uppercase text-slate-400 dark:text-slate-600 cursor-not-allowed select-none">
-                          MESSAGE
-                        </span>
-                      )}
+                      <div className="ml-auto flex items-center gap-3">
+                        {/* Only clickable if Shortlisted (matching Flutter line 559-640) */}
+                        {isShortlisted ? (
+                          <button
+                            type="button"
+                            disabled={isConnecting}
+                            onClick={() => handleMessageRecruiter(job, app.applicationId)}
+                            className="px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-xs transition cursor-pointer inline-flex items-center gap-1.5"
+                          >
+                            <MessageSquare className="w-3.5 h-3.5" />
+                            <span>{isConnecting ? 'Connecting...' : 'Message Recruiter'}</span>
+                          </button>
+                        ) : (
+                          <span className="text-xs font-semibold text-slate-400 dark:text-slate-600 cursor-not-allowed select-none px-3 py-1">
+                            Message (Shortlist Required)
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 );
@@ -432,27 +431,26 @@ export const ApplicationsPage: React.FC = () => {
             </div>
           ) : savedJobs.length === 0 ? (
             /* Empty State (matching Flutter) */
-            <div className="py-20 text-center border border-dashed border-slate-300 dark:border-slate-800 bg-white/50 dark:bg-[#111827]/50 p-8 space-y-3">
-              <div className="w-14 h-14 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+            <div className="rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/40 p-12 text-center space-y-3">
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
                 <Bookmark className="w-7 h-7" />
               </div>
-              <h3 className="text-base font-black text-slate-900 dark:text-white tracking-wider uppercase">
-                NO SAVED JOBS
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                No Saved Jobs
               </h3>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                Save jobs to view them here
+                Bookmark job openings you find interesting to view and apply later.
               </p>
               <div className="pt-2">
                 <Link
                   to={ROUTES.JOBS}
-                  className="inline-block px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold uppercase tracking-wider hover:opacity-90 transition"
+                  className="inline-block px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
                 >
                   Browse Vacancies
                 </Link>
               </div>
             </div>
           ) : (
-            /* Saved Jobs List */
             <div className="space-y-4">
               {savedJobs.map((job) => (
                 <JobCard
@@ -460,7 +458,15 @@ export const ApplicationsPage: React.FC = () => {
                   job={job}
                   candidateSkills={candidate?.skills || []}
                   isSaved={true}
-                  onSaveToggle={() => handleUnsaveJob(job.jobId)}
+                  isApplied={applications.some((a) => a.jobId === job.jobId)}
+                  onSaveToggle={async (jobId, isSaved) => {
+                    if (!candidate?.uid) return;
+                    if (!isSaved) {
+                      await jobService.unsaveJob(candidate.uid, jobId);
+                      setSavedJobs((prev) => prev.filter((j) => j.jobId !== jobId));
+                    }
+                    await refreshCandidate();
+                  }}
                 />
               ))}
             </div>
@@ -471,25 +477,20 @@ export const ApplicationsPage: React.FC = () => {
       {/* TAB 3: ACCEPTED (Matching Flutter _AcceptedJobsView) */}
       {activeTab === 'accepted' && (
         <div className="space-y-4">
-          {loadingApps ? (
-            <div className="py-20 flex justify-center">
-              <LoadingSpinner size="md" label="Loading accepted opportunities..." />
-            </div>
-          ) : acceptedApplications.length === 0 ? (
+          {acceptedApplications.length === 0 ? (
             /* Empty State (matching Flutter) */
-            <div className="py-20 text-center border border-dashed border-slate-300 dark:border-slate-800 bg-white/50 dark:bg-[#111827]/50 p-8 space-y-3">
-              <div className="w-14 h-14 mx-auto rounded-full bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+            <div className="rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/40 p-12 text-center space-y-3">
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                 <CheckCircle2 className="w-7 h-7" />
               </div>
-              <h3 className="text-base font-black text-slate-900 dark:text-white tracking-wider uppercase">
-                NO ACCEPTED JOBS YET
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                No Accepted Jobs
               </h3>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                Jobs you are accepted for will appear here
+                When a recruiter accepts or hires you for a role, it will appear here.
               </p>
             </div>
           ) : (
-            /* Accepted Applications List (Distinct Green Border matching Flutter) */
             <div className="space-y-4">
               {acceptedApplications.map((app) => {
                 const job = jobsMap.get(app.jobId) || null;
@@ -498,61 +499,63 @@ export const ApplicationsPage: React.FC = () => {
                 return (
                   <div
                     key={app.applicationId || app.id}
-                    className="p-5 sm:p-6 bg-white dark:bg-[#111827] border-2 border-emerald-500 dark:border-emerald-500 transition space-y-4 shadow-xs"
+                    className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-emerald-200/80 dark:border-emerald-800/60 hover:shadow-card-hover transition-all duration-200 space-y-4 shadow-xs"
                   >
-                    {/* Top Row: Company Logo & Details */}
-                    <div className="flex items-start gap-4">
-                      {/* Logo (48x48) */}
-                      <div className="w-12 h-12 rounded-none border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 overflow-hidden shrink-0 flex items-center justify-center p-1">
-                        {job?.companyLogoUrl ? (
-                          <img
-                            src={job.companyLogoUrl}
-                            alt={job.companyName || 'Company'}
-                            className="w-full h-full object-contain"
-                            onError={(e) => {
-                              (e.target as HTMLElement).style.display = 'none';
-                            }}
-                          />
-                        ) : (
-                          <Building2 className="w-6 h-6 text-slate-600 dark:text-slate-400" />
-                        )}
-                      </div>
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-4">
+                        <div className="w-14 h-14 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 overflow-hidden shrink-0 flex items-center justify-center p-2 shadow-2xs">
+                          {job?.companyLogoUrl ? (
+                            <img
+                              src={job.companyLogoUrl}
+                              alt={job.companyName || 'Company'}
+                              className="w-full h-full object-contain"
+                              onError={(e) => {
+                                (e.target as HTMLElement).style.display = 'none';
+                              }}
+                            />
+                          ) : (
+                            <Building2 className="w-6 h-6 text-slate-400" />
+                          )}
+                        </div>
 
-                      {/* Job Title & Company */}
-                      <div className="flex-1 min-w-0">
-                        <Link
-                          to={`/jobs/${app.jobId}`}
-                          className="text-sm sm:text-base font-black text-slate-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition tracking-wide uppercase line-clamp-1"
-                        >
-                          {job?.title || job?.roleName || app.jobTitle || 'Role Details'}
-                        </Link>
-                        <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase mt-0.5 tracking-wide">
-                          {job?.companyName || 'Company'}
-                        </p>
-                        <div className="mt-3">
-                          <div className="inline-block px-3 py-1 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500 text-emerald-600 dark:text-emerald-400 text-[10px] font-black tracking-wider uppercase rounded-none">
-                            ACCEPTED / HIRED
+                        <div className="space-y-1 min-w-0">
+                          <Link
+                            to={`/jobs/${app.jobId}`}
+                            className="text-base sm:text-lg font-bold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition line-clamp-1"
+                          >
+                            {job?.title || job?.roleName || app.jobTitle || 'Role Details'}
+                          </Link>
+                          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                            {job?.companyName || 'Company'}
+                          </p>
+                          <div className="pt-1.5">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800">
+                              <Sparkles className="w-3 h-3 text-emerald-600" />
+                              <span>OFFER ACCEPTED / HIRED</span>
+                            </span>
                           </div>
                         </div>
                       </div>
+
+                      <span className="text-xs font-medium text-slate-400 dark:text-slate-500 shrink-0 hidden sm:inline">
+                        Hired on {formatDate(app.appliedAt)}
+                      </span>
                     </div>
 
-                    {/* Divider */}
-                    <div className="border-t border-slate-100 dark:border-slate-800" />
+                    <div className="border-t border-slate-100 dark:border-slate-800/80" />
 
-                    {/* Bottom Row: Accepted Date & MESSAGE Action */}
-                    <div className="flex items-center justify-between text-xs font-semibold">
-                      <span className="text-slate-500 dark:text-slate-400 tracking-wider uppercase text-[11px]">
-                        ACCEPTED ON {formatDate(app.updatedAt || app.appliedAt)}
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-slate-400 dark:text-slate-500 text-[11px] sm:hidden">
+                        Hired on {formatDate(app.appliedAt)}
                       </span>
-
                       <button
                         type="button"
                         disabled={isConnecting}
                         onClick={() => handleMessageRecruiter(job, app.applicationId)}
-                        className="text-xs font-black tracking-wider uppercase text-slate-900 dark:text-white underline hover:text-emerald-600 dark:hover:text-emerald-400 transition cursor-pointer"
+                        className="ml-auto px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-xs transition cursor-pointer inline-flex items-center gap-1.5"
                       >
-                        {isConnecting ? 'CONNECTING...' : 'MESSAGE'}
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        <span>{isConnecting ? 'Connecting...' : 'Message Recruiter'}</span>
                       </button>
                     </div>
                   </div>
@@ -565,3 +568,5 @@ export const ApplicationsPage: React.FC = () => {
     </div>
   );
 };
+
+export default ApplicationsPage;

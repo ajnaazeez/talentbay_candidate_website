@@ -86,7 +86,7 @@ export const NotificationsPage: React.FC = () => {
         )}
       </div>
 
-      {/* Filter Chips (Matching Flutter _buildMinimalFilterChip) */}
+      {/* Filter Chips (Matching Flutter _buildMinimalFilterChip with modern Web Pill styling) */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
         {FILTERS.map((filter) => {
           const isSelected = selectedFilter === filter;
@@ -95,10 +95,10 @@ export const NotificationsPage: React.FC = () => {
               key={filter}
               type="button"
               onClick={() => setSelectedFilter(filter)}
-              className={`px-5 py-2 text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-indigo-600 text-white border-indigo-600'
-                  : 'bg-transparent text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500'
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm shadow-indigo-200 dark:shadow-none'
+                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
               }`}
             >
               {filter.toUpperCase()}
@@ -114,8 +114,10 @@ export const NotificationsPage: React.FC = () => {
         </div>
       ) : filteredNotifications.length === 0 ? (
         /* Empty State (Matching Flutter _buildEmptyState) */
-        <div className="py-24 text-center space-y-4">
-          <BellOff className="w-16 h-16 mx-auto text-slate-300 dark:text-slate-700" />
+        <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs p-12 text-center space-y-4">
+          <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-center mx-auto text-slate-400">
+            <BellOff className="w-8 h-8" />
+          </div>
           <div className="text-base font-bold text-slate-800 dark:text-slate-200">
             No notifications yet
           </div>
@@ -124,23 +126,23 @@ export const NotificationsPage: React.FC = () => {
           </p>
         </div>
       ) : (
-        <div className="divide-y divide-slate-100 dark:divide-slate-800 border-y border-slate-100 dark:border-slate-800">
+        <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs overflow-hidden divide-y divide-slate-100 dark:divide-slate-800/80">
           {filteredNotifications.map((notif) => {
             const isUnread = !notif.isRead;
             return (
               <div
                 key={notif.id}
                 onClick={() => handleTileClick(notif)}
-                className={`py-4 px-3 flex items-start gap-4 transition cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/40 ${
-                  isUnread ? 'bg-indigo-50/30 dark:bg-indigo-950/10' : ''
+                className={`p-4 sm:p-5 flex items-start gap-4 transition cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-800/40 ${
+                  isUnread ? 'bg-indigo-50/40 dark:bg-indigo-950/20' : ''
                 }`}
               >
-                {/* 48x48 Circular Avatar / Icon */}
+                {/* 44x44 Circular Avatar / Icon */}
                 <div
-                  className={`w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden border ${
+                  className={`w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden border ${
                     isUnread
-                      ? 'border-2 border-indigo-600 dark:border-indigo-400 bg-white dark:bg-slate-900'
-                      : 'border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900'
+                      ? 'border-indigo-500/40 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400'
+                      : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400'
                   }`}
                 >
                   {notif.metadata?.companyLogoUrl ? (
@@ -150,11 +152,11 @@ export const NotificationsPage: React.FC = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : notif.type === 'chat_message' ? (
-                    <MessageSquare className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                    <MessageSquare className="w-5 h-5" />
                   ) : notif.title.toLowerCase().includes('invitation') ? (
-                    <Mail className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                    <Mail className="w-5 h-5" />
                   ) : (
-                    <Briefcase className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                    <Briefcase className="w-5 h-5" />
                   )}
                 </div>
 
@@ -164,14 +166,14 @@ export const NotificationsPage: React.FC = () => {
                     <span
                       className={`text-sm truncate ${
                         isUnread
-                          ? 'font-black text-slate-900 dark:text-white'
+                          ? 'font-bold text-slate-900 dark:text-white'
                           : 'font-semibold text-slate-700 dark:text-slate-300'
                       }`}
                     >
                       {notif.title}
                     </span>
                     <span
-                      className={`text-xs whitespace-nowrap ${
+                      className={`text-xs whitespace-nowrap font-medium ${
                         isUnread
                           ? 'font-bold text-indigo-600 dark:text-indigo-400'
                           : 'text-slate-400'
@@ -184,7 +186,7 @@ export const NotificationsPage: React.FC = () => {
                   <p
                     className={`text-xs line-clamp-2 leading-relaxed ${
                       isUnread
-                        ? 'text-slate-800 dark:text-slate-200 font-medium'
+                        ? 'text-slate-700 dark:text-slate-200 font-medium'
                         : 'text-slate-500 dark:text-slate-400 font-normal'
                     }`}
                   >

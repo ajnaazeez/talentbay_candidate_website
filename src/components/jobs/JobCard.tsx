@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { Job, Skill } from '@/types';
 import { calculateJobSkillMatch } from '@/utils/skillMatcher';
 import { Button } from '@/components/common/Button';
@@ -33,6 +33,7 @@ export const JobCard: React.FC<JobCardProps> = ({
   onSaveToggle,
   onApplyClick,
 }) => {
+  const navigate = useNavigate();
   const [isSaved, setIsSaved] = useState(initialIsSaved);
   const [savingBookmark, setSavingBookmark] = useState(false);
 
@@ -228,7 +229,7 @@ export const JobCard: React.FC<JobCardProps> = ({
               <Button
                 variant="primary"
                 size="sm"
-                onClick={() => (onApplyClick ? onApplyClick(job) : null)}
+                onClick={() => (onApplyClick ? onApplyClick(job) : navigate(`/jobs/${job.jobId}`))}
               >
                 Apply Now
                 <ArrowRight className="w-3.5 h-3.5 ml-1" />

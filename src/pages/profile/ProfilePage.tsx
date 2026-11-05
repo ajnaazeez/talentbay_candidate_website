@@ -121,17 +121,20 @@ export const ProfilePage: React.FC = () => {
     return calculateProfileCompletion(candidate);
   }, [candidate]);
 
-  // Sync completion percentage to Firestore if changed
+  // Sync completion percentage to Firestore if changed (Flutter expects 0.0 to 1.0 ratio)
   useEffect(() => {
-    if (
-      candidate?.uid &&
-      Math.abs((candidate.profileCompletionPercentage || 0) - completionData.percentage) > 0.01
-    ) {
+    if (!candidate?.uid) return;
+    const currentStoredRatio =
+      candidate.profileCompletionPercentage !== undefined && candidate.profileCompletionPercentage > 1
+        ? candidate.profileCompletionPercentage / 100
+        : candidate.profileCompletionPercentage || 0;
+
+    if (Math.abs(currentStoredRatio - completionData.ratio) > 0.01) {
       updateCandidate(candidate.uid, {
-        profileCompletionPercentage: completionData.percentage,
+        profileCompletionPercentage: completionData.ratio,
       }).catch((err) => console.error('Failed to sync completion percentage', err));
     }
-  }, [candidate?.uid, completionData.percentage, candidate?.profileCompletionPercentage]);
+  }, [candidate?.uid, completionData.ratio, candidate?.profileCompletionPercentage]);
 
   // Helper: Format date MMMM dd, yyyy
   const formatDate = (dateValue: any): string => {
@@ -280,7 +283,12 @@ export const ProfilePage: React.FC = () => {
   // Generic Subform Update
   const handleUpdateProfile = async (updatedData: Partial<CandidateModel>) => {
     if (!candidate?.uid) return;
-    await updateCandidate(candidate.uid, updatedData);
+    const merged: CandidateModel = { ...candidate, ...updatedData };
+    const completion = calculateProfileCompletion(merged);
+    await updateCandidate(candidate.uid, {
+      ...updatedData,
+      profileCompletionPercentage: completion.ratio,
+    });
     await refreshCandidate();
   };
 
@@ -316,18 +324,21 @@ export const ProfilePage: React.FC = () => {
   const locationText = [candidate.currentLocation?.city, candidate.currentLocation?.country].filter(Boolean).join(', ');
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-24 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto space-y-8 pb-24 animate-in fade-in duration-300">
       {/* Title */}
-      <div>
-        <h1 className="text-2xl font-black uppercase tracking-[2px] text-slate-900 dark:text-white font-futura">
-          MY PROFILE
+      <div className="pt-2">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          My Profile
         </h1>
+        <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 mt-0.5">
+          Manage your credentials, professional history, CVs and career preferences.
+        </p>
       </div>
 
       {/* Feedback Message */}
       {feedback && (
         <div
-          className={`p-4 rounded-none text-xs flex items-center justify-between border ${
+          className={`p-4 rounded-xl text-xs flex items-center justify-between border ${
             feedback.type === 'success'
               ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200'
               : 'bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-800 dark:text-rose-200'
@@ -339,20 +350,20 @@ export const ProfilePage: React.FC = () => {
           </div>
           <button
             onClick={() => setFeedback(null)}
-            className="text-xs font-bold uppercase underline hover:opacity-80"
+            className="text-xs font-bold uppercase underline hover:opacity-80 cursor-pointer"
           >
             Dismiss
           </button>
         </div>
       )}
 
-      {/* Section A: Profile Header (Matching Screenshot 5 & Flutter _buildProfileHeader) */}
-      <div className="flex flex-col items-center text-center space-y-3 pt-2">
+      {/* Section A: Profile Header (Matching Screenshot 5 & Flutter _buildProfileHeader with Recruiter Web design) */}
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-8 shadow-xs flex flex-col items-center text-center space-y-4">
         {/* Avatar with Camera Icon Overlay */}
         <div className="relative">
           <div
             onClick={() => setModalOpen((prev) => ({ ...prev, photoOptions: true }))}
-            className="w-24 h-24 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center cursor-pointer group shadow-sm"
+            className="w-24 h-24 rounded-2xl border-2 border-indigo-100 dark:border-indigo-900 bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center cursor-pointer group shadow-sm"
           >
             {candidate.photoUrl ? (
               <img
@@ -370,7 +381,7 @@ export const ProfilePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, photoOptions: true }))}
-            className="absolute bottom-0 right-0 p-1.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-md hover:scale-105 transition cursor-pointer"
+            className="absolute -bottom-1 -right-1 p-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:scale-105 transition cursor-pointer"
             title="Update photo"
           >
             <Camera className="w-3.5 h-3.5" />
@@ -390,9 +401,9 @@ export const ProfilePage: React.FC = () => {
           <div className="space-y-1">
             <div
               onClick={() => navigate(ROUTES.SUBSCRIPTION)}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400 text-black text-[10px] font-black uppercase tracking-wider shadow-xs cursor-pointer hover:bg-amber-300 transition"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400 text-black text-[11px] font-bold uppercase tracking-wider shadow-xs cursor-pointer hover:bg-amber-300 transition"
             >
-              <Star className="w-3 h-3 fill-black text-black" />
+              <Star className="w-3.5 h-3.5 fill-black text-black" />
               <span>PREMIUM MEMBER</span>
             </div>
             <div>
@@ -421,18 +432,18 @@ export const ProfilePage: React.FC = () => {
 
         {/* Candidate Names, Bio & Designation */}
         <div className="space-y-1 pt-1">
-          <h2 className="text-2xl md:text-3xl font-normal text-slate-900 dark:text-white">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             {candidateFullName}
           </h2>
 
           {candidate.designation && (
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+            <div className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
               {candidate.designation}
             </div>
           )}
 
           {candidate.bio && (
-            <p className="text-xs text-slate-700 dark:text-slate-300 font-semibold max-w-lg mx-auto leading-relaxed pt-1">
+            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium max-w-lg mx-auto leading-relaxed pt-1">
               {candidate.bio}
             </p>
           )}
@@ -466,7 +477,7 @@ export const ProfilePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, basicInfo: true }))}
-            className="w-full py-2.5 px-6 border border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 text-xs font-black tracking-wider uppercase transition cursor-pointer"
+            className="w-full py-2.5 px-6 rounded-xl border border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 text-xs font-bold tracking-wider uppercase transition shadow-xs cursor-pointer"
           >
             EDIT INTRODUCTION
           </button>
@@ -474,91 +485,89 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Section B: Profile Statistics (Matching Flutter _buildStatsCards) */}
-      <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900">
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs">
         <div className="grid grid-cols-3 text-center divide-x divide-slate-100 dark:divide-slate-800">
           <div>
-            <div className="text-2xl md:text-3xl font-light text-slate-900 dark:text-white">
+            <div className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               {applicationsCount}
             </div>
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mt-1">
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
               APPLICATIONS
             </div>
           </div>
 
           <div>
-            <div className="text-2xl md:text-3xl font-light text-slate-900 dark:text-white">
+            <div className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               {candidate.skills?.length || 0}
             </div>
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mt-1">
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
               SKILLS
             </div>
           </div>
 
           <div>
-            <div className={`text-2xl md:text-3xl font-light ${getCompletionColorClass(completionData.percentage)}`}>
+            <div className={`text-3xl md:text-4xl font-extrabold tracking-tight ${getCompletionColorClass(completionData.percentage)}`}>
               {completionData.percentage}%
             </div>
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mt-1">
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
               PROFILE COMPLETION
             </div>
           </div>
         </div>
       </div>
 
-      <div className="border-t border-slate-200 dark:border-slate-800" />
-
       {/* Section C: CV Headline */}
-      <div className="space-y-3">
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-            CV HEADLINE
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white">
+            CV Headline
           </h3>
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, headlineSummary: true }))}
-            className="p-1 text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
           >
             <Edit2 className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900 space-y-2">
+        <div className="p-4 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 space-y-2">
           {candidate.bio && (
             <div className="text-sm font-bold text-slate-900 dark:text-white">
               {candidate.bio}
             </div>
           )}
-          <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
             {candidate.aboutMe || 'Add a professional description...'}
           </p>
-          <div className="pt-2 text-[11px] text-slate-400">
+          <div className="pt-1 text-[11px] text-slate-400">
             Keep it updated for better job opportunities
           </div>
         </div>
       </div>
 
       {/* Section D: Key Skills */}
-      <div className="space-y-3">
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-            KEY SKILLS
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white">
+            Key Skills
           </h3>
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, skills: true }))}
-            className="p-1 text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
           >
             <Edit2 className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900">
+        <div>
           {(candidate.skills && candidate.skills.length > 0) ? (
             <div className="flex flex-wrap gap-2">
               {candidate.skills.map((skill) => (
                 <div
                   key={skill.name}
-                  className="px-3 py-1.5 border border-slate-900 dark:border-white text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white"
+                  className="px-3.5 py-1.5 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/50 dark:bg-indigo-950/40 text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300"
                 >
                   {skill.name}
                 </div>
@@ -581,48 +590,53 @@ export const ProfilePage: React.FC = () => {
 
       {/* Section E: Skill Assessments */}
       {assessments.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-            SKILL ASSESSMENTS
-          </h3>
-
-          <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900 space-y-4">
+        <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+              <Verified className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <span>Skill Assessments</span>
+            </h3>
             <button
               type="button"
               onClick={() => navigate(ROUTES.CAREER_READINESS)}
-              className="w-full py-2.5 border border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 text-xs font-black tracking-wider uppercase transition flex items-center justify-center gap-2 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition cursor-pointer"
             >
-              <BarChart2 className="w-4 h-4" />
-              <span>CHECK PERFORMANCE &amp; READINESS</span>
+              <BarChart2 className="w-3.5 h-3.5" />
+              <span>Performance &amp; Readiness</span>
             </button>
+          </div>
 
-            <div className="divide-y divide-slate-100 dark:divide-slate-800">
-              {assessments.map((a) => (
-                <div key={a.id} className="py-3 flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <div className="text-sm font-black uppercase text-slate-900 dark:text-white">
-                      {a.skill}
-                    </div>
-                    <div className="text-xs text-slate-500 font-medium">
-                      {a.difficulty} • {a.proficiencyLevel}
-                    </div>
-                    <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
-                      {Math.round(a.percentage || (a.score / Math.max(a.totalQuestions, 1)) * 100)}% Score
-                    </div>
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
+            {assessments.map((a) => (
+              <div key={a.id} className="py-3.5 flex items-center justify-between first:pt-0 last:pb-0">
+                <div className="space-y-1">
+                  <div className="text-sm font-bold uppercase text-slate-900 dark:text-white">
+                    {a.skill}
                   </div>
-                  <Verified className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                  <div className="text-xs text-slate-500 font-medium">
+                    {a.difficulty} • {a.proficiencyLevel}
+                  </div>
                 </div>
-              ))}
-            </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/40">
+                      {Math.round(a.percentage || (a.score / Math.max(a.totalQuestions, 1)) * 100)}% Score
+                    </span>
+                  </div>
+                  <Verified className="w-5 h-5 text-indigo-600 dark:text-indigo-400 flex-shrink-0" />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
 
       {/* Section F: Employment Details */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-            EMPLOYMENT DETAILS
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+            <Briefcase className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <span>Employment Details</span>
           </h3>
           <button
             type="button"
@@ -630,61 +644,58 @@ export const ProfilePage: React.FC = () => {
               setSelectedExperience(null);
               setModalOpen((prev) => ({ ...prev, experience: true }));
             }}
-            className="flex items-center gap-1 text-xs font-bold uppercase text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>ADD</span>
+            <span>Add</span>
           </button>
         </div>
 
-        <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900">
+        <div>
           {(candidate.workExperience && candidate.workExperience.length > 0) ? (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {candidate.workExperience.map((exp) => (
-                <div key={exp.id || exp.companyName} className="flex items-start gap-4">
-                  <div className="w-2 h-2 rounded-full bg-slate-400 mt-1.5 flex-shrink-0" />
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-bold uppercase text-slate-900 dark:text-white">
-                        {exp.jobTitle}
-                      </h4>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedExperience(exp);
-                          setModalOpen((prev) => ({ ...prev, experience: true }));
-                        }}
-                        className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                    <div className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                <div key={exp.id || exp.companyName} className="p-4 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-bold uppercase text-slate-900 dark:text-white">
+                      {exp.jobTitle}
+                    </h4>
+                    <div className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
                       {exp.companyName}
                     </div>
                     <div className="text-xs text-slate-400 font-medium">
                       {formatDuration(exp.startDate, exp.endDate, exp.isCurrent)}
                     </div>
                     {exp.description && (
-                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed pt-1 whitespace-pre-line">
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pt-1.5 whitespace-pre-line font-normal">
                         {exp.description}
                       </p>
                     )}
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedExperience(exp);
+                      setModalOpen((prev) => ({ ...prev, experience: true }));
+                    }}
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition cursor-pointer flex-shrink-0"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-6 space-y-2">
+            <div className="text-center py-8 space-y-2.5">
               <Briefcase className="w-8 h-8 text-slate-300 dark:text-slate-700 mx-auto" />
-              <div className="text-xs text-slate-400">No work experience added yet</div>
+              <div className="text-xs text-slate-400 font-medium">No work experience added yet</div>
               <button
                 type="button"
                 onClick={() => {
                   setSelectedExperience(null);
                   setModalOpen((prev) => ({ ...prev, experience: true }));
                 }}
-                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline"
+                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
               >
                 + Add Experience
               </button>
@@ -694,10 +705,11 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Section G: Education */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-            EDUCATION
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+            <GraduationCap className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <span>Education</span>
           </h3>
           <button
             type="button"
@@ -705,56 +717,53 @@ export const ProfilePage: React.FC = () => {
               setSelectedEducation(null);
               setModalOpen((prev) => ({ ...prev, education: true }));
             }}
-            className="flex items-center gap-1 text-xs font-bold uppercase text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>ADD</span>
+            <span>Add</span>
           </button>
         </div>
 
-        <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900">
+        <div>
           {(candidate.education && candidate.education.length > 0) ? (
-            <div className="space-y-5">
+            <div className="space-y-4">
               {candidate.education.map((edu) => (
-                <div key={edu.id || edu.institution} className="flex items-start gap-4">
-                  <div className="w-2 h-2 rounded-full bg-slate-400 mt-1.5 flex-shrink-0" />
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-bold uppercase text-slate-900 dark:text-white">
-                        {edu.degree}
-                      </h4>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedEducation(edu);
-                          setModalOpen((prev) => ({ ...prev, education: true }));
-                        }}
-                        className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                    <div className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                <div key={edu.id || edu.institution} className="p-4 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-bold uppercase text-slate-900 dark:text-white">
+                      {edu.degree}
+                    </h4>
+                    <div className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
                       {edu.institution}
                     </div>
                     <div className="text-xs text-slate-400 font-medium">
                       {edu.startYear} - {edu.endYear || 'Present'}
                     </div>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedEducation(edu);
+                      setModalOpen((prev) => ({ ...prev, education: true }));
+                    }}
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition cursor-pointer flex-shrink-0"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-6 space-y-2">
+            <div className="text-center py-8 space-y-2.5">
               <GraduationCap className="w-8 h-8 text-slate-300 dark:text-slate-700 mx-auto" />
-              <div className="text-xs text-slate-400">No education added yet</div>
+              <div className="text-xs text-slate-400 font-medium">No education added yet</div>
               <button
                 type="button"
                 onClick={() => {
                   setSelectedEducation(null);
                   setModalOpen((prev) => ({ ...prev, education: true }));
                 }}
-                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline"
+                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
               >
                 + Add Education
               </button>
@@ -764,10 +773,11 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Section H: Projects */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-            PROJECTS
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+            <FolderGit2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <span>Projects</span>
           </h3>
           <button
             type="button"
@@ -775,38 +785,25 @@ export const ProfilePage: React.FC = () => {
               setSelectedProject(null);
               setModalOpen((prev) => ({ ...prev, project: true }));
             }}
-            className="flex items-center gap-1 text-xs font-bold uppercase text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>ADD</span>
+            <span>Add</span>
           </button>
         </div>
 
-        <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900">
+        <div>
           {(candidate.projects && candidate.projects.length > 0) ? (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {candidate.projects.map((proj) => (
-                <div key={proj.id || proj.title} className="flex items-start gap-4">
-                  <div className="w-2 h-2 rounded-full bg-slate-400 mt-1.5 flex-shrink-0" />
-                  <div className="flex-1 space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-bold uppercase text-slate-900 dark:text-white">
-                        {proj.title}
-                      </h4>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedProject(proj);
-                          setModalOpen((prev) => ({ ...prev, project: true }));
-                        }}
-                        className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+                <div key={proj.id || proj.title} className="p-4 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
+                  <div className="space-y-1.5 flex-1">
+                    <h4 className="text-sm font-bold uppercase text-slate-900 dark:text-white">
+                      {proj.title}
+                    </h4>
 
                     {proj.role && (
-                      <div className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <div className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
                         {proj.role}
                       </div>
                     )}
@@ -816,7 +813,7 @@ export const ProfilePage: React.FC = () => {
                         {proj.technologies.map((t) => (
                           <span
                             key={t}
-                            className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-300"
+                            className="px-2.5 py-0.5 rounded-md bg-slate-200/60 dark:bg-slate-700/60 text-[10px] font-bold text-slate-700 dark:text-slate-300"
                           >
                             {t}
                           </span>
@@ -825,7 +822,7 @@ export const ProfilePage: React.FC = () => {
                     )}
 
                     {proj.description && (
-                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal whitespace-pre-line">
                         {proj.description}
                       </p>
                     )}
@@ -835,27 +832,37 @@ export const ProfilePage: React.FC = () => {
                         href={proj.link}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1 pt-1 font-medium"
+                        className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 pt-1 font-semibold"
                       >
                         <span>{proj.link}</span>
                         <ExternalLink className="w-3 h-3" />
                       </a>
                     )}
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedProject(proj);
+                      setModalOpen((prev) => ({ ...prev, project: true }));
+                    }}
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition cursor-pointer flex-shrink-0"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-6 space-y-2">
+            <div className="text-center py-8 space-y-2.5">
               <FolderGit2 className="w-8 h-8 text-slate-300 dark:text-slate-700 mx-auto" />
-              <div className="text-xs text-slate-400">No projects added yet</div>
+              <div className="text-xs text-slate-400 font-medium">No projects added yet</div>
               <button
                 type="button"
                 onClick={() => {
                   setSelectedProject(null);
                   setModalOpen((prev) => ({ ...prev, project: true }));
                 }}
-                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline"
+                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
               >
                 + Add Projects
               </button>
@@ -865,87 +872,88 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Section I: Personal Details */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-            PERSONAL DETAILS
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+            <Star className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <span>Personal Details</span>
           </h3>
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, basicInfo: true }))}
-            className="p-1 text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
           >
             <Edit2 className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900 space-y-3 divide-y divide-slate-100 dark:divide-slate-800">
-          <div className="pt-2 first:pt-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
             <div className="text-[11px] font-medium text-slate-400">Date of Birth</div>
-            <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+            <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
               {candidate.dob ? formatDate(candidate.dob) : 'Add DOB'}
             </div>
           </div>
 
-          <div className="pt-2">
+          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
             <div className="text-[11px] font-medium text-slate-400">Gender</div>
-            <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+            <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
               {candidate.gender || 'Add Gender'}
             </div>
           </div>
 
-          <div className="pt-2">
+          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
             <div className="text-[11px] font-medium text-slate-400">Nationality</div>
-            <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+            <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
               {candidate.nationality || 'Add Nationality'}
             </div>
           </div>
 
-          <div className="pt-2">
+          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
             <div className="text-[11px] font-medium text-slate-400">Current City</div>
-            <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+            <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
               {candidate.currentLocation?.city || 'Add City'}
             </div>
           </div>
 
-          <div className="pt-2">
+          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
             <div className="text-[11px] font-medium text-slate-400">Country</div>
-            <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+            <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
               {candidate.currentLocation?.country || 'Add Country'}
             </div>
           </div>
 
-          <div className="pt-2">
+          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
             <div className="text-[11px] font-medium text-slate-400">Languages Known</div>
-            <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+            <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
               {candidate.languages && Object.keys(candidate.languages).length > 0
                 ? Object.keys(candidate.languages).join(', ')
                 : 'Add Languages'}
             </div>
           </div>
 
-          <div className="pt-2">
+          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
             <div className="text-[11px] font-medium text-slate-400">LinkedIn</div>
             {candidate.linkedinProfile ? (
               <a
                 href={candidate.linkedinProfile}
                 target="_blank"
                 rel="noreferrer"
-                className="text-xs font-semibold text-blue-600 hover:underline inline-flex items-center gap-1 mt-0.5"
+                className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 mt-1"
               >
-                <span>{candidate.linkedinProfile}</span>
-                <ExternalLink className="w-3 h-3" />
+                <span className="truncate max-w-[200px]">{candidate.linkedinProfile}</span>
+                <ExternalLink className="w-3 h-3 flex-shrink-0" />
               </a>
             ) : (
-              <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+              <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
                 Add LinkedIn
               </div>
             )}
           </div>
 
-          <div className="pt-2">
+          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 sm:col-span-2">
             <div className="text-[11px] font-medium text-slate-400">Email</div>
-            <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+            <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
               {candidate.email}
             </div>
           </div>
@@ -953,88 +961,101 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Section J: Desired Jobs */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-            DESIRED JOBS
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+            <Briefcase className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <span>Desired Jobs</span>
           </h3>
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, jobPreference: true }))}
-            className="p-1 text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
           >
             <Edit2 className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900 space-y-3">
+        <div>
           {candidate.jobPreference ? (
-            <>
-              <div>
-                <div className="text-[11px] font-medium text-slate-400">Preferred Designations</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-0.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
+                <div className="text-[11px] font-medium text-slate-400">Preferred Designation</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
                   {candidate.jobPreference.role || 'Not specified'}
                 </div>
               </div>
 
-              <div>
+              <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
                 <div className="text-[11px] font-medium text-slate-400">Preferred Locations</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-0.5">
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
                   {(candidate.jobPreference.preferredLocations || []).join(', ') || 'Not specified'}
                 </div>
               </div>
 
-              <div>
+              <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
                 <div className="text-[11px] font-medium text-slate-400">Preferred Industry</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-0.5">
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
                   {candidate.jobPreference.preferredIndustry || 'Not specified'}
                 </div>
               </div>
 
-              <div>
+              <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
                 <div className="text-[11px] font-medium text-slate-400">Work Mode</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-0.5">
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
                   {candidate.jobPreference.workMode || 'Remote'} • {candidate.jobPreference.employmentType || 'Full-Time'}
                 </div>
               </div>
-            </>
+            </div>
           ) : (
-            <div className="text-xs text-slate-500">
-              Add your job preferences to get better recommendations
+            <div className="text-center py-6 space-y-2">
+              <div className="text-xs text-slate-500 font-medium">
+                Add your job preferences to get better recommendations
+              </div>
+              <button
+                type="button"
+                onClick={() => setModalOpen((prev) => ({ ...prev, jobPreference: true }))}
+                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+              >
+                + Add Preferences
+              </button>
             </div>
           )}
         </div>
       </div>
 
       {/* Section K: Attached CV */}
-      <div className="space-y-3">
-        <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-          ATTACHED CV
-        </h3>
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+            <FileText className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <span>Attached CV</span>
+          </h3>
+        </div>
 
-        <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900">
+        <div>
           {candidate.resumeUrl ? (
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-center">
+            <div className="p-4 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-xl border border-indigo-200 dark:border-indigo-800/50 bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center flex-shrink-0">
                   <FileText className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold uppercase text-slate-900 dark:text-white">
+                  <div className="text-sm font-bold text-slate-900 dark:text-white">
                     Attached Resume
                   </div>
-                  <div className="text-[11px] text-slate-400">
+                  <div className="text-xs text-slate-400 font-medium">
                     PDF Document
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <a
                   href={candidate.resumeUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-3 py-1.5 border border-slate-300 dark:border-slate-700 hover:border-slate-400 text-xs font-bold uppercase text-slate-800 dark:text-slate-200 inline-flex items-center gap-1.5 transition"
+                  className="px-3.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 hover:border-slate-400 text-xs font-bold uppercase text-slate-800 dark:text-slate-200 inline-flex items-center gap-1.5 transition"
                 >
                   <Eye className="w-3.5 h-3.5" />
                   <span>Open</span>
@@ -1044,7 +1065,7 @@ export const ProfilePage: React.FC = () => {
                   type="button"
                   disabled={deletingResume}
                   onClick={handleDeleteResume}
-                  className="px-3 py-1.5 border border-rose-300 dark:border-rose-900 hover:bg-rose-50 dark:hover:bg-rose-950/20 text-xs font-bold uppercase text-rose-600 dark:text-rose-400 inline-flex items-center gap-1.5 transition cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-lg border border-rose-200 dark:border-rose-900/60 hover:bg-rose-50 dark:hover:bg-rose-950/20 text-xs font-bold uppercase text-rose-600 dark:text-rose-400 inline-flex items-center gap-1.5 transition cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>{deletingResume ? 'Removing...' : 'Delete'}</span>
@@ -1052,16 +1073,17 @@ export const ProfilePage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="text-center py-6 space-y-3">
+            <div className="text-center py-8 space-y-3">
               <Upload className="w-8 h-8 text-slate-300 dark:text-slate-700 mx-auto" />
-              <div className="text-xs text-slate-400">No CV attached yet</div>
+              <div className="text-xs text-slate-400 font-medium">No CV attached yet</div>
               <button
                 type="button"
                 disabled={uploadingResume}
                 onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-2 border border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 text-xs font-black uppercase tracking-wider hover:bg-indigo-50 dark:hover:bg-indigo-950/20 transition cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider transition cursor-pointer shadow-sm shadow-indigo-200 dark:shadow-none inline-flex items-center gap-2"
               >
-                {uploadingResume ? 'UPLOADING...' : 'UPLOAD CV'}
+                <Upload className="w-3.5 h-3.5" />
+                <span>{uploadingResume ? 'UPLOADING...' : 'UPLOAD CV'}</span>
               </button>
               <input
                 type="file"
@@ -1076,15 +1098,18 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Section L: AI Generated CV (Matching Flutter _buildAiGeneratedCv) */}
-      <div className="space-y-3">
-        <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-          AI GENERATED CV
-        </h3>
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <span>AI Generated CV</span>
+          </h3>
+        </div>
 
         {latestSavedCv ? (
-          <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900 space-y-4">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/40 flex items-center justify-center flex-shrink-0">
+          <div className="p-5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 space-y-4">
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/40 flex items-center justify-center flex-shrink-0">
                 <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
               </div>
               <div className="space-y-1 flex-1">
@@ -1092,22 +1117,22 @@ export const ProfilePage: React.FC = () => {
                   <span className="text-sm font-bold text-slate-900 dark:text-white">
                     {latestSavedCv.targetJobRole || 'ATS Resume'}
                   </span>
-                  <span className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold uppercase rounded-sm inline-flex items-center gap-1">
+                  <span className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold uppercase rounded-md inline-flex items-center gap-1">
                     <CheckCircle className="w-3 h-3" />
                     <span>Saved</span>
                   </span>
                 </div>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-slate-500 font-medium">
                   {latestSavedCv.targetIndustry ? `${latestSavedCv.targetIndustry} • ` : ''}100% Machine-Readable Single-Column ATS Format
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
               <button
                 type="button"
                 onClick={handleOpenAtsResume}
-                className="py-2 border border-slate-300 dark:border-slate-700 hover:border-slate-400 text-slate-800 dark:text-slate-200 text-xs font-bold uppercase flex items-center justify-center gap-1.5 transition cursor-pointer"
+                className="py-2.5 px-3 rounded-lg border border-slate-300 dark:border-slate-700 hover:border-slate-400 text-slate-800 dark:text-slate-200 text-xs font-bold uppercase flex items-center justify-center gap-1.5 transition cursor-pointer"
               >
                 <Eye className="w-3.5 h-3.5" />
                 <span>Open</span>
@@ -1116,7 +1141,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleDownloadAtsResume}
-                className="py-2 border border-slate-300 dark:border-slate-700 hover:border-slate-400 text-slate-800 dark:text-slate-200 text-xs font-bold uppercase flex items-center justify-center gap-1.5 transition cursor-pointer"
+                className="py-2.5 px-3 rounded-lg border border-slate-300 dark:border-slate-700 hover:border-slate-400 text-slate-800 dark:text-slate-200 text-xs font-bold uppercase flex items-center justify-center gap-1.5 transition cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Download</span>
@@ -1125,7 +1150,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate(ROUTES.RESUME_BUILDER)}
-                className="py-2 border border-slate-300 dark:border-slate-700 hover:border-slate-400 text-slate-800 dark:text-slate-200 text-xs font-bold uppercase flex items-center justify-center gap-1.5 transition cursor-pointer"
+                className="py-2.5 px-3 rounded-lg border border-indigo-200 dark:border-indigo-800/60 bg-indigo-50/50 dark:bg-indigo-950/20 hover:bg-indigo-100/50 text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase flex items-center justify-center gap-1.5 transition cursor-pointer"
               >
                 <Edit2 className="w-3.5 h-3.5" />
                 <span>Edit</span>
@@ -1133,9 +1158,9 @@ export const ProfilePage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/40 flex items-center justify-center flex-shrink-0">
+          <div className="p-5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/40 flex items-center justify-center flex-shrink-0">
                 <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
               </div>
               <div>
@@ -1151,7 +1176,7 @@ export const ProfilePage: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate(ROUTES.RESUME_BUILDER)}
-              className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black uppercase tracking-wider transition cursor-pointer whitespace-nowrap self-start sm:self-auto"
+              className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider transition cursor-pointer whitespace-nowrap self-start sm:self-auto shadow-sm shadow-indigo-200 dark:shadow-none"
             >
               CREATE
             </button>
@@ -1162,7 +1187,7 @@ export const ProfilePage: React.FC = () => {
       {/* Modal: Photo Options Bottom Sheet */}
       {modalOpen.photoOptions && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-sm p-6 space-y-4 shadow-xl">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-sm p-6 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
                 PROFILE PICTURE
@@ -1170,7 +1195,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setModalOpen((prev) => ({ ...prev, photoOptions: false }))}
-                className="text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                className="text-slate-400 hover:text-slate-900 dark:hover:text-white p-1 rounded-lg"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1181,9 +1206,9 @@ export const ProfilePage: React.FC = () => {
                 type="button"
                 disabled={uploadingPhoto}
                 onClick={() => photoInputRef.current?.click()}
-                className="w-full py-3 px-4 text-left text-xs font-bold uppercase text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60 flex items-center gap-3 cursor-pointer"
+                className="w-full py-3 px-4 text-left text-xs font-bold uppercase text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60 rounded-xl flex items-center gap-3 cursor-pointer transition"
               >
-                <Upload className="w-4 h-4" />
+                <Upload className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 <span>{uploadingPhoto ? 'Uploading...' : 'Choose from Gallery / Files'}</span>
               </button>
 
@@ -1192,7 +1217,7 @@ export const ProfilePage: React.FC = () => {
                   type="button"
                   disabled={uploadingPhoto}
                   onClick={handleRemovePhoto}
-                  className="w-full py-3 px-4 text-left text-xs font-bold uppercase text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 flex items-center gap-3 cursor-pointer"
+                  className="w-full py-3 px-4 text-left text-xs font-bold uppercase text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl flex items-center gap-3 cursor-pointer transition"
                 >
                   <Trash2 className="w-4 h-4" />
                   <span>Remove Photo</span>

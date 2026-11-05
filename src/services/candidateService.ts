@@ -47,7 +47,7 @@ export const candidateService = {
       const completion = calculateProfileCompletion(candidateOrUid);
       dataToMerge = {
         ...candidateOrUid,
-        profileCompletionPercentage: completion.percentage,
+        profileCompletionPercentage: completion.ratio,
       };
     }
 

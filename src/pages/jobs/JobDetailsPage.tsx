@@ -277,7 +277,7 @@ export const JobDetailsPage: React.FC = () => {
           </button>
 
           {shareMenuOpen && (
-            <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-50 py-2 divide-y divide-slate-100 dark:divide-slate-800">
+            <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-50 py-2 divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden">
               <button
                 type="button"
                 onClick={handleShareWhatsApp}
@@ -381,7 +381,7 @@ export const JobDetailsPage: React.FC = () => {
             OVERVIEW
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 p-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-xs">
             <div>
               <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 SALARY
@@ -461,11 +461,11 @@ export const JobDetailsPage: React.FC = () => {
             <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
               SKILLS REQUIRED
             </h3>
-            <div className="flex flex-wrap gap-2.5">
+            <div className="flex flex-wrap gap-2">
               {job.skillsRequired.map((skill) => (
                 <div
                   key={skill}
-                  className="px-4 py-2 border border-slate-900 dark:border-white text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white"
+                  className="px-3.5 py-1.5 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/50 dark:bg-indigo-950/40 text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300"
                 >
                   {skill}
                 </div>
@@ -508,7 +508,7 @@ export const JobDetailsPage: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate(`${ROUTES.CAREER_READINESS}?jobId=${job.jobId}`)}
-            className="h-12 px-5 border border-slate-900 dark:border-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-xs font-black tracking-wider uppercase transition flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+            className="h-12 px-6 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold tracking-wider uppercase transition flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
           >
             <School className="w-4 h-4" />
             <span>PREPARE</span>
@@ -520,7 +520,7 @@ export const JobDetailsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate(ROUTES.LOGIN)}
-                className="w-full h-12 bg-slate-400 text-white text-xs font-black tracking-wider uppercase transition flex items-center justify-center cursor-pointer"
+                className="w-full h-12 rounded-xl bg-slate-400 text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer"
               >
                 LOGIN TO APPLY
               </button>
@@ -529,7 +529,7 @@ export const JobDetailsPage: React.FC = () => {
                 type="button"
                 disabled={isApplying}
                 onClick={handleAcceptInvitation}
-                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black tracking-wider uppercase transition flex items-center justify-center cursor-pointer"
+                className="w-full h-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm shadow-indigo-200 dark:shadow-none"
               >
                 {isApplying ? 'ACCEPTING...' : 'ACCEPT & APPLY'}
               </button>
@@ -537,7 +537,7 @@ export const JobDetailsPage: React.FC = () => {
               <button
                 type="button"
                 disabled
-                className="w-full h-12 bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 text-xs font-black tracking-wider uppercase cursor-not-allowed flex items-center justify-center"
+                className="w-full h-12 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 text-xs font-bold tracking-wider uppercase cursor-not-allowed flex items-center justify-center border border-slate-200 dark:border-slate-700"
               >
                 APPLIED
               </button>
@@ -546,7 +546,7 @@ export const JobDetailsPage: React.FC = () => {
                 type="button"
                 disabled={isApplying}
                 onClick={() => setApplyModalOpen(true)}
-                className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm"
+                className="w-full h-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm shadow-indigo-200 dark:shadow-none"
               >
                 {isApplying ? 'APPLYING...' : 'APPLY NOW'}
               </button>

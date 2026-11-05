@@ -193,7 +193,7 @@ export const JobsPage: React.FC = () => {
         {/* Quick Search Shortcut */}
         <div
           onClick={() => navigate(ROUTES.SEARCH)}
-          className="flex items-center gap-2 px-4 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:border-slate-400 transition cursor-pointer text-xs font-semibold"
+          className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700 shadow-xs transition cursor-pointer text-xs font-medium"
         >
           <Search className="w-4 h-4 text-slate-400" />
           <span>Search jobs, companies, skills...</span>
@@ -209,10 +209,10 @@ export const JobsPage: React.FC = () => {
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat)}
-              className={`px-5 py-2 text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-indigo-600 text-white border-indigo-600'
-                  : 'bg-transparent text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500'
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm shadow-indigo-200 dark:shadow-none'
+                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
               }`}
             >
               {cat.toUpperCase()}
@@ -227,8 +227,10 @@ export const JobsPage: React.FC = () => {
           <LoadingSpinner size="lg" label="Loading opportunities..." />
         </div>
       ) : validJobs.length === 0 ? (
-        <div className="py-24 text-center space-y-3">
-          <Briefcase className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto" />
+        <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs p-12 text-center space-y-3">
+          <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-center mx-auto text-slate-400">
+            <Briefcase className="w-7 h-7" />
+          </div>
           <div className="text-base font-bold text-slate-800 dark:text-slate-200">
             No jobs available
           </div>

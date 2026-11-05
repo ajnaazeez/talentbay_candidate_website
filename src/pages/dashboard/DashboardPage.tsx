@@ -6,6 +6,9 @@ import {
   Briefcase,
   Building2,
   User,
+  Bookmark,
+  Mail,
+  ChevronRight,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -113,20 +116,43 @@ export const DashboardPage: React.FC = () => {
     fetchCompanies();
   }, [fetchJobs, fetchCompanies]);
 
-  // Candidate Name Resolution (matching Flutter home_tab.dart)
-  const candidateFullName = useMemo(() => {
-    const fName = candidate?.firstName?.trim() || user?.displayName?.split(' ')[0] || '';
-    const lName = candidate?.lastName?.trim() || (user?.displayName?.split(' ').length || 0) > 1
-      ? user?.displayName?.split(' ').slice(1).join(' ') || ''
-      : '';
-    const full = `${fName} ${lName}`.trim();
-    if (full) return full.toUpperCase();
-    if (user?.email) return user.email.split('@')[0].toUpperCase();
-    return 'CANDIDATE';
-  }, [candidate, user]);
+  // Handle Search Submission
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`${ROUTES.SEARCH}?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate(ROUTES.SEARCH);
+    }
+  };
 
-  // Load search history from localStorage (matching Flutter SharedPreferences search_history)
-  const recentSearches: string[] = useMemo(() => {
+  // Full Name formatting
+  const candidateFullName = useMemo(() => {
+    const fName = candidate?.firstName?.trim() || '';
+    const lName = candidate?.lastName?.trim() || '';
+    const full = `${fName} ${lName}`.trim();
+    if (full) return full;
+    return user?.displayName || user?.email?.split('@')[0] || 'Candidate';
+  }, [candidate?.firstName, candidate?.lastName, user?.displayName, user?.email]);
+
+  // Applications Excluded IDs (matching Flutter home_tab.dart)
+  const { excludedJobIds, appliedJobIds } = useMemo(() => {
+    const excluded = new Set<string>();
+    const applied = new Set<string>();
+
+    for (const app of candidateApplications) {
+      applied.add(app.jobId);
+      const status = (app.applicationStatus || '').toLowerCase().trim();
+      if (status === 'hired' || status === 'accepted' || status === 'rejected') {
+        excluded.add(app.jobId);
+      }
+    }
+
+    return { excludedJobIds: excluded, appliedJobIds: applied };
+  }, [candidateApplications]);
+
+  // Load Recent Searches from localStorage (matching Flutter search history match)
+  const recentSearches = useMemo(() => {
     try {
       const raw = localStorage.getItem('search_history');
       if (!raw) return [];
@@ -134,66 +160,24 @@ export const DashboardPage: React.FC = () => {
       if (Array.isArray(parsed)) {
         return parsed.map((item) => (typeof item === 'string' ? item : item?.query || '')).filter(Boolean);
       }
-      return [];
     } catch {
-      return [];
+      // Ignore
     }
+    return [];
   }, []);
 
-  // Handle Search Submit
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const query = searchQuery.trim();
-    if (!query) {
-      navigate(ROUTES.SEARCH);
-      return;
-    }
-    // Save to search_history with timestamp
-    try {
-      const raw = localStorage.getItem('search_history');
-      const existing = raw ? JSON.parse(raw) : [];
-      const filtered = Array.isArray(existing)
-        ? existing.filter((item: any) => (item?.query || item || '').toLowerCase() !== query.toLowerCase())
-        : [];
-      const updated = [{ query, timestamp: new Date().toISOString() }, ...filtered].slice(0, 20);
-      localStorage.setItem('search_history', JSON.stringify(updated));
-    } catch {}
-    navigate(`${ROUTES.SEARCH}?q=${encodeURIComponent(query)}`);
-  };
-
-  // Excluded, Invited, and Applied Job ID sets (matching Flutter home_tab.dart)
-  const { excludedJobIds, appliedJobIds } = useMemo(() => {
-    const excluded = new Set<string>();
-    const invited = new Set<string>();
-    const applied = new Set<string>();
-
-    candidateApplications.forEach((app) => {
-      const st = (app.applicationStatus || '').toLowerCase();
-      if (st === 'hired' || st === 'accepted' || st === 'rejected') {
-        excluded.add(app.jobId);
-      } else if (st === 'invited') {
-        invited.add(app.jobId);
-      } else {
-        applied.add(app.jobId);
-      }
-    });
-
-    return { excludedJobIds: excluded, invitedJobIds: invited, appliedJobIds: applied };
-  }, [candidateApplications]);
-
-  // Filtered & Profile-Matched Jobs (matching Flutter home_tab.dart filtering algorithm)
+  // Filter Recommended Jobs (matching Flutter home_tab.dart top 5 logic)
   const recommendedJobs = useMemo(() => {
     const candidateDesignation = (candidate?.designation || '').toLowerCase().trim();
-    const candidateSkills = (candidate?.skills || []).map((s) => s.name.toLowerCase());
-
+    const candidateSkills = (candidate?.skills || []).map((s) => s.name.toLowerCase().trim());
     const hasProfileData = Boolean(candidateDesignation || candidateSkills.length > 0);
     const hasSearchData = recentSearches.length > 0;
 
     const filtered = jobs.filter((job) => {
-      // 1. Exclude if hired, accepted, or rejected
+      // 1. Exclude terminal statuses
       if (excludedJobIds.has(job.jobId)) return false;
 
-      // 2. Category Chip Filter
+      // 2. Category Filter
       if (selectedCategory !== 'All') {
         if (selectedCategory === 'Remote') {
           const isRemote =
@@ -281,15 +265,15 @@ export const DashboardPage: React.FC = () => {
   const savedJobsCount = candidate?.savedJobIds?.length || 0;
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto pb-16">
+    <div className="space-y-8 max-w-6xl mx-auto pb-20 animate-in fade-in duration-300">
       {/* 1. Header (Greeting, Subtitle & Action Icons - matching Flutter home_tab.dart) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
         <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-wider font-sans">
-            HELLO, {candidateFullName}
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            Hello, {candidateFullName}
           </h1>
-          <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 tracking-wider uppercase">
-            FIND YOUR NEXT ROLE
+          <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
+            Find your next role and track your recruitment journey.
           </p>
         </div>
 
@@ -297,12 +281,12 @@ export const DashboardPage: React.FC = () => {
         <div className="flex items-center gap-3 self-end sm:self-auto">
           <Link
             to={ROUTES.NOTIFICATIONS}
-            className="relative p-2.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-600 transition"
+            className="relative p-2.5 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:border-indigo-400 dark:hover:border-indigo-600 transition shadow-xs"
             title="Notifications"
           >
             <Bell className="w-5 h-5" />
             {unreadNotificationsCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
                 {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
               </span>
             )}
@@ -310,7 +294,7 @@ export const DashboardPage: React.FC = () => {
 
           <Link
             to={ROUTES.PROFILE}
-            className="w-11 h-11 rounded-full border-2 border-slate-900 dark:border-white overflow-hidden bg-white dark:bg-slate-900 flex items-center justify-center hover:opacity-90 transition shadow-xs"
+            className="w-10 h-10 rounded-xl border-2 border-indigo-600/30 overflow-hidden bg-white dark:bg-slate-900 flex items-center justify-center hover:opacity-90 transition shadow-xs"
             title="My Profile"
           >
             {candidate?.photoUrl ? (
@@ -320,74 +304,101 @@ export const DashboardPage: React.FC = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <User className="w-6 h-6 text-slate-700 dark:text-slate-300" />
+              <User className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
             )}
           </Link>
         </div>
       </div>
 
-      {/* 2. Minimal Search Bar (matching Flutter home_tab.dart) */}
+      {/* 2. Premium Search Bar */}
       <form onSubmit={handleSearchSubmit} className="relative">
-        <div className="relative flex items-center">
+        <div className="relative flex items-center bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-xs focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all p-1.5">
           <Search className="w-5 h-5 text-slate-400 dark:text-slate-500 absolute left-4 pointer-events-none" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="SEARCH FOR JOBS, COMPANIES..."
-            className="w-full pl-12 pr-28 py-3.5 bg-white dark:bg-[#111827] border border-slate-300 dark:border-slate-800 rounded-none text-sm font-semibold tracking-wide text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-1 focus:ring-indigo-600 transition"
+            placeholder="Search for jobs, companies, skills..."
+            className="w-full pl-11 pr-28 py-2.5 bg-transparent text-sm font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
           />
           <button
             type="submit"
-            className="absolute right-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold tracking-wider uppercase transition"
+            className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer shrink-0"
           >
-            SEARCH
+            Search
           </button>
         </div>
       </form>
 
-      {/* 3. Minimal Stats Grid (3 Sharp Cards: APPLIED, SAVED, INVITES - matching Flutter) */}
-      <div className="grid grid-cols-3 gap-3 sm:gap-4">
+      {/* 3. Stat Cards (APPLIED, SAVED, INVITES - matching Flutter) */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Applied */}
         <Link
           to={ROUTES.APPLICATIONS}
-          className="p-5 sm:p-6 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-center hover:border-slate-400 dark:hover:border-slate-600 transition group"
+          className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-card-hover hover:border-indigo-300 dark:hover:border-indigo-700 transition-all duration-200 group flex items-center justify-between"
         >
-          <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            {applicationsCount}
+          <div className="space-y-1">
+            <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
+              Applied
+            </span>
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight block">
+              {applicationsCount}
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 font-medium group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
+              <span>View applications</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </span>
           </div>
-          <div className="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase mt-1">
-            APPLIED
+          <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+            <Briefcase className="w-6 h-6" />
           </div>
         </Link>
 
         {/* Saved */}
         <Link
           to={ROUTES.SAVED_JOBS}
-          className="p-5 sm:p-6 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-center hover:border-slate-400 dark:hover:border-slate-600 transition group"
+          className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-card-hover hover:border-indigo-300 dark:hover:border-indigo-700 transition-all duration-200 group flex items-center justify-between"
         >
-          <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            {savedJobsCount}
+          <div className="space-y-1">
+            <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
+              Saved
+            </span>
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight block">
+              {savedJobsCount}
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 font-medium group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
+              <span>View saved jobs</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </span>
           </div>
-          <div className="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase mt-1">
-            SAVED
+          <div className="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+            <Bookmark className="w-6 h-6" />
           </div>
         </Link>
 
         {/* Invites */}
         <Link
           to={ROUTES.INVITATIONS}
-          className="p-5 sm:p-6 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-center hover:border-indigo-500 dark:hover:border-indigo-500 transition group relative"
+          className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-card-hover hover:border-indigo-300 dark:hover:border-indigo-700 transition-all duration-200 group flex items-center justify-between relative"
         >
-          <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            {pendingInvitesCount}
+          <div className="space-y-1">
+            <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
+              Invites
+            </span>
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight block">
+              {pendingInvitesCount}
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 font-medium group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
+              <span>View invitations</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </span>
           </div>
-          <div className="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase mt-1">
-            INVITES
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform relative">
+            <Mail className="w-6 h-6" />
+            {pendingInvitesCount > 0 && (
+              <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-rose-600 ring-2 ring-white dark:ring-slate-900" />
+            )}
           </div>
-          {pendingInvitesCount > 0 && (
-            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-indigo-600" />
-          )}
         </Link>
       </div>
 
@@ -400,10 +411,10 @@ export const DashboardPage: React.FC = () => {
               key={category}
               type="button"
               onClick={() => setSelectedCategory(category)}
-              className={`px-5 py-2 text-xs font-bold tracking-wider uppercase whitespace-nowrap transition-all border ${
+              className={`px-4 py-2 text-xs font-semibold rounded-xl whitespace-nowrap transition-all border shadow-2xs cursor-pointer ${
                 isSelected
-                  ? 'bg-indigo-600 dark:bg-indigo-600 text-white border-indigo-600 shadow-xs'
-                  : 'bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600'
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               {category}
@@ -414,15 +425,21 @@ export const DashboardPage: React.FC = () => {
 
       {/* 5. Recommended Jobs Section (matching Flutter home_tab.dart) */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-          <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-wider uppercase">
-            RECOMMENDED FOR YOU
-          </h2>
+        <div className="flex items-center justify-between pb-1">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+              Recommended for You
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Matched based on your skills, experience, and interests.
+            </p>
+          </div>
           <Link
             to={ROUTES.JOBS}
-            className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline tracking-wider uppercase"
+            className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition inline-flex items-center gap-1"
           >
-            VIEW ALL
+            <span>View All</span>
+            <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -432,20 +449,20 @@ export const DashboardPage: React.FC = () => {
             <LoadingSpinner size="md" label="Loading recommended roles..." />
           </div>
         ) : recommendedJobs.length === 0 ? (
-          <div className="py-14 text-center border border-dashed border-slate-300 dark:border-slate-800 bg-white/50 dark:bg-[#111827]/50 p-8 space-y-3">
-            <div className="w-12 h-12 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+          <div className="rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/40 p-10 text-center space-y-3">
+            <div className="w-12 h-12 mx-auto rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
               <Briefcase className="w-6 h-6" />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
               No matching jobs found
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
-              No jobs match your current profile. Tap &quot;VIEW ALL&quot; to explore all available opportunities.
+              No jobs match your current profile. Tap &quot;View All&quot; to explore all available opportunities.
             </p>
             <div className="pt-2">
               <Link
                 to={ROUTES.JOBS}
-                className="inline-block px-5 py-2.5 bg-indigo-600 text-white text-xs font-bold uppercase tracking-wider hover:bg-indigo-700 transition"
+                className="inline-block px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
               >
                 Explore All Jobs
               </Link>
@@ -470,15 +487,21 @@ export const DashboardPage: React.FC = () => {
 
       {/* 6. Top Companies Section (matching Flutter home_tab.dart) */}
       <div className="space-y-4 pt-2">
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-          <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-wider uppercase">
-            TOP COMPANIES
-          </h2>
+        <div className="flex items-center justify-between pb-1">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+              Top Companies
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Leading employers actively seeking talent on TalentBay.
+            </p>
+          </div>
           <Link
             to={ROUTES.COMPANIES}
-            className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline tracking-wider uppercase"
+            className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition inline-flex items-center gap-1"
           >
-            VIEW ALL
+            <span>View All</span>
+            <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -491,31 +514,31 @@ export const DashboardPage: React.FC = () => {
             No companies available
           </p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
             {topCompanies.map((company) => (
               <Link
                 key={company.id}
                 to={`/companies/${company.id}`}
-                className="p-4 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-center hover:border-slate-400 dark:hover:border-slate-600 transition group h-36"
+                className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 flex flex-col items-center justify-center text-center hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-card-hover transition-all duration-200 group h-40 shadow-xs"
               >
-                <div className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 overflow-hidden flex items-center justify-center mb-3">
+                <div className="w-14 h-14 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 overflow-hidden flex items-center justify-center mb-3 shadow-2xs group-hover:scale-105 transition-transform p-2">
                   {company.profile?.logoUrl || company.logoUrl ? (
                     <img
                       src={company.profile?.logoUrl || company.logoUrl}
                       alt={company.profile?.companyName || company.companyName || 'Company'}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                       onError={(e) => {
                         (e.target as HTMLElement).style.display = 'none';
                       }}
                     />
                   ) : (
-                    <Building2 className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                    <Building2 className="w-6 h-6 text-slate-500 dark:text-slate-400" />
                   )}
                 </div>
-                <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate max-w-full tracking-wide">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate max-w-full">
                   {company.profile?.companyName || company.companyName}
                 </h4>
-                <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate max-w-full mt-0.5">
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate max-w-full mt-0.5 font-medium">
                   {company.profile?.industry || 'Technology'}
                 </p>
               </Link>
@@ -542,3 +565,5 @@ export const DashboardPage: React.FC = () => {
     </div>
   );
 };
+
+export default DashboardPage;

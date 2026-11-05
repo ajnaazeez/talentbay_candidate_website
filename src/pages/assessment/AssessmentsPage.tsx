@@ -277,35 +277,38 @@ export const AssessmentsPage: React.FC = () => {
   const isMixedDone = isLevelCompleted('Mixed');
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-16 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto space-y-8 pb-20 animate-in fade-in duration-300">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-black uppercase tracking-[2px] text-slate-900 dark:text-white font-futura">
-          ASSESSMENTS
+      <div className="pt-2">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          Assessments
         </h1>
+        <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1">
+          Validate your skills with AI-powered multiple-choice quizzes to stand out to employers.
+        </p>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <div className="p-4 rounded-none bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 text-xs flex items-center justify-between">
+        <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{error}</span>
           </div>
           <button
             onClick={() => setError(null)}
-            className="text-xs uppercase font-bold underline hover:text-rose-900 dark:hover:text-rose-100"
+            className="text-xs uppercase font-bold underline hover:text-rose-900 dark:hover:text-rose-100 cursor-pointer"
           >
             Dismiss
           </button>
         </div>
       )}
 
-      {/* Assessment Stats Box (Matching Flutter exactly) */}
-      <div className="border border-indigo-500/20 bg-indigo-500/[0.02] dark:bg-slate-900/40 p-6 md:p-8 space-y-6">
+      {/* Assessment Stats Box (Matching Flutter exactly with Recruiter Web design) */}
+      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-8 shadow-xs space-y-6">
         <div className="grid grid-cols-3 text-center divide-x divide-slate-100 dark:divide-slate-800">
           <div>
-            <div className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
+            <div className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               {completedCount}
             </div>
             <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
@@ -314,7 +317,7 @@ export const AssessmentsPage: React.FC = () => {
           </div>
 
           <div>
-            <div className={`text-3xl md:text-4xl font-black tracking-tight ${getScoreColorClass(averageScore)}`}>
+            <div className={`text-3xl md:text-4xl font-extrabold tracking-tight ${getScoreColorClass(averageScore)}`}>
               {averageScore}%
             </div>
             <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
@@ -323,7 +326,7 @@ export const AssessmentsPage: React.FC = () => {
           </div>
 
           <div>
-            <div className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
+            <div className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               {skillsCount}
             </div>
             <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
@@ -333,9 +336,9 @@ export const AssessmentsPage: React.FC = () => {
         </div>
 
         {/* AI-POWERED ASSESSMENTS ACTIVE Banner */}
-        <div className="border border-indigo-500/30 p-2.5 flex items-center justify-center gap-2 text-center">
-          <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-          <span className="text-[10px] font-black uppercase tracking-[1.5px] text-slate-800 dark:text-slate-200">
+        <div className="rounded-xl border border-indigo-200 dark:border-indigo-900/60 bg-indigo-50/50 dark:bg-indigo-950/20 p-2.5 flex items-center justify-center gap-2 text-center">
+          <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+          <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300">
             AI-POWERED ASSESSMENTS ACTIVE
           </span>
         </div>
@@ -345,22 +348,27 @@ export const AssessmentsPage: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate(ROUTES.CAREER_READINESS)}
-            className="w-full py-2.5 px-4 rounded-full border border-indigo-600/50 hover:border-indigo-600 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 transition flex items-center justify-center gap-2 text-xs font-black tracking-wider uppercase cursor-pointer"
+            className="w-full py-3 px-4 rounded-xl border border-indigo-600/40 hover:border-indigo-600 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider cursor-pointer shadow-xs"
           >
             <BarChart2 className="w-4 h-4" />
-            HOW AM I PERFORMING?
+            <span>HOW AM I PERFORMING?</span>
           </button>
         </div>
       </div>
 
       {/* YOUR SKILLS Section */}
-      <div className="space-y-3">
-        <h2 className="text-xs font-black uppercase tracking-wider text-slate-400">
-          YOUR SKILLS
-        </h2>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between pb-1">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+            Your Skills
+          </h2>
+          <span className="text-xs font-medium text-slate-400">
+            {candidateSkills.length} {candidateSkills.length === 1 ? 'skill' : 'skills'} added
+          </span>
+        </div>
 
         {candidateSkills.length > 0 ? (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {candidateSkills.map((sk) => {
               const skillName = sk.name;
               const bestAssessment = getBestAssessment(skillName);
@@ -370,45 +378,47 @@ export const AssessmentsPage: React.FC = () => {
                 <div
                   key={skillName}
                   onClick={() => handleOpenDifficulty(skillName)}
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 hover:border-slate-300 dark:hover:border-slate-700 transition cursor-pointer flex items-center justify-between group"
+                  className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 p-5 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-card-hover transition-all duration-200 cursor-pointer flex items-center justify-between group shadow-xs"
                 >
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 min-w-0">
                     <div className="flex items-center gap-2.5">
-                      <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                      <span className="text-base font-bold text-slate-900 dark:text-white truncate">
                         {skillName}
                       </span>
-                      <span className="bg-indigo-600 text-white text-[9px] font-bold uppercase px-1.5 py-0.5 tracking-wider">
-                        ADDED
+                      <span className="bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-950/50 dark:text-indigo-300 dark:border-indigo-800 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full">
+                        Added
                       </span>
                     </div>
 
                     {hasAssessment && bestAssessment ? (
-                      <div className="flex items-center gap-2 text-[11px] font-bold">
-                        <span className="uppercase text-slate-700 dark:text-slate-300">
+                      <div className="flex items-center gap-2 text-xs font-semibold">
+                        <span className="text-slate-600 dark:text-slate-300">
                           {bestAssessment.proficiencyLevel}
                         </span>
-                        <span className="text-slate-400">•</span>
+                        <span className="text-slate-300 dark:text-slate-700">•</span>
                         <span className={getScoreColorClass(getResultPercentage(bestAssessment))}>
-                          {getResultPercentage(bestAssessment)}% SCORE
+                          {getResultPercentage(bestAssessment)}% score
                         </span>
-                        <span className="border border-slate-300 dark:border-slate-700 uppercase px-1 py-0.5 text-[8px] font-black text-slate-700 dark:text-slate-300">
+                        <span className="border border-slate-200 dark:border-slate-700 uppercase px-1.5 py-0.5 text-[9px] font-bold text-slate-600 dark:text-slate-400 rounded-md">
                           {bestAssessment.difficulty}
                         </span>
                       </div>
                     ) : (
-                      <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                        15 QUESTIONS • ~10 MIN
+                      <div className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                        15 questions • ~10 min
                       </div>
                     )}
                   </div>
 
-                  <ArrowRight className="w-4 h-4 text-slate-900 dark:text-white group-hover:translate-x-1 transition-transform" />
+                  <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:translate-x-0.5 transition-all shrink-0">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
               );
             })}
           </div>
         ) : (
-          <div className="p-8 border border-dashed border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500">
+          <div className="p-8 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500">
             No profile skills added yet. Add skills to your profile to take assessments.
           </div>
         )}
@@ -416,17 +426,22 @@ export const AssessmentsPage: React.FC = () => {
 
       {/* RECOMMENDED FOR YOU (Related Skills) Section */}
       {(relatedSkills.length > 0 || loadingRelated) && (
-        <div className="space-y-3 pt-2">
-          <h2 className="text-xs font-black uppercase tracking-wider text-slate-400">
-            RECOMMENDED FOR YOU
-          </h2>
+        <div className="space-y-4 pt-2">
+          <div className="flex items-center justify-between pb-1">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+              Recommended for You
+            </h2>
+            <span className="text-xs font-medium text-slate-400">
+              Related to your technical profile
+            </span>
+          </div>
 
           {loadingRelated ? (
             <div className="py-6 flex justify-center">
               <LoadingSpinner size="sm" label="Loading related skills..." />
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {relatedSkills.map((relSkill) => {
                 const bestAssessment = getBestAssessment(relSkill);
                 const hasAssessment = Boolean(bestAssessment);
@@ -435,34 +450,36 @@ export const AssessmentsPage: React.FC = () => {
                   <div
                     key={relSkill}
                     onClick={() => handleOpenDifficulty(relSkill)}
-                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 hover:border-slate-300 dark:hover:border-slate-700 transition cursor-pointer flex items-center justify-between group"
+                    className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 p-5 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-card-hover transition-all duration-200 cursor-pointer flex items-center justify-between group shadow-xs"
                   >
-                    <div className="space-y-1.5">
-                      <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                    <div className="space-y-1.5 min-w-0">
+                      <span className="text-base font-bold text-slate-900 dark:text-white truncate block">
                         {relSkill}
                       </span>
 
                       {hasAssessment && bestAssessment ? (
-                        <div className="flex items-center gap-2 text-[11px] font-bold">
-                          <span className="uppercase text-slate-700 dark:text-slate-300">
+                        <div className="flex items-center gap-2 text-xs font-semibold">
+                          <span className="text-slate-600 dark:text-slate-300">
                             {bestAssessment.proficiencyLevel}
                           </span>
-                          <span className="text-slate-400">•</span>
+                          <span className="text-slate-300 dark:text-slate-700">•</span>
                           <span className={getScoreColorClass(getResultPercentage(bestAssessment))}>
-                            {getResultPercentage(bestAssessment)}% SCORE
+                            {getResultPercentage(bestAssessment)}% score
                           </span>
-                          <span className="border border-slate-300 dark:border-slate-700 uppercase px-1 py-0.5 text-[8px] font-black text-slate-700 dark:text-slate-300">
+                          <span className="border border-slate-200 dark:border-slate-700 uppercase px-1.5 py-0.5 text-[9px] font-bold text-slate-600 dark:text-slate-400 rounded-md">
                             {bestAssessment.difficulty}
                           </span>
                         </div>
                       ) : (
-                        <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                          15 QUESTIONS • ~10 MIN
+                        <div className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                          15 questions • ~10 min
                         </div>
                       )}
                     </div>
 
-                    <ArrowRight className="w-4 h-4 text-slate-900 dark:text-white group-hover:translate-x-1 transition-transform" />
+                    <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:translate-x-0.5 transition-all shrink-0">
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
                   </div>
                 );
               })}
@@ -473,22 +490,22 @@ export const AssessmentsPage: React.FC = () => {
 
       {/* SELECT DIFFICULTY Modal */}
       {selectedSkill && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-lg p-6 sm:p-8 space-y-6 relative shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-lg p-6 sm:p-8 space-y-6 relative shadow-2xl">
             {/* Close button */}
             <button
               type="button"
               onClick={() => setSelectedSkill(null)}
-              className="absolute top-6 right-6 text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              className="absolute top-6 right-6 text-slate-400 hover:text-slate-900 dark:hover:text-white transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="space-y-1">
-              <div className="text-xs font-black uppercase tracking-[1.5px] text-slate-400">
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                 {selectedSkill}
-              </div>
-              <h3 className="text-2xl font-black uppercase tracking-tight text-slate-900 dark:text-white font-futura">
+              </span>
+              <h3 className="text-2xl font-black uppercase tracking-tight text-slate-900 dark:text-white">
                 SELECT DIFFICULTY
               </h3>
             </div>
@@ -498,12 +515,12 @@ export const AssessmentsPage: React.FC = () => {
               <div
                 onClick={() => !isEasyDone && handleStartQuiz(selectedSkill, 'Easy')}
                 className={`py-4 flex items-center justify-between ${
-                  isEasyDone ? 'opacity-60 cursor-default' : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer'
+                  isEasyDone ? 'opacity-60 cursor-default' : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer rounded-xl px-2'
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                    <span className="text-sm font-bold text-slate-900 dark:text-white">
                       EASY
                     </span>
                     {isEasyDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
@@ -522,15 +539,15 @@ export const AssessmentsPage: React.FC = () => {
                 }
                 className={`py-4 flex items-center justify-between ${
                   !isEasyDone
-                    ? 'opacity-40 cursor-not-allowed'
+                    ? 'opacity-40 cursor-not-allowed px-2'
                     : isMediumDone
-                    ? 'opacity-60 cursor-default'
-                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer'
+                    ? 'opacity-60 cursor-default px-2'
+                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer rounded-xl px-2'
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                    <span className="text-sm font-bold text-slate-900 dark:text-white">
                       MEDIUM
                     </span>
                     {isMediumDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
@@ -552,15 +569,15 @@ export const AssessmentsPage: React.FC = () => {
                 }
                 className={`py-4 flex items-center justify-between ${
                   !isMediumDone
-                    ? 'opacity-40 cursor-not-allowed'
+                    ? 'opacity-40 cursor-not-allowed px-2'
                     : isHardDone
-                    ? 'opacity-60 cursor-default'
-                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer'
+                    ? 'opacity-60 cursor-default px-2'
+                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer rounded-xl px-2'
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                    <span className="text-sm font-bold text-slate-900 dark:text-white">
                       HARD
                     </span>
                     {isHardDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
@@ -582,22 +599,22 @@ export const AssessmentsPage: React.FC = () => {
                 }
                 className={`py-4 flex items-center justify-between ${
                   !isHardDone
-                    ? 'opacity-40 cursor-not-allowed'
+                    ? 'opacity-40 cursor-not-allowed px-2'
                     : isMixedDone
-                    ? 'opacity-60 cursor-default'
-                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer'
+                    ? 'opacity-60 cursor-default px-2'
+                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer rounded-xl px-2'
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                    <span className="text-sm font-bold text-slate-900 dark:text-white">
                       MIXED
                     </span>
                     {isMixedDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
                     {!isHardDone && <Lock className="w-3.5 h-3.5 text-slate-400" />}
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                    A balanced set of questions across all levels.
+                    Comprehensive evaluation across all difficulty levels.
                   </p>
                 </div>
                 {isHardDone && !isMixedDone && (

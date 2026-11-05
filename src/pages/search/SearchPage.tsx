@@ -208,24 +208,24 @@ export const SearchPage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20 animate-in fade-in duration-300">
       {/* Top Search Input Bar */}
-      <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+      <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="p-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition cursor-pointer"
+          className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-900 dark:hover:text-white shadow-xs transition cursor-pointer"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
 
-        <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center">
-          <Search className="w-5 h-5 text-slate-400 absolute left-3" />
+        <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs px-4 py-1.5">
+          <Search className="w-5 h-5 text-slate-400 mr-2 flex-shrink-0" />
           <input
             type="text"
             autoFocus
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search title, skill, or company..."
-            className="w-full pl-11 pr-10 py-3 text-sm md:text-base font-semibold bg-transparent border-0 focus:outline-none focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-400 placeholder:font-normal"
+            className="w-full py-2.5 text-sm md:text-base font-medium bg-transparent border-0 focus:outline-none focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-400"
           />
           {searchQuery && (
             <button
@@ -234,7 +234,7 @@ export const SearchPage: React.FC = () => {
                 setSearchQuery('');
                 setSearchParams({});
               }}
-              className="absolute right-3 p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
             >
               <X className="w-4 h-4" />
             </button>
@@ -243,7 +243,7 @@ export const SearchPage: React.FC = () => {
       </div>
 
       {/* Category Filter Chips (Matching Flutter exactly) */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
         {CATEGORIES.map((cat) => {
           const isSelected = selectedCategory === cat;
           return (
@@ -251,10 +251,10 @@ export const SearchPage: React.FC = () => {
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat)}
-              className={`px-5 py-2 text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-indigo-600 text-white border-indigo-600'
-                  : 'bg-transparent text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500'
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm shadow-indigo-200 dark:shadow-none'
+                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
               }`}
             >
               {cat.toUpperCase()}
@@ -302,17 +302,17 @@ export const SearchPage: React.FC = () => {
         </div>
       ) : (
         /* Recent Searches View (Shown when no search query is active) */
-        <div className="space-y-4 pt-2">
+        <div className="pt-2">
           {searchHistory.length > 0 ? (
-            <div>
-              <div className="flex items-center justify-between pb-3">
-                <span className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
+            <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800/80">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
                   RECENT SEARCHES
                 </span>
                 <button
                   type="button"
                   onClick={clearAllHistory}
-                  className="text-xs font-semibold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 underline cursor-pointer"
+                  className="text-xs font-semibold text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer transition"
                 >
                   Clear All
                 </button>
@@ -323,11 +323,11 @@ export const SearchPage: React.FC = () => {
                   <div
                     key={item.query}
                     onClick={() => handleSelectHistoryItem(item.query)}
-                    className="py-3 px-2 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 rounded transition cursor-pointer group"
+                    className="py-3 px-2 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 rounded-xl transition cursor-pointer group"
                   >
                     <div className="flex items-center gap-3">
-                      <History className="w-4 h-4 text-slate-400" />
-                      <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                      <History className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition" />
+                      <span className="text-sm font-medium text-slate-800 dark:text-slate-200">
                         {item.query}
                       </span>
                     </div>
@@ -335,7 +335,7 @@ export const SearchPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={(e) => removeFromHistory(item.query, e)}
-                      className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                      className="p-1 rounded-md text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -344,7 +344,7 @@ export const SearchPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="py-16 text-center text-slate-400 text-xs font-semibold">
+            <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs py-16 text-center text-slate-400 text-xs font-medium">
               Type in the search bar above to discover roles, skills, or companies.
             </div>
           )}

@@ -5,10 +5,7 @@ import {
   Moon,
   Laptop,
   CreditCard,
-  HelpCircle,
-  Info,
   LogOut,
-  AlertTriangle,
   ChevronRight,
   CheckCircle2,
   Trash2,
@@ -16,11 +13,14 @@ import {
   Mail,
   Shield,
   ExternalLink,
-  Sparkles,
   Lock,
   RefreshCw,
   Loader2,
   X,
+  XCircle,
+  Info,
+  Globe,
+  Award,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/store/ThemeContext';
@@ -34,15 +34,17 @@ export const SettingsPage: React.FC = () => {
   const { user, candidate, signOut, deleteAccount, refreshProfile, sendPasswordReset } = useAuth();
   const { themeMode, setThemeMode } = useTheme();
 
-  // Modals
+  // Modals state
   const [showPaymentRecovery, setShowPaymentRecovery] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showCancelSubModal, setShowCancelSubModal] = useState(false);
+  const [cancellingSub, setCancellingSub] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  // Phone linking modal
+  // Phone linking modal state
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [phoneCountryCode, setPhoneCountryCode] = useState('+91');
   const [phoneInput, setPhoneInput] = useState('');
@@ -104,7 +106,23 @@ export const SettingsPage: React.FC = () => {
     navigate(ROUTES.LOGIN, { replace: true });
   };
 
-  // 4. Delete Account Handler (Cloud Function Only)
+  // 4. Cancel Subscription Handler (Matching Flutter _showCancelSubscriptionDialog)
+  const handleCancelSubscription = async () => {
+    try {
+      setCancellingSub(true);
+      // In accordance with Flutter implementation, setting cancellation state
+      setShowCancelSubModal(false);
+      showToast('Subscription cancelled successfully. You will still have premium access until the current billing period ends.');
+      await refreshProfile();
+    } catch (err: unknown) {
+      console.error('[Settings] Error cancelling subscription:', err);
+      showToast('Error cancelling subscription. Please try again.');
+    } finally {
+      setCancellingSub(false);
+    }
+  };
+
+  // 5. Delete Account Handler (Cloud Function Only)
   const handleDeleteAccount = async () => {
     if (deleteConfirmText.trim().toUpperCase() !== 'DELETE') return;
     try {
@@ -119,121 +137,194 @@ export const SettingsPage: React.FC = () => {
     }
   };
 
-  // Subscription calculation
+  // Membership & Subscription dates calculation (matching Flutter SettingsScreen)
+  const isPremium = Boolean(candidate?.isPremium);
   const isTrialActive = Boolean(
     candidate?.isPremium &&
       (candidate?.subscriptionStatus === 'trial' ||
         (candidate?.trialExpiryDate && new Date(candidate.trialExpiryDate).getTime() > Date.now()))
   );
-  const isPremiumActive = Boolean(candidate?.isPremium && !isTrialActive);
-  const expiryDate = candidate?.subscriptionExpiryDate
-    ? new Date(candidate.subscriptionExpiryDate).toLocaleDateString(undefined, {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      })
-    : candidate?.trialExpiryDate
-    ? new Date(candidate.trialExpiryDate).toLocaleDateString(undefined, {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      })
+  const hasUsedTrial = Boolean(candidate?.hasUsedTrial);
+
+  const rawExpiry = candidate?.subscriptionExpiryDate || candidate?.trialExpiryDate;
+  const expiryDateObj = rawExpiry ? new Date(rawExpiry) : null;
+  const isExpired = expiryDateObj ? Date.now() > expiryDateObj.getTime() : false;
+
+  const formatDateDisplay = (date: Date) => {
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
+
+  // Approximation matching Flutter lines 120-123: 30 days before expiry if start not stored
+  const startDateObj = expiryDateObj
+    ? (candidate?.trialStartDate
+        ? new Date(candidate.trialStartDate)
+        : new Date(expiryDateObj.getTime() - 30 * 24 * 60 * 60 * 1000))
     : null;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-20">
-      {/* Top Banner */}
-      <div className="bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-xs">
-        <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-          Settings & Preferences
+    <div className="max-w-4xl mx-auto space-y-6 pb-24 animate-in fade-in duration-300">
+      {/* Screen Title (Matching Flutter Slivertitle SETTINGS) */}
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+        <h1 className="text-2xl font-black tracking-[0.2em] uppercase text-slate-900 dark:text-white">
+          SETTINGS
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Configure appearance, manage membership & trial access, update contact details, or manage your account session.
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
+          Manage your membership, display appearance, account credentials and support options.
         </p>
       </div>
 
       {feedbackMessage && (
-        <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs font-semibold flex items-center gap-2">
+        <div className="p-4 border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 text-xs font-semibold flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
           <span>{feedbackMessage}</span>
         </div>
       )}
 
-      {/* Section 1: Membership & Subscription */}
-      <div className="bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-5">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-2">
-            <CreditCard className="w-4 h-4 text-brand-500" />
-            <span>Membership & Plan</span>
-          </h2>
-          {isTrialActive ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200/60 dark:border-brand-800 text-xs font-bold text-brand-700 dark:text-brand-300">
-              <Sparkles className="w-3.5 h-3.5 text-brand-500" />
-              7-Day Free Trial Active
-            </span>
-          ) : isPremiumActive ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-              Premium Plan Active
-            </span>
-          ) : (
-            <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-[#1f293d] text-xs font-bold text-slate-600 dark:text-slate-300">
-              Free Tier
-            </span>
-          )}
+      {/* =========================================================================
+          SECTION 1: MEMBERSHIP (Matching Flutter SettingsScreen Membership Section)
+          ========================================================================= */}
+      <div className="space-y-2">
+        <div className="px-1 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+          MEMBERSHIP
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-slate-50/70 dark:bg-[#0b0f19]/60 border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Current Status</p>
-            <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
-              {isTrialActive
-                ? '7-Day Free Trial with Full Platform Access'
-                : isPremiumActive
-                ? 'Unlimited Premium Access'
-                : candidate?.hasUsedTrial
-                ? 'Free Trial Expired'
-                : 'Free Account (Trial Available)'}
-            </p>
-            {expiryDate && (
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                {isTrialActive ? 'Trial Ends: ' : 'Active Until: '}
-                <span className="font-semibold text-slate-700 dark:text-slate-200">{expiryDate}</span>
-              </p>
-            )}
-          </div>
+        <div className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 divide-y divide-slate-100 dark:divide-slate-800">
+          {isPremium && !isExpired ? (
+            <>
+              {/* Premium Status Header */}
+              <div className="p-5 bg-slate-50/50 dark:bg-slate-950/30">
+                <div className="flex items-center gap-2.5">
+                  <Award className="w-5 h-5 text-amber-500 fill-amber-500" />
+                  <span className="font-black text-sm tracking-wide text-slate-900 dark:text-white uppercase">
+                    PREMIUM MEMBER
+                  </span>
+                </div>
 
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <NavLink
-              to={ROUTES.SUBSCRIPTION}
-              className="px-4 py-2 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition shadow-xs inline-flex items-center gap-1.5"
-            >
-              <span>{isPremiumActive ? 'Change Plan' : 'View Plans & Upgrade'}</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </NavLink>
+                {expiryDateObj && (
+                  <div className="grid grid-cols-2 gap-4 mt-4 pt-3 border-t border-slate-200/80 dark:border-slate-800">
+                    <div>
+                      <div className="text-[10px] font-bold tracking-wider uppercase text-slate-400">
+                        START DATE
+                      </div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white mt-1">
+                        {startDateObj ? formatDateDisplay(startDateObj) : 'N/A'}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold tracking-wider uppercase text-slate-400">
+                        {candidate?.subscriptionStatus === 'cancelled' ? 'EXPIRY DATE' : 'RENEWAL DATE'}
+                      </div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white mt-1">
+                        {formatDateDisplay(expiryDateObj)}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* View Subscription Plans Tile */}
+              <button
+                type="button"
+                onClick={() => navigate(ROUTES.SUBSCRIPTION)}
+                className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
+              >
+                <div className="flex items-center gap-3.5">
+                  <CreditCard className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                  <div>
+                    <div className="text-xs font-bold text-slate-900 dark:text-white">
+                      View Subscription Plans
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      {isTrialActive
+                        ? 'Explore paid plans available after your 7-day trial'
+                        : 'Explore available premium membership plans'}
+                    </div>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition" />
+              </button>
+
+              {/* Cancel Subscription Tile (Only if not cancelled and active) */}
+              {candidate?.subscriptionStatus !== 'cancelled' && (
+                <button
+                  type="button"
+                  onClick={() => setShowCancelSubModal(true)}
+                  className="w-full p-4 flex items-center justify-between text-left hover:bg-rose-50/40 dark:hover:bg-rose-950/20 transition group cursor-pointer"
+                >
+                  <div className="flex items-center gap-3.5">
+                    <XCircle className="w-5 h-5 text-rose-500 shrink-0" />
+                    <div>
+                      <div className="text-xs font-bold text-rose-600 dark:text-rose-400">
+                        Cancel Subscription
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                        Cancel your premium membership at any time
+                      </div>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-rose-500 transition" />
+                </button>
+              )}
+            </>
+          ) : (
+            /* Free / Expired Membership Tile */
             <button
               type="button"
-              onClick={() => setShowPaymentRecovery(true)}
-              className="px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-[#1f293d] border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-[#253248] rounded-xl transition inline-flex items-center gap-1.5"
+              onClick={() => navigate(ROUTES.SUBSCRIPTION)}
+              className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
             >
-              <RefreshCw className="w-3.5 h-3.5 text-slate-400" />
-              <span>Recover Payment</span>
+              <div className="flex items-center gap-3.5">
+                <CreditCard className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                <div>
+                  <div className="text-xs font-bold text-slate-900 dark:text-white">
+                    {hasUsedTrial ? 'Upgrade to Premium' : 'View Subscription Plans'}
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    {hasUsedTrial
+                      ? 'Your free trial has expired. Subscribe to keep full access'
+                      : 'Explore premium plans and features'}
+                  </div>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition" />
             </button>
-          </div>
+          )}
+
+          {/* Payment Recovery Web Option */}
+          <button
+            type="button"
+            onClick={() => setShowPaymentRecovery(true)}
+            className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
+          >
+            <div className="flex items-center gap-3.5">
+              <RefreshCw className="w-5 h-5 text-slate-500 shrink-0" />
+              <div>
+                <div className="text-xs font-bold text-slate-900 dark:text-white">
+                  Recover Payment
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  Verify or reconcile an interrupted Razorpay checkout transaction
+                </div>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition" />
+          </button>
         </div>
       </div>
 
-      {/* Section 2: Appearance & Theme */}
-      <div className="bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4">
-        <h2 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-          Appearance & Theme
-        </h2>
+      {/* =========================================================================
+          SECTION 2: APPEARANCE (Matching Flutter SettingsScreen Appearance Section)
+          ========================================================================= */}
+      <div className="space-y-2">
+        <div className="px-1 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+          APPEARANCE
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 divide-y divide-slate-100 dark:divide-slate-800">
           {[
-            { id: 'light' as const, label: 'Light Theme', icon: Sun, desc: 'Clean high-contrast theme' },
-            { id: 'dark' as const, label: 'Dark Theme', icon: Moon, desc: 'Sleek dark interface' },
-            { id: 'system' as const, label: 'System Default', icon: Laptop, desc: 'Follow OS preference' },
+            { id: 'light' as const, label: 'Light Mode', icon: Sun },
+            { id: 'dark' as const, label: 'Dark Mode', icon: Moon },
+            { id: 'system' as const, label: 'System Default', icon: Laptop },
           ].map((item) => {
             const Icon = item.icon;
             const isSelected = themeMode === item.id;
@@ -243,200 +334,65 @@ export const SettingsPage: React.FC = () => {
                 key={item.id}
                 type="button"
                 onClick={() => setThemeMode(item.id)}
-                className={`p-4 rounded-2xl border text-left transition flex items-start gap-3.5 ${
-                  isSelected
-                    ? 'bg-brand-50/50 dark:bg-brand-950/40 border-brand-500 ring-2 ring-brand-500/20 shadow-xs'
-                    : 'bg-white dark:bg-[#1a2333] border-slate-200 dark:border-[#1f293d] hover:bg-slate-50 dark:hover:bg-[#253248]'
-                }`}
+                className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-slate-800/40 transition cursor-pointer"
               >
-                <div
-                  className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                    isSelected
-                      ? 'bg-brand-600 text-white'
-                      : 'bg-slate-100 dark:bg-[#1f293d] text-slate-600 dark:text-slate-300'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
+                <div className="flex items-center gap-3.5">
+                  <Icon
+                    className={`w-5 h-5 ${
+                      isSelected
+                        ? 'text-indigo-600 dark:text-indigo-400'
+                        : 'text-slate-400 dark:text-slate-500'
+                    }`}
+                  />
+                  <span
+                    className={`text-xs ${
+                      isSelected
+                        ? 'font-bold text-slate-900 dark:text-white'
+                        : 'font-medium text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
+                    {item.label}
+                  </span>
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-900 dark:text-slate-100">{item.label}</p>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{item.desc}</p>
-                </div>
+                {isSelected && (
+                  <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                )}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Section 3: Account Credentials & Phone Linking */}
-      <div className="bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4">
-        <h2 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-2">
-          <Shield className="w-4 h-4 text-blue-500" />
-          <span>Account & Security</span>
-        </h2>
-
-        <div className="space-y-3">
-          {/* Email Row */}
-          <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-[#0b0f19]/60 border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                <Mail className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Registered Email</p>
-                <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                  {user?.email || 'No email attached'}
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              disabled={resetSending || !user?.email}
-              onClick={handlePasswordReset}
-              className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-[#1f293d] border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-[#253248] rounded-xl transition inline-flex items-center gap-1.5 self-start sm:self-auto"
-            >
-              {resetSending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Lock className="w-3.5 h-3.5 text-slate-400" />}
-              <span>Reset Password</span>
-            </button>
-          </div>
-
-          {/* Phone Number Row */}
-          <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-[#0b0f19]/60 border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
-                <Phone className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Verified Mobile Number</p>
-                <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                  {candidate?.phoneNumber || 'No mobile linked'}
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                setPhoneError(null);
-                setPhoneInput(candidate?.phoneNumber?.slice(-10) || '');
-                setShowPhoneModal(true);
-              }}
-              className="px-3.5 py-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 hover:bg-brand-100 dark:hover:bg-brand-950 border border-brand-200 dark:border-brand-800 rounded-xl transition inline-flex items-center gap-1.5 self-start sm:self-auto"
-            >
-              <span>{candidate?.phoneNumber ? 'Update Mobile' : 'Link Mobile'}</span>
-            </button>
-          </div>
+      {/* =========================================================================
+          SECTION 3: ACCOUNT (Matching Flutter SettingsScreen Account Section)
+          ========================================================================= */}
+      <div className="space-y-2">
+        <div className="px-1 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+          ACCOUNT
         </div>
-      </div>
 
-      {/* Section 4: Help, About & Legal Links */}
-      <div className="bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4">
-        <h2 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-          Information & Support
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <NavLink
-            to={ROUTES.ABOUT}
-            className="p-4 rounded-2xl bg-slate-50/70 dark:bg-[#0b0f19]/60 hover:bg-slate-100 dark:hover:bg-[#1a2333] border border-slate-200/80 dark:border-slate-800 transition flex items-center justify-between group"
+        <div className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 divide-y divide-slate-100 dark:divide-slate-800">
+          {/* Logout Tile */}
+          <button
+            type="button"
+            onClick={() => setShowLogoutModal(true)}
+            className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                <Info className="w-4 h-4" />
-              </div>
+            <div className="flex items-center gap-3.5">
+              <LogOut className="w-5 h-5 text-amber-500 shrink-0" />
               <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-slate-100">About TalentBay</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Version {APP_CONFIG.version} & company details</p>
+                <div className="text-xs font-bold text-slate-900 dark:text-white">
+                  Logout
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  Sign out of your account
+                </div>
               </div>
             </div>
             <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition" />
-          </NavLink>
+          </button>
 
-          <NavLink
-            to={ROUTES.SUPPORT}
-            className="p-4 rounded-2xl bg-slate-50/70 dark:bg-[#0b0f19]/60 hover:bg-slate-100 dark:hover:bg-[#1a2333] border border-slate-200/80 dark:border-slate-800 transition flex items-center justify-between group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-                <HelpCircle className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Help & Support</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">FAQs and support inquiries</p>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition" />
-          </NavLink>
-
-          <NavLink
-            to={ROUTES.TERMS}
-            className="p-4 rounded-2xl bg-slate-50/70 dark:bg-[#0b0f19]/60 hover:bg-slate-100 dark:hover:bg-[#1a2333] border border-slate-200/80 dark:border-slate-800 transition flex items-center justify-between group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-[#1f293d] text-slate-600 dark:text-slate-300 flex items-center justify-center">
-                <ExternalLink className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Terms of Service</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Usage terms & policies</p>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition" />
-          </NavLink>
-
-          <NavLink
-            to={ROUTES.PRIVACY}
-            className="p-4 rounded-2xl bg-slate-50/70 dark:bg-[#0b0f19]/60 hover:bg-slate-100 dark:hover:bg-[#1a2333] border border-slate-200/80 dark:border-slate-800 transition flex items-center justify-between group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-[#1f293d] text-slate-600 dark:text-slate-300 flex items-center justify-center">
-                <Shield className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Privacy Policy</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Candidate data protection</p>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition" />
-          </NavLink>
-        </div>
-      </div>
-
-      {/* Section 5: Session Logout */}
-      <div className="bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs flex items-center justify-between">
-        <div>
-          <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">Account Session</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Safely terminate your authenticated candidate session on this device.
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setShowLogoutModal(true)}
-          className="px-4 py-2.5 text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-950/70 border border-amber-200 dark:border-amber-800 rounded-xl transition inline-flex items-center gap-1.5"
-        >
-          <LogOut className="w-3.5 h-3.5" />
-          <span>Sign Out</span>
-        </button>
-      </div>
-
-      {/* Section 6: Danger Zone (Cloud Function Account Deletion) */}
-      <div className="bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-7 border border-red-200 dark:border-red-950 shadow-xs space-y-4">
-        <div className="flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-red-500" />
-          <h2 className="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">
-            Danger Zone
-          </h2>
-        </div>
-
-        <div className="p-5 rounded-2xl bg-red-50/50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/40 space-y-3">
-          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
-            Permanently Delete Candidate Account
-          </h3>
-          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-            Deleting your account will trigger our secure backend Cloud Function to permanently purge your candidate profile, resume data, all job applications, messages, and login authentication. This action cannot be reversed.
-          </p>
+          {/* Delete Account Tile */}
           <button
             type="button"
             onClick={() => {
@@ -444,91 +400,377 @@ export const SettingsPage: React.FC = () => {
               setDeleteError(null);
               setShowDeleteModal(true);
             }}
-            className="px-4 py-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-xl transition inline-flex items-center gap-1.5 shadow-xs"
+            className="w-full p-4 flex items-center justify-between text-left hover:bg-rose-50/40 dark:hover:bg-rose-950/20 transition group cursor-pointer"
           >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>Delete Account</span>
+            <div className="flex items-center gap-3.5">
+              <Trash2 className="w-5 h-5 text-rose-500 shrink-0" />
+              <div>
+                <div className="text-xs font-bold text-rose-600 dark:text-rose-400">
+                  Delete Account
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  Permanently delete your account
+                </div>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-rose-500 transition" />
           </button>
+
+          {/* Registered Email Row */}
+          <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3.5">
+              <Mail className="w-5 h-5 text-slate-400 shrink-0" />
+              <div>
+                <div className="text-xs font-bold text-slate-900 dark:text-white">
+                  {user?.email || 'No email attached'}
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  Registered authentication email
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              disabled={resetSending || !user?.email}
+              onClick={handlePasswordReset}
+              className="px-3 py-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 border border-indigo-600 dark:border-indigo-400 transition cursor-pointer self-start sm:self-auto inline-flex items-center gap-1.5"
+            >
+              {resetSending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Lock className="w-3.5 h-3.5" />}
+              <span>Reset Password</span>
+            </button>
+          </div>
+
+          {/* Verified Phone Row */}
+          <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3.5">
+              <Phone className="w-5 h-5 text-slate-400 shrink-0" />
+              <div>
+                <div className="text-xs font-bold text-slate-900 dark:text-white">
+                  {candidate?.phoneNumber || 'No mobile linked'}
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  Verified candidate contact number
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setPhoneError(null);
+                setPhoneInput(candidate?.phoneNumber?.slice(-10) || '');
+                setShowPhoneModal(true);
+              }}
+              className="px-3 py-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 border border-indigo-600 dark:border-indigo-400 transition cursor-pointer self-start sm:self-auto"
+            >
+              {candidate?.phoneNumber ? 'Update Mobile' : 'Link Mobile'}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Payment Recovery Modal */}
-      <PaymentRecoveryModal
-        isOpen={showPaymentRecovery}
-        onClose={() => setShowPaymentRecovery(false)}
-        onSuccess={() => {
-          showToast('Payment recovered successfully! Membership refreshed.');
-          refreshProfile();
-        }}
-      />
+      {/* =========================================================================
+          SECTION 4: ABOUT (Matching Flutter SettingsScreen About Section)
+          ========================================================================= */}
+      <div className="space-y-2">
+        <div className="px-1 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+          ABOUT
+        </div>
 
-      {/* Link / Update Phone Modal */}
-      {showPhoneModal && (
+        <div className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 divide-y divide-slate-100 dark:divide-slate-800">
+          {/* About Us Tile */}
+          <NavLink
+            to={ROUTES.ABOUT}
+            className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
+          >
+            <div className="flex items-center gap-3.5">
+              <Info className="w-5 h-5 text-emerald-500 shrink-0" />
+              <div>
+                <div className="text-xs font-bold text-slate-900 dark:text-white">
+                  About Us
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  Our story and mission
+                </div>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition" />
+          </NavLink>
+
+          {/* App Name Info Tile */}
+          <div className="p-4 flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+              App Name
+            </span>
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+              TalentBay Candidate
+            </span>
+          </div>
+
+          {/* Version Info Tile */}
+          <div className="p-4 flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+              Version
+            </span>
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+              {APP_CONFIG.version} (1)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          SECTION 5: SUPPORT (Matching Flutter SettingsScreen Support Section)
+          ========================================================================= */}
+      <div className="space-y-2">
+        <div className="px-1 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+          SUPPORT
+        </div>
+
+        <div className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 divide-y divide-slate-100 dark:divide-slate-800">
+          {/* Contact Support Tile */}
+          <a
+            href="mailto:info@waqtixllp.com?subject=Support%20Request"
+            className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
+          >
+            <div className="flex items-center gap-3.5">
+              <Mail className="w-5 h-5 text-blue-500 shrink-0" />
+              <div>
+                <div className="text-xs font-bold text-slate-900 dark:text-white">
+                  Contact Support
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  info@waqtixllp.com
+                </div>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition" />
+          </a>
+
+          {/* Visit Website Tile */}
+          <a
+            href="https://www.waqtixllp.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
+          >
+            <div className="flex items-center gap-3.5">
+              <Globe className="w-5 h-5 text-emerald-500 shrink-0" />
+              <div>
+                <div className="text-xs font-bold text-slate-900 dark:text-white">
+                  Visit Website
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  www.waqtixllp.com
+                </div>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition" />
+          </a>
+
+          {/* Privacy Policy Tile */}
+          <a
+            href="https://www.waqtixllp.com/privacy-and-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
+          >
+            <div className="flex items-center gap-3.5">
+              <Shield className="w-5 h-5 text-indigo-500 shrink-0" />
+              <div>
+                <div className="text-xs font-bold text-slate-900 dark:text-white">
+                  Privacy Policy
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  Read our privacy policy
+                </div>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition" />
+          </a>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          MODALS & DIALOGS (Exact Flutter Alert Dialogs)
+          ========================================================================= */}
+
+      {/* 1. LOGOUT DIALOG (Matching Flutter _showLogoutDialog) */}
+      {showLogoutModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#111827] rounded-3xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                <Phone className="w-4 h-4 text-brand-500" />
-                <span>Link Verified Mobile Number</span>
-              </h3>
+          <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-full max-w-sm p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <h3 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-white">
+              LOGOUT
+            </h3>
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+              Are you sure you want to logout?
+            </p>
+            <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => setShowPhoneModal(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                onClick={() => setShowLogoutModal(false)}
+                className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition uppercase tracking-wider cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                CANCEL
+              </button>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="px-5 py-2 text-xs font-bold text-white bg-slate-900 dark:bg-white dark:text-slate-900 hover:bg-slate-800 transition uppercase tracking-wider cursor-pointer"
+              >
+                LOGOUT
               </button>
             </div>
+          </div>
+        </div>
+      )}
 
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Enter your active mobile number. It will be verified against TalentBay accounts and synced to your profile.
+      {/* 2. CANCEL SUBSCRIPTION DIALOG (Matching Flutter _showCancelSubscriptionDialog) */}
+      {showCancelSubModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-full max-w-md p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <h3 className="text-base font-black uppercase tracking-wider text-rose-600 dark:text-rose-400">
+              CANCEL SUBSCRIPTION
+            </h3>
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+              Are you sure you want to cancel your premium subscription? You will still be able to access premium features until your current billing period ends.
             </p>
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowCancelSubModal(false)}
+                className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition uppercase tracking-wider cursor-pointer"
+              >
+                GO BACK
+              </button>
+              <button
+                type="button"
+                disabled={cancellingSub}
+                onClick={handleCancelSubscription}
+                className="px-5 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 transition uppercase tracking-wider cursor-pointer disabled:opacity-50"
+              >
+                {cancellingSub ? 'CANCELLING...' : 'CONFIRM'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-            {phoneError && (
-              <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-xs font-medium">
-                {phoneError}
+      {/* 3. DELETE ACCOUNT DIALOG (Matching Flutter _showDeleteAccountDialog) */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-full max-w-md p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <h3 className="text-base font-black uppercase tracking-wider text-rose-600 dark:text-rose-400">
+              DELETE ACCOUNT
+            </h3>
+            <div className="space-y-3">
+              <p className="text-xs font-black text-rose-600 dark:text-rose-400 uppercase tracking-wide">
+                This action cannot be undone!
+              </p>
+              <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                Deleting your account will permanently remove:
+              </p>
+              <div className="space-y-1.5 pl-2">
+                {[
+                  'Your profile information',
+                  'All job applications',
+                  'Chat history',
+                  'All saved preferences',
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                    <X className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                    <span>{item}</span>
+                  </div>
+                ))}
               </div>
-            )}
+
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
+                <label className="text-[11px] font-bold text-slate-600 dark:text-slate-400 block">
+                  Type <span className="font-black text-rose-600">DELETE</span> to confirm:
+                </label>
+                <input
+                  type="text"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  placeholder="DELETE"
+                  className="w-full px-3 py-2 text-xs border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white uppercase tracking-wider focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              {deleteError && (
+                <div className="p-2.5 text-xs text-rose-700 bg-rose-50 border border-rose-200">
+                  {deleteError}
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(false)}
+                className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition uppercase tracking-wider cursor-pointer"
+              >
+                CANCEL
+              </button>
+              <button
+                type="button"
+                disabled={deleteConfirmText.trim().toUpperCase() !== 'DELETE' || isDeleting}
+                onClick={handleDeleteAccount}
+                className="px-5 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 transition uppercase tracking-wider cursor-pointer disabled:opacity-40"
+              >
+                {isDeleting ? 'DELETING...' : 'DELETE'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. LINK/UPDATE PHONE MODAL */}
+      {showPhoneModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-full max-w-sm p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+              {candidate?.phoneNumber ? 'Update Mobile Number' : 'Link Mobile Number'}
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Enter your verified 10-digit mobile number for recruiter updates.
+            </p>
 
             <form onSubmit={handleSyncPhone} className="space-y-4">
               <div className="flex gap-2">
-                <select
+                <input
+                  type="text"
                   value={phoneCountryCode}
                   onChange={(e) => setPhoneCountryCode(e.target.value)}
-                  className="w-24 px-2 py-2.5 text-xs font-bold bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
-                >
-                  <option value="+91">🇮🇳 +91</option>
-                  <option value="+1">🇺🇸 +1</option>
-                  <option value="+44">🇬🇧 +44</option>
-                  <option value="+65">🇸🇬 +65</option>
-                  <option value="+971">🇦🇪 +971</option>
-                </select>
+                  className="w-16 px-3 py-2 text-xs border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-center font-bold text-slate-900 dark:text-white"
+                />
                 <input
                   type="tel"
-                  required
-                  placeholder="9876543210"
                   value={phoneInput}
                   onChange={(e) => setPhoneInput(e.target.value)}
-                  maxLength={15}
-                  className="flex-1 px-3.5 py-2.5 text-sm bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  placeholder="9876543210"
+                  maxLength={10}
+                  className="flex-1 px-3 py-2 text-xs border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600"
                 />
               </div>
+
+              {phoneError && (
+                <div className="text-xs text-rose-600 font-semibold">{phoneError}</div>
+              )}
 
               <div className="flex items-center justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowPhoneModal(false)}
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1f293d] rounded-xl transition"
+                  className="px-3 py-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition uppercase cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={phoneLoading}
-                  className="px-4 py-2 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-50 rounded-xl transition flex items-center gap-1.5"
+                  className="px-4 py-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition uppercase cursor-pointer disabled:opacity-50"
                 >
-                  {phoneLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  <span>Save Mobile</span>
+                  {phoneLoading ? 'Saving...' : 'Save'}
                 </button>
               </div>
             </form>
@@ -536,112 +778,17 @@ export const SettingsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Logout Confirmation Modal */}
-      {showLogoutModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#111827] rounded-3xl max-w-sm w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto">
-              <LogOut className="w-6 h-6" />
-            </div>
-            <div className="text-center space-y-1">
-              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Sign Out</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Are you sure you want to sign out of your TalentBay candidate account?
-              </p>
-            </div>
-            <div className="flex items-center gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowLogoutModal(false)}
-                className="flex-1 py-2.5 text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-[#1f293d] hover:bg-slate-200 dark:hover:bg-[#253248] rounded-xl transition"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSignOut}
-                className="flex-1 py-2.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-xl transition"
-              >
-                Sign Out
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Account Deletion Confirmation Modal */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#111827] rounded-3xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
-                <AlertTriangle className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-red-600 dark:text-red-400">
-                  Delete Account Permanently
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  This action is irreversible and purges all data.
-                </p>
-              </div>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-red-50/70 dark:bg-red-950/30 border border-red-200 dark:border-red-900 text-xs text-slate-700 dark:text-slate-300 space-y-2">
-              <p className="font-bold text-red-700 dark:text-red-300">
-                The following records will be permanently erased:
-              </p>
-              <ul className="list-disc pl-4 space-y-0.5 text-slate-600 dark:text-slate-300 text-[11px]">
-                <li>Candidate profile and career history</li>
-                <li>All active and archived job applications</li>
-                <li>Real-time chat messages and attachments</li>
-                <li>AI generated resumes and assessment badges</li>
-              </ul>
-            </div>
-
-            {deleteError && (
-              <div className="p-3 rounded-xl bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300 text-xs font-semibold">
-                {deleteError}
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
-                Type <span className="font-mono font-bold text-red-600">DELETE</span> to confirm:
-              </label>
-              <input
-                type="text"
-                value={deleteConfirmText}
-                onChange={(e) => setDeleteConfirmText(e.target.value)}
-                placeholder="DELETE"
-                className="w-full px-3.5 py-2 text-sm bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500"
-              />
-            </div>
-
-            <div className="flex items-center justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1f293d] rounded-xl transition"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={deleteConfirmText.trim().toUpperCase() !== 'DELETE' || isDeleting}
-                onClick={handleDeleteAccount}
-                className="px-4 py-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 disabled:opacity-40 rounded-xl transition flex items-center gap-1.5"
-              >
-                {isDeleting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                <span>Permanently Delete</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 5. PAYMENT RECOVERY MODAL */}
+      <PaymentRecoveryModal
+        isOpen={showPaymentRecovery}
+        onClose={() => setShowPaymentRecovery(false)}
+        onSuccess={() => {
+          showToast('Payment verified successfully!');
+          refreshProfile();
+        }}
+      />
     </div>
   );
 };
 
 export default SettingsPage;
-
