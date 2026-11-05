@@ -190,14 +190,14 @@ export const ApplicationsPage: React.FC = () => {
       case 'interview':
       case 'interviewing':
         label = 'INTERVIEW';
-        chipClass = 'bg-purple-50 text-purple-700 border-purple-200/80 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800/60';
-        dotColor = 'bg-purple-500';
+        chipClass = 'bg-brand-50 text-brand-700 border-brand-200/80 dark:bg-brand-950/40 dark:text-brand-300 dark:border-brand-800/60';
+        dotColor = 'bg-brand-500';
         break;
       case 'shortlisted':
       case 'screening':
         label = 'SHORTLISTED';
-        chipClass = 'bg-indigo-50 text-indigo-700 border-indigo-200/80 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800/60';
-        dotColor = 'bg-indigo-500';
+        chipClass = 'bg-blue-50 text-blue-700 border-blue-200/80 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800/60';
+        dotColor = 'bg-blue-500';
         break;
       default:
         label = 'APPLIED';
@@ -229,13 +229,13 @@ export const ApplicationsPage: React.FC = () => {
         {/* Mail / Chat Icon with Live Unread Badge */}
         <Link
           to={ROUTES.CHAT}
-          className="relative self-start sm:self-auto p-2.5 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:border-indigo-400 dark:hover:border-indigo-600 transition shadow-xs flex items-center gap-2"
+          className="relative self-start sm:self-auto p-2.5 rounded-xl border border-slate-200/90 dark:border-[#1e2f52] bg-white dark:bg-[#131f37] text-slate-600 dark:text-slate-300 hover:border-brand-400 dark:hover:border-brand-600 transition shadow-xs flex items-center gap-2"
           title="Direct Messages"
         >
-          <Mail className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+          <Mail className="w-5 h-5 text-brand-600 dark:text-brand-400" />
           <span className="text-xs font-bold text-slate-900 dark:text-white hidden sm:inline">Messages</span>
           {unreadChatsCount > 0 && (
-            <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+            <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-brand-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
               {unreadChatsCount > 9 ? '9+' : unreadChatsCount}
             </span>
           )}
@@ -243,19 +243,19 @@ export const ApplicationsPage: React.FC = () => {
       </div>
 
       {/* 2. Three Tabs: APPLIED, SAVED, ACCEPTED (Segmented Web Navigation) */}
-      <div className="inline-flex p-1.5 rounded-2xl bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 gap-1.5">
+      <div className="inline-flex p-1.5 rounded-2xl bg-slate-100/80 dark:bg-[#0e1628] border border-slate-200/80 dark:border-[#1e2f52] gap-1.5">
         <button
           type="button"
           onClick={() => setActiveTab('applied')}
           className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold tracking-wide transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'applied'
-              ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
+              ? 'bg-white dark:bg-[#131f37] text-brand-600 dark:text-brand-400 shadow-xs'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <span>Applied</span>
           {appliedApplications.length > 0 && (
-            <span className="px-2 py-0.5 rounded-full text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+            <span className="px-2 py-0.5 rounded-full text-[11px] bg-slate-100 dark:bg-[#182644] text-slate-600 dark:text-slate-300">
               {appliedApplications.length}
             </span>
           )}
@@ -266,13 +266,13 @@ export const ApplicationsPage: React.FC = () => {
           onClick={() => setActiveTab('saved')}
           className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold tracking-wide transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'saved'
-              ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
+              ? 'bg-white dark:bg-[#131f37] text-brand-600 dark:text-brand-400 shadow-xs'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <span>Saved</span>
           {(candidate?.savedJobIds?.length || 0) > 0 && (
-            <span className="px-2 py-0.5 rounded-full text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+            <span className="px-2 py-0.5 rounded-full text-[11px] bg-slate-100 dark:bg-[#182644] text-slate-600 dark:text-slate-300">
               {candidate?.savedJobIds?.length || 0}
             </span>
           )}
@@ -283,7 +283,7 @@ export const ApplicationsPage: React.FC = () => {
           onClick={() => setActiveTab('accepted')}
           className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold tracking-wide transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'accepted'
-              ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
+              ? 'bg-white dark:bg-[#131f37] text-brand-600 dark:text-brand-400 shadow-xs'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
@@ -312,15 +312,15 @@ export const ApplicationsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-700 transition"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-600 text-white text-xs font-bold rounded-xl hover:bg-brand-700 transition"
               >
                 <RefreshCw className="w-3.5 h-3.5" /> Retry
               </button>
             </div>
           ) : appliedApplications.length === 0 ? (
             /* Empty State (matching Flutter) */
-            <div className="rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/40 p-12 text-center space-y-3">
-              <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+            <div className="rounded-2xl border border-dashed border-slate-200 dark:border-[#1e2f52] bg-white/60 dark:bg-[#131f37]/40 p-12 text-center space-y-3">
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 dark:bg-[#0e1628] flex items-center justify-center text-slate-400">
                 <Briefcase className="w-7 h-7" />
               </div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -332,7 +332,7 @@ export const ApplicationsPage: React.FC = () => {
               <div className="pt-2">
                 <Link
                   to={ROUTES.JOBS}
-                  className="inline-block px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
+                  className="inline-block px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
                 >
                   Explore Jobs
                 </Link>
@@ -349,13 +349,13 @@ export const ApplicationsPage: React.FC = () => {
                 return (
                   <div
                     key={app.applicationId || app.id}
-                    className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-800 hover:shadow-card-hover transition-all duration-200 space-y-4 shadow-xs"
+                    className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#131f37] border border-slate-200/90 dark:border-[#1e2f52] hover:border-brand-400 dark:hover:border-brand-600 hover:shadow-card-hover transition-all duration-200 space-y-4 shadow-card"
                   >
                     {/* Top Row: Company Logo & Details */}
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-4">
                         {/* Logo (56x56) */}
-                        <div className="w-14 h-14 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 overflow-hidden shrink-0 flex items-center justify-center p-2 shadow-2xs">
+                        <div className="w-14 h-14 rounded-2xl border border-slate-100 dark:border-[#1e2f52] bg-slate-50 dark:bg-[#0e1628] overflow-hidden shrink-0 flex items-center justify-center p-2 shadow-2xs">
                           {job?.companyLogoUrl ? (
                             <img
                               src={job.companyLogoUrl}
@@ -374,7 +374,7 @@ export const ApplicationsPage: React.FC = () => {
                         <div className="space-y-1 min-w-0">
                           <Link
                             to={`/jobs/${app.jobId}`}
-                            className="text-base sm:text-lg font-bold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition line-clamp-1"
+                            className="text-base sm:text-lg font-bold text-slate-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition line-clamp-1"
                           >
                             {job?.title || job?.roleName || app.jobTitle || 'Role Details'}
                           </Link>
@@ -394,7 +394,7 @@ export const ApplicationsPage: React.FC = () => {
                     </div>
 
                     {/* Divider */}
-                    <div className="border-t border-slate-100 dark:border-slate-800/80" />
+                    <div className="border-t border-slate-100 dark:border-[#1e2f52]/80" />
 
                     {/* Bottom Row: Applied Date (mobile) & Conditional MESSAGE Action */}
                     <div className="flex items-center justify-between text-xs font-medium">
@@ -409,7 +409,7 @@ export const ApplicationsPage: React.FC = () => {
                             type="button"
                             disabled={isConnecting}
                             onClick={() => handleMessageRecruiter(job, app.applicationId)}
-                            className="px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-xs transition cursor-pointer inline-flex items-center gap-1.5"
+                            className="px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-xs transition cursor-pointer inline-flex items-center gap-1.5"
                           >
                             <MessageSquare className="w-3.5 h-3.5" />
                             <span>{isConnecting ? 'Connecting...' : 'Message Recruiter'}</span>
@@ -438,8 +438,8 @@ export const ApplicationsPage: React.FC = () => {
             </div>
           ) : savedJobs.length === 0 ? (
             /* Empty State (matching Flutter) */
-            <div className="rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/40 p-12 text-center space-y-3">
-              <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+            <div className="rounded-2xl border border-dashed border-slate-200 dark:border-[#1e2f52] bg-white/60 dark:bg-[#131f37]/40 p-12 text-center space-y-3">
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 dark:bg-[#0e1628] flex items-center justify-center text-slate-400">
                 <Bookmark className="w-7 h-7" />
               </div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -451,7 +451,7 @@ export const ApplicationsPage: React.FC = () => {
               <div className="pt-2">
                 <Link
                   to={ROUTES.JOBS}
-                  className="inline-block px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
+                  className="inline-block px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
                 >
                   Browse Vacancies
                 </Link>
@@ -486,7 +486,7 @@ export const ApplicationsPage: React.FC = () => {
         <div className="space-y-4">
           {acceptedApplications.length === 0 ? (
             /* Empty State (matching Flutter) */
-            <div className="rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/40 p-12 text-center space-y-3">
+            <div className="rounded-2xl border border-dashed border-slate-200 dark:border-[#1e2f52] bg-white/60 dark:bg-[#131f37]/40 p-12 text-center space-y-3">
               <div className="w-14 h-14 mx-auto rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                 <CheckCircle2 className="w-7 h-7" />
               </div>
@@ -506,11 +506,11 @@ export const ApplicationsPage: React.FC = () => {
                 return (
                   <div
                     key={app.applicationId || app.id}
-                    className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-emerald-200/80 dark:border-emerald-800/60 hover:shadow-card-hover transition-all duration-200 space-y-4 shadow-xs"
+                    className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#131f37] border border-emerald-200/80 dark:border-emerald-800/60 hover:shadow-card-hover transition-all duration-200 space-y-4 shadow-card"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-4">
-                        <div className="w-14 h-14 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 overflow-hidden shrink-0 flex items-center justify-center p-2 shadow-2xs">
+                        <div className="w-14 h-14 rounded-2xl border border-slate-100 dark:border-[#1e2f52] bg-slate-50 dark:bg-[#0e1628] overflow-hidden shrink-0 flex items-center justify-center p-2 shadow-2xs">
                           {job?.companyLogoUrl ? (
                             <img
                               src={job.companyLogoUrl}
@@ -528,7 +528,7 @@ export const ApplicationsPage: React.FC = () => {
                         <div className="space-y-1 min-w-0">
                           <Link
                             to={`/jobs/${app.jobId}`}
-                            className="text-base sm:text-lg font-bold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition line-clamp-1"
+                            className="text-base sm:text-lg font-bold text-slate-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition line-clamp-1"
                           >
                             {job?.title || job?.roleName || app.jobTitle || 'Role Details'}
                           </Link>
@@ -549,7 +549,7 @@ export const ApplicationsPage: React.FC = () => {
                       </span>
                     </div>
 
-                    <div className="border-t border-slate-100 dark:border-slate-800/80" />
+                    <div className="border-t border-slate-100 dark:border-[#1e2f52]/80" />
 
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-slate-400 dark:text-slate-500 text-[11px] sm:hidden">
@@ -559,7 +559,7 @@ export const ApplicationsPage: React.FC = () => {
                         type="button"
                         disabled={isConnecting}
                         onClick={() => handleMessageRecruiter(job, app.applicationId)}
-                        className="ml-auto px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-xs transition cursor-pointer inline-flex items-center gap-1.5"
+                        className="ml-auto px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-xs transition cursor-pointer inline-flex items-center gap-1.5"
                       >
                         <MessageSquare className="w-3.5 h-3.5" />
                         <span>{isConnecting ? 'Connecting...' : 'Message Recruiter'}</span>

@@ -103,7 +103,7 @@ export const SupportPage: React.FC = () => {
       </div>
 
       {/* Hero Banner */}
-      <div className="bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-10 border border-slate-200/90 dark:border-slate-800 shadow-xs text-center relative overflow-hidden">
+      <div className="bg-white dark:bg-[#131f37] rounded-3xl p-6 sm:p-10 border border-slate-200/90 dark:border-slate-800 shadow-xs text-center relative overflow-hidden">
         <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-brand-50 dark:bg-brand-950/60 border border-brand-200/60 dark:border-brand-800 flex items-center justify-center text-brand-600 dark:text-brand-400 mx-auto mb-5 shadow-xs">
           <Headphones className="w-8 h-8 sm:w-10 sm:h-10" />
         </div>
@@ -127,7 +127,7 @@ export const SupportPage: React.FC = () => {
             <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
               {APP_CONFIG.supportEmail}
             </span>
-            <span className="p-1 rounded-lg bg-white dark:bg-[#1f293d] border border-slate-200 dark:border-slate-700 text-slate-400 group-hover:text-brand-600 transition">
+            <span className="p-1 rounded-lg bg-white dark:bg-[#1e2f52] border border-slate-200 dark:border-slate-700 text-slate-400 group-hover:text-brand-600 transition">
               {copiedEmail ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
             </span>
           </div>
@@ -135,7 +135,7 @@ export const SupportPage: React.FC = () => {
       </div>
 
       {/* Frequently Asked Questions */}
-      <div className="bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-5">
+      <div className="bg-white dark:bg-[#131f37] rounded-3xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-5">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <HelpCircle className="w-4 h-4 text-brand-500" />
@@ -172,7 +172,7 @@ export const SupportPage: React.FC = () => {
                 </button>
 
                 {isOpen && (
-                  <div className="p-4 sm:p-5 bg-white dark:bg-[#111827] border-t border-slate-200/80 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <div className="p-4 sm:p-5 bg-white dark:bg-[#131f37] border-t border-slate-200/80 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                     {faq.answer}
                   </div>
                 )}
@@ -183,7 +183,7 @@ export const SupportPage: React.FC = () => {
       </div>
 
       {/* Support Inquiry Form */}
-      <div className="bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-5">
+      <div className="bg-white dark:bg-[#131f37] rounded-3xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-5">
         <div>
           <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <Send className="w-4 h-4 text-brand-500" />

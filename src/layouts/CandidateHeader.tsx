@@ -67,6 +67,7 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
     if (path.startsWith(ROUTES.CAREER_READINESS)) return 'Career Readiness';
     if (path.startsWith(ROUTES.ASSESSMENTS)) return 'Skill Assessments';
     if (path.startsWith(ROUTES.COMPANIES)) return 'Explore Companies';
+    if (path.startsWith(ROUTES.SEARCH)) return 'Search Jobs';
     if (path.startsWith(ROUTES.JOBS)) return 'Find Jobs';
     if (path.startsWith(ROUTES.CHAT)) return 'Messages & Chat';
     if (path.startsWith(ROUTES.NOTIFICATIONS)) return 'Notifications';
@@ -79,7 +80,7 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-30 h-16 bg-white/95 dark:bg-[#0b0f19]/95 backdrop-blur-md border-b border-slate-200/90 dark:border-[#1f293d] px-4 sm:px-6 transition-colors">
+      <header className="sticky top-0 z-30 h-16 bg-white/95 dark:bg-[#0a0f1d]/95 backdrop-blur-md border-b border-slate-200/90 dark:border-[#1e2f52] px-4 sm:px-6 transition-colors">
         <div className="flex items-center justify-between h-full gap-4">
           {/* Left section: mobile toggle and page title */}
           <div className="flex items-center gap-3 min-w-0">
@@ -106,7 +107,7 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search jobs, skills, companies..."
-                className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-slate-100/80 dark:bg-slate-900/80 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 rounded-xl border border-transparent focus:border-brand-500/50 focus:bg-white dark:focus:bg-[#0f172a] focus:outline-none focus:ring-2 focus:ring-brand-500/20 transition-all shadow-xs"
+                className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-slate-100/80 dark:bg-[#0e1628]/80 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 rounded-xl border border-transparent focus:border-brand-500/50 focus:bg-white dark:focus:bg-[#131f37] focus:outline-none focus:ring-2 focus:ring-brand-500/20 transition-all shadow-xs"
               />
             </form>
           </div>
@@ -203,8 +204,8 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
                     className="fixed inset-0 z-40"
                     onClick={() => setProfileDropdownOpen(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200/90 dark:border-[#1f293d] shadow-dropdown py-2 z-50 text-xs animate-in fade-in zoom-in-95 duration-100">
-                    <div className="px-4 py-2.5 border-b border-slate-100 dark:border-[#1f293d]">
+                  <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-[#131f37] border border-slate-200/90 dark:border-[#1e2f52] shadow-dropdown py-2 z-50 text-xs animate-in fade-in zoom-in-95 duration-100">
+                    <div className="px-4 py-2.5 border-b border-slate-100 dark:border-[#1e2f52]">
                       <p className="font-bold text-slate-900 dark:text-slate-100 truncate">{candidateName}</p>
                       {candidateEmail && (
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{candidateEmail}</p>
@@ -241,7 +242,7 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
                       </NavLink>
                     </div>
 
-                    <div className="pt-1 border-t border-slate-100 dark:border-[#1f293d]">
+                    <div className="pt-1 border-t border-slate-100 dark:border-[#1e2f52]">
                       <button
                         onClick={handleSignOut}
                         className="w-full flex items-center gap-2.5 px-4 py-2 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition text-left"

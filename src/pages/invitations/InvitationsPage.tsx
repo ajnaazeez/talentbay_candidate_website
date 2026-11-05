@@ -295,7 +295,7 @@ export const InvitationsPage: React.FC = () => {
                     </div>
 
                     {/* Status Badge */}
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 self-start">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 self-start">
                       <Sparkles className="w-3.5 h-3.5" />
                       RECRUITER INVITED
                     </span>

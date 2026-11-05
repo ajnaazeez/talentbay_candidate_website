@@ -363,7 +363,7 @@ export const ProfilePage: React.FC = () => {
         <div className="relative">
           <div
             onClick={() => setModalOpen((prev) => ({ ...prev, photoOptions: true }))}
-            className="w-24 h-24 rounded-2xl border-2 border-indigo-100 dark:border-indigo-900 bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center cursor-pointer group shadow-sm"
+            className="w-24 h-24 rounded-2xl border-2 border-brand-100 dark:border-brand-900 bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center cursor-pointer group shadow-sm"
           >
             {candidate.photoUrl ? (
               <img
@@ -381,7 +381,7 @@ export const ProfilePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, photoOptions: true }))}
-            className="absolute -bottom-1 -right-1 p-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:scale-105 transition cursor-pointer"
+            className="absolute -bottom-1 -right-1 p-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white shadow-md hover:scale-105 transition cursor-pointer"
             title="Update photo"
           >
             <Camera className="w-3.5 h-3.5" />
@@ -410,7 +410,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate(ROUTES.SUBSCRIPTION)}
-                className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 cursor-pointer"
+                className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline inline-flex items-center gap-1 cursor-pointer"
               >
                 <Tv className="w-3 h-3" />
                 <span>View Subscription Plans</span>
@@ -422,7 +422,7 @@ export const ProfilePage: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate(ROUTES.SUBSCRIPTION)}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline uppercase tracking-wider cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline uppercase tracking-wider cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Upgrade to Premium</span>
@@ -437,7 +437,7 @@ export const ProfilePage: React.FC = () => {
           </h2>
 
           {candidate.designation && (
-            <div className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+            <div className="text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
               {candidate.designation}
             </div>
           )}
@@ -477,7 +477,7 @@ export const ProfilePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, basicInfo: true }))}
-            className="w-full py-2.5 px-6 rounded-xl border border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 text-xs font-bold tracking-wider uppercase transition shadow-xs cursor-pointer"
+            className="w-full py-2.5 px-6 rounded-xl border border-brand-600 text-brand-600 dark:border-brand-400 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/20 text-xs font-bold tracking-wider uppercase transition shadow-xs cursor-pointer"
           >
             EDIT INTRODUCTION
           </button>
@@ -525,7 +525,7 @@ export const ProfilePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, headlineSummary: true }))}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-brand-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
           >
             <Edit2 className="w-4 h-4" />
           </button>
@@ -555,7 +555,7 @@ export const ProfilePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, skills: true }))}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-brand-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
           >
             <Edit2 className="w-4 h-4" />
           </button>
@@ -567,7 +567,7 @@ export const ProfilePage: React.FC = () => {
               {candidate.skills.map((skill) => (
                 <div
                   key={skill.name}
-                  className="px-3.5 py-1.5 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/50 dark:bg-indigo-950/40 text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300"
+                  className="px-3.5 py-1.5 rounded-xl border border-brand-200 dark:border-brand-800 bg-brand-50/50 dark:bg-brand-950/40 text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300"
                 >
                   {skill.name}
                 </div>
@@ -579,7 +579,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setModalOpen((prev) => ({ ...prev, skills: true }))}
-                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline"
+                className="text-xs font-bold uppercase text-brand-600 dark:text-brand-400 hover:underline"
               >
                 + Add Skills
               </button>
@@ -593,13 +593,13 @@ export const ProfilePage: React.FC = () => {
         <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
             <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
-              <Verified className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <Verified className="w-4 h-4 text-brand-600 dark:text-brand-400" />
               <span>Skill Assessments</span>
             </h3>
             <button
               type="button"
               onClick={() => navigate(ROUTES.CAREER_READINESS)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/40 transition cursor-pointer"
             >
               <BarChart2 className="w-3.5 h-3.5" />
               <span>Performance &amp; Readiness</span>
@@ -619,11 +619,11 @@ export const ProfilePage: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/40">
+                    <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-900/40">
                       {Math.round(a.percentage || (a.score / Math.max(a.totalQuestions, 1)) * 100)}% Score
                     </span>
                   </div>
-                  <Verified className="w-5 h-5 text-indigo-600 dark:text-indigo-400 flex-shrink-0" />
+                  <Verified className="w-5 h-5 text-brand-600 dark:text-brand-400 flex-shrink-0" />
                 </div>
               </div>
             ))}
@@ -635,7 +635,7 @@ export const ProfilePage: React.FC = () => {
       <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
           <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
-            <Briefcase className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <Briefcase className="w-4 h-4 text-brand-600 dark:text-brand-400" />
             <span>Employment Details</span>
           </h3>
           <button
@@ -644,7 +644,7 @@ export const ProfilePage: React.FC = () => {
               setSelectedExperience(null);
               setModalOpen((prev) => ({ ...prev, experience: true }));
             }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/40 transition cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add</span>
@@ -660,7 +660,7 @@ export const ProfilePage: React.FC = () => {
                     <h4 className="text-sm font-bold uppercase text-slate-900 dark:text-white">
                       {exp.jobTitle}
                     </h4>
-                    <div className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                    <div className="text-xs font-semibold text-brand-600 dark:text-brand-400">
                       {exp.companyName}
                     </div>
                     <div className="text-xs text-slate-400 font-medium">
@@ -678,7 +678,7 @@ export const ProfilePage: React.FC = () => {
                       setSelectedExperience(exp);
                       setModalOpen((prev) => ({ ...prev, experience: true }));
                     }}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition cursor-pointer flex-shrink-0"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-brand-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition cursor-pointer flex-shrink-0"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
@@ -695,7 +695,7 @@ export const ProfilePage: React.FC = () => {
                   setSelectedExperience(null);
                   setModalOpen((prev) => ({ ...prev, experience: true }));
                 }}
-                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                className="text-xs font-bold uppercase text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
               >
                 + Add Experience
               </button>
@@ -708,7 +708,7 @@ export const ProfilePage: React.FC = () => {
       <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
           <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
-            <GraduationCap className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <GraduationCap className="w-4 h-4 text-brand-600 dark:text-brand-400" />
             <span>Education</span>
           </h3>
           <button
@@ -717,7 +717,7 @@ export const ProfilePage: React.FC = () => {
               setSelectedEducation(null);
               setModalOpen((prev) => ({ ...prev, education: true }));
             }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/40 transition cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add</span>
@@ -733,7 +733,7 @@ export const ProfilePage: React.FC = () => {
                     <h4 className="text-sm font-bold uppercase text-slate-900 dark:text-white">
                       {edu.degree}
                     </h4>
-                    <div className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                    <div className="text-xs font-semibold text-brand-600 dark:text-brand-400">
                       {edu.institution}
                     </div>
                     <div className="text-xs text-slate-400 font-medium">
@@ -746,7 +746,7 @@ export const ProfilePage: React.FC = () => {
                       setSelectedEducation(edu);
                       setModalOpen((prev) => ({ ...prev, education: true }));
                     }}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition cursor-pointer flex-shrink-0"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-brand-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition cursor-pointer flex-shrink-0"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
@@ -763,7 +763,7 @@ export const ProfilePage: React.FC = () => {
                   setSelectedEducation(null);
                   setModalOpen((prev) => ({ ...prev, education: true }));
                 }}
-                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                className="text-xs font-bold uppercase text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
               >
                 + Add Education
               </button>
@@ -776,7 +776,7 @@ export const ProfilePage: React.FC = () => {
       <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
           <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
-            <FolderGit2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <FolderGit2 className="w-4 h-4 text-brand-600 dark:text-brand-400" />
             <span>Projects</span>
           </h3>
           <button
@@ -785,7 +785,7 @@ export const ProfilePage: React.FC = () => {
               setSelectedProject(null);
               setModalOpen((prev) => ({ ...prev, project: true }));
             }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/40 transition cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add</span>
@@ -803,7 +803,7 @@ export const ProfilePage: React.FC = () => {
                     </h4>
 
                     {proj.role && (
-                      <div className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                      <div className="text-xs font-semibold text-brand-600 dark:text-brand-400">
                         {proj.role}
                       </div>
                     )}
@@ -832,7 +832,7 @@ export const ProfilePage: React.FC = () => {
                         href={proj.link}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 pt-1 font-semibold"
+                        className="text-xs text-brand-600 dark:text-brand-400 hover:underline inline-flex items-center gap-1 pt-1 font-semibold"
                       >
                         <span>{proj.link}</span>
                         <ExternalLink className="w-3 h-3" />
@@ -845,7 +845,7 @@ export const ProfilePage: React.FC = () => {
                       setSelectedProject(proj);
                       setModalOpen((prev) => ({ ...prev, project: true }));
                     }}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition cursor-pointer flex-shrink-0"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-brand-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition cursor-pointer flex-shrink-0"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
@@ -862,7 +862,7 @@ export const ProfilePage: React.FC = () => {
                   setSelectedProject(null);
                   setModalOpen((prev) => ({ ...prev, project: true }));
                 }}
-                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                className="text-xs font-bold uppercase text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
               >
                 + Add Projects
               </button>
@@ -875,13 +875,13 @@ export const ProfilePage: React.FC = () => {
       <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
           <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
-            <Star className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <Star className="w-4 h-4 text-brand-600 dark:text-brand-400" />
             <span>Personal Details</span>
           </h3>
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, basicInfo: true }))}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-brand-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
           >
             <Edit2 className="w-4 h-4" />
           </button>
@@ -939,7 +939,7 @@ export const ProfilePage: React.FC = () => {
                 href={candidate.linkedinProfile}
                 target="_blank"
                 rel="noreferrer"
-                className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 mt-1"
+                className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline inline-flex items-center gap-1 mt-1"
               >
                 <span className="truncate max-w-[200px]">{candidate.linkedinProfile}</span>
                 <ExternalLink className="w-3 h-3 flex-shrink-0" />
@@ -964,13 +964,13 @@ export const ProfilePage: React.FC = () => {
       <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
           <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
-            <Briefcase className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <Briefcase className="w-4 h-4 text-brand-600 dark:text-brand-400" />
             <span>Desired Jobs</span>
           </h3>
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, jobPreference: true }))}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-brand-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
           >
             <Edit2 className="w-4 h-4" />
           </button>
@@ -1015,7 +1015,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setModalOpen((prev) => ({ ...prev, jobPreference: true }))}
-                className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                className="text-xs font-bold uppercase text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
               >
                 + Add Preferences
               </button>
@@ -1028,7 +1028,7 @@ export const ProfilePage: React.FC = () => {
       <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
           <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
-            <FileText className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <FileText className="w-4 h-4 text-brand-600 dark:text-brand-400" />
             <span>Attached CV</span>
           </h3>
         </div>
@@ -1037,8 +1037,8 @@ export const ProfilePage: React.FC = () => {
           {candidate.resumeUrl ? (
             <div className="p-4 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl border border-indigo-200 dark:border-indigo-800/50 bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center flex-shrink-0">
-                  <FileText className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                <div className="w-11 h-11 rounded-xl border border-brand-200 dark:border-brand-800/50 bg-brand-50 dark:bg-brand-950/40 flex items-center justify-center flex-shrink-0">
+                  <FileText className="w-5 h-5 text-brand-600 dark:text-brand-400" />
                 </div>
                 <div>
                   <div className="text-sm font-bold text-slate-900 dark:text-white">
@@ -1080,7 +1080,7 @@ export const ProfilePage: React.FC = () => {
                 type="button"
                 disabled={uploadingResume}
                 onClick={() => fileInputRef.current?.click()}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider transition cursor-pointer shadow-sm shadow-indigo-200 dark:shadow-none inline-flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider transition cursor-pointer shadow-sm shadow-brand-200 dark:shadow-none inline-flex items-center gap-2"
               >
                 <Upload className="w-3.5 h-3.5" />
                 <span>{uploadingResume ? 'UPLOADING...' : 'UPLOAD CV'}</span>
@@ -1101,7 +1101,7 @@ export const ProfilePage: React.FC = () => {
       <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
           <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400" />
             <span>AI Generated CV</span>
           </h3>
         </div>
@@ -1109,8 +1109,8 @@ export const ProfilePage: React.FC = () => {
         {latestSavedCv ? (
           <div className="p-5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 space-y-4">
             <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/40 flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              <div className="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-950/40 border border-brand-200 dark:border-brand-800/40 flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-5 h-5 text-brand-600 dark:text-brand-400" />
               </div>
               <div className="space-y-1 flex-1">
                 <div className="flex items-center gap-2">
@@ -1150,7 +1150,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate(ROUTES.RESUME_BUILDER)}
-                className="py-2.5 px-3 rounded-lg border border-indigo-200 dark:border-indigo-800/60 bg-indigo-50/50 dark:bg-indigo-950/20 hover:bg-indigo-100/50 text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase flex items-center justify-center gap-1.5 transition cursor-pointer"
+                className="py-2.5 px-3 rounded-lg border border-brand-200 dark:border-brand-800/60 bg-brand-50/50 dark:bg-brand-950/20 hover:bg-brand-100/50 text-brand-600 dark:text-brand-400 text-xs font-bold uppercase flex items-center justify-center gap-1.5 transition cursor-pointer"
               >
                 <Edit2 className="w-3.5 h-3.5" />
                 <span>Edit</span>
@@ -1160,8 +1160,8 @@ export const ProfilePage: React.FC = () => {
         ) : (
           <div className="p-5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/40 flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              <div className="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-950/40 border border-brand-200 dark:border-brand-800/40 flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-5 h-5 text-brand-600 dark:text-brand-400" />
               </div>
               <div>
                 <h4 className="text-sm font-bold text-slate-900 dark:text-white">
@@ -1176,7 +1176,7 @@ export const ProfilePage: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate(ROUTES.RESUME_BUILDER)}
-              className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider transition cursor-pointer whitespace-nowrap self-start sm:self-auto shadow-sm shadow-indigo-200 dark:shadow-none"
+              className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider transition cursor-pointer whitespace-nowrap self-start sm:self-auto shadow-sm shadow-brand-200 dark:shadow-none"
             >
               CREATE
             </button>
@@ -1208,7 +1208,7 @@ export const ProfilePage: React.FC = () => {
                 onClick={() => photoInputRef.current?.click()}
                 className="w-full py-3 px-4 text-left text-xs font-bold uppercase text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60 rounded-xl flex items-center gap-3 cursor-pointer transition"
               >
-                <Upload className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                <Upload className="w-4 h-4 text-brand-600 dark:text-brand-400" />
                 <span>{uploadingPhoto ? 'Uploading...' : 'Choose from Gallery / Files'}</span>
               </button>
 

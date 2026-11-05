@@ -54,7 +54,7 @@ export const AboutPage: React.FC = () => {
             POWERED BY
           </div>
           <div className="flex items-center justify-center gap-2">
-            <Building2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+            <Building2 className="w-5 h-5 text-brand-600 dark:text-brand-400" />
             <span className="text-base font-black text-slate-900 dark:text-white tracking-wider">
               {APP_CONFIG.companyName}
             </span>

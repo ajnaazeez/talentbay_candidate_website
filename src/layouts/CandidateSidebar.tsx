@@ -20,7 +20,6 @@ import {
   ChevronRight,
   X,
   Mail,
-  Search,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/utils/constants';
@@ -65,7 +64,6 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
       items: [
         { title: 'Overview', to: ROUTES.DASHBOARD, icon: LayoutDashboard },
         { title: 'Browse Jobs', to: ROUTES.JOBS, icon: Briefcase },
-        { title: 'Search Jobs', to: ROUTES.SEARCH, icon: Search },
         { title: 'Applications', to: ROUTES.APPLICATIONS, icon: FileCheck2 },
         {
           title: 'Invitations',
@@ -132,13 +130,13 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
       {/* Sidebar Container */}
       <aside
         className={cn(
-          'fixed top-0 left-0 bottom-0 z-50 flex flex-col bg-[#0b0f19] border-r border-[#1e293b] transition-all duration-300 ease-in-out lg:translate-x-0',
+          'fixed top-0 left-0 bottom-0 z-50 flex flex-col bg-[#0a0f1d] border-r border-[#1e2f52] transition-all duration-300 ease-in-out lg:translate-x-0',
           isOpen ? 'translate-x-0' : '-translate-x-full',
           isCollapsed ? 'lg:w-[72px]' : 'lg:w-64 w-64'
         )}
       >
         {/* Brand Header */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-[#1e293b]/90 bg-[#070b12]">
+        <div className="flex items-center justify-between h-16 px-4 border-b border-[#1e2f52] bg-[#070b14]">
           <NavLink
             to={ROUTES.DASHBOARD}
             className={cn(
@@ -190,9 +188,14 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
               )}
               {section.items.map((item) => {
                 const Icon = item.icon;
+                const isJobRelated =
+                  item.to === ROUTES.JOBS &&
+                  (location.pathname === ROUTES.SEARCH ||
+                    location.pathname.startsWith(`${ROUTES.SEARCH}/`));
                 const isActive =
                   location.pathname === item.to ||
-                  (item.to !== ROUTES.DASHBOARD && location.pathname.startsWith(`${item.to}/`));
+                  (item.to !== ROUTES.DASHBOARD && location.pathname.startsWith(`${item.to}/`)) ||
+                  isJobRelated;
 
                 return (
                   <div
@@ -209,8 +212,8 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                           'flex items-center px-3 py-2 rounded-xl text-xs font-medium transition-all duration-150 group relative',
                           isCollapsed ? 'justify-center px-2' : 'justify-between',
                           matchActive || isActive
-                            ? 'bg-brand-500/15 text-brand-300 font-semibold border border-brand-500/30 shadow-xs'
-                            : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/70'
+                            ? 'bg-brand-600/15 text-brand-300 font-semibold border border-brand-500/30 shadow-xs'
+                            : 'text-slate-400 hover:text-slate-100 hover:bg-[#182644]/70'
                         )
                       }
                     >
@@ -227,7 +230,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                       {!isCollapsed && (
                         <div className="flex items-center gap-1.5 shrink-0">
                           {item.badge !== undefined && (
-                            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-brand-500 text-white">
+                            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-brand-600 text-white">
                               {item.badge}
                             </span>
                           )}
@@ -240,10 +243,10 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
 
                     {/* Tooltip for collapsed sidebar */}
                     {isCollapsed && hoveredItem === item.to && (
-                      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs font-semibold whitespace-nowrap shadow-xl z-50">
+                      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 rounded-lg bg-[#0e1628] border border-[#1e2f52] text-white text-xs font-semibold whitespace-nowrap shadow-xl z-50">
                         {item.title}
                         {item.badge !== undefined && (
-                          <span className="ml-2 text-[10px] px-1.5 py-0.2 rounded-full bg-brand-500 text-white font-bold">
+                          <span className="ml-2 text-[10px] px-1.5 py-0.2 rounded-full bg-brand-600 text-white font-bold">
                             {item.badge}
                           </span>
                         )}
@@ -258,7 +261,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
 
         {/* Sidebar Collapse Toggle Button on Desktop */}
         {onToggleCollapse && (
-          <div className="hidden lg:flex items-center justify-between p-3 border-t border-[#1e293b]/90 bg-[#070b12]">
+          <div className="hidden lg:flex items-center justify-between p-3 border-t border-[#1e2f52] bg-[#070b14]">
             {!isCollapsed && (
               <div className="flex items-center gap-2 min-w-0">
                 <div className="w-2 h-2 rounded-full bg-brand-400 animate-pulse" />

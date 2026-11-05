@@ -268,10 +268,10 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="space-y-8 max-w-6xl mx-auto pb-20 animate-in fade-in duration-300">
       {/* 1. Executive Welcome & Search Hero Banner */}
-      <div className="relative rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-8 shadow-card overflow-hidden">
+      <div className="relative rounded-3xl bg-gradient-to-br from-[#070b14] via-[#0b1329] to-[#0f1f3d] text-white p-6 sm:p-8 shadow-card overflow-hidden border border-brand-500/20">
         {/* Ambient subtle light glows */}
         <div className="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-brand-500/15 blur-3xl pointer-events-none" />
-        <div className="absolute -left-20 -bottom-20 w-80 h-80 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute -left-20 -bottom-20 w-80 h-80 rounded-full bg-brand-600/10 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 space-y-6">
           {/* Top Row: Greeting & Right Quick Actions */}
@@ -281,7 +281,7 @@ export const DashboardPage: React.FC = () => {
                 <Sparkles className="w-3.5 h-3.5 text-brand-300" />
                 <span>Career Hub</span>
                 {candidate?.isPremium && (
-                  <span className="ml-1 px-1.5 py-0.2 rounded text-[10px] bg-amber-400 text-slate-950 font-bold">
+                  <span className="ml-1 px-1.5 py-0.2 rounded text-[10px] bg-amber-400/20 text-amber-300 border border-amber-400/40 font-bold">
                     PRO
                   </span>
                 )}
@@ -329,7 +329,7 @@ export const DashboardPage: React.FC = () => {
 
           {/* Embedded Glassmorphic Search Bar */}
           <form onSubmit={handleSearchSubmit} className="relative">
-            <div className="relative flex items-center bg-white/10 dark:bg-black/30 backdrop-blur-md border border-white/20 rounded-2xl p-1.5 focus-within:border-brand-400 focus-within:ring-2 focus-within:ring-brand-400/30 transition-all shadow-inner">
+            <div className="relative flex items-center bg-white/10 dark:bg-black/40 backdrop-blur-md border border-white/20 rounded-2xl p-1.5 focus-within:border-brand-400 focus-within:ring-2 focus-within:ring-brand-400/30 transition-all shadow-inner">
               <Search className="w-5 h-5 text-slate-300 absolute left-4 pointer-events-none" />
               <input
                 type="text"
@@ -354,7 +354,7 @@ export const DashboardPage: React.FC = () => {
         {/* Applied */}
         <Link
           to={ROUTES.APPLICATIONS}
-          className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-card-hover hover:border-indigo-300 dark:hover:border-indigo-700 transition-all duration-200 group flex items-center justify-between"
+          className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#131f37] border border-slate-200/90 dark:border-[#1e2f52] shadow-card hover:shadow-card-hover hover:border-brand-400 dark:hover:border-brand-600 hover:-translate-y-0.5 transition-all duration-200 group flex items-center justify-between"
         >
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
@@ -363,12 +363,12 @@ export const DashboardPage: React.FC = () => {
             <span className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight block">
               {applicationsCount}
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 font-medium group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
+            <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 font-medium group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">
               <span>View applications</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+          <div className="w-12 h-12 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
             <Briefcase className="w-6 h-6" />
           </div>
         </Link>
@@ -376,7 +376,7 @@ export const DashboardPage: React.FC = () => {
         {/* Saved */}
         <Link
           to={ROUTES.SAVED_JOBS}
-          className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-card-hover hover:border-indigo-300 dark:hover:border-indigo-700 transition-all duration-200 group flex items-center justify-between"
+          className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#131f37] border border-slate-200/90 dark:border-[#1e2f52] shadow-card hover:shadow-card-hover hover:border-brand-400 dark:hover:border-brand-600 hover:-translate-y-0.5 transition-all duration-200 group flex items-center justify-between"
         >
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
@@ -385,12 +385,12 @@ export const DashboardPage: React.FC = () => {
             <span className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight block">
               {savedJobsCount}
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 font-medium group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
+            <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 font-medium group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">
               <span>View saved jobs</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+          <div className="w-12 h-12 rounded-xl bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
             <Bookmark className="w-6 h-6" />
           </div>
         </Link>
@@ -398,7 +398,7 @@ export const DashboardPage: React.FC = () => {
         {/* Invites */}
         <Link
           to={ROUTES.INVITATIONS}
-          className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-card-hover hover:border-indigo-300 dark:hover:border-indigo-700 transition-all duration-200 group flex items-center justify-between relative"
+          className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#131f37] border border-slate-200/90 dark:border-[#1e2f52] shadow-card hover:shadow-card-hover hover:border-brand-400 dark:hover:border-brand-600 hover:-translate-y-0.5 transition-all duration-200 group flex items-center justify-between relative"
         >
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
@@ -407,12 +407,12 @@ export const DashboardPage: React.FC = () => {
             <span className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight block">
               {pendingInvitesCount}
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 font-medium group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
+            <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 font-medium group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">
               <span>View invitations</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform relative">
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform relative">
             <Mail className="w-6 h-6" />
             {pendingInvitesCount > 0 && (
               <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-rose-600 ring-2 ring-white dark:ring-slate-900" />
@@ -423,7 +423,7 @@ export const DashboardPage: React.FC = () => {
 
       {/* 4. Category Filter Chips (ALL, REMOTE, FULL-TIME, etc. - matching Flutter) */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-        <div className="inline-flex items-center gap-1.5 p-1 rounded-2xl bg-slate-100/80 dark:bg-[#111827] border border-slate-200/80 dark:border-[#1f293d]">
+        <div className="inline-flex items-center gap-1.5 p-1 rounded-2xl bg-slate-100/80 dark:bg-[#131f37] border border-slate-200/80 dark:border-[#1e2f52]">
           {CATEGORIES.map((category) => {
             const isSelected = selectedCategory === category;
             return (
@@ -457,7 +457,7 @@ export const DashboardPage: React.FC = () => {
           </div>
           <Link
             to={ROUTES.JOBS}
-            className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition inline-flex items-center gap-1"
+            className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition inline-flex items-center gap-1"
           >
             <span>View All</span>
             <ChevronRight className="w-4 h-4" />
@@ -483,7 +483,7 @@ export const DashboardPage: React.FC = () => {
             <div className="pt-2">
               <Link
                 to={ROUTES.JOBS}
-                className="inline-block px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
+                className="inline-block px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
               >
                 Explore All Jobs
               </Link>
@@ -519,7 +519,7 @@ export const DashboardPage: React.FC = () => {
           </div>
           <Link
             to={ROUTES.COMPANIES}
-            className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition inline-flex items-center gap-1"
+            className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition inline-flex items-center gap-1"
           >
             <span>View All</span>
             <ChevronRight className="w-4 h-4" />
@@ -540,9 +540,9 @@ export const DashboardPage: React.FC = () => {
               <Link
                 key={company.id}
                 to={`/companies/${company.id}`}
-                className="p-5 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200/80 dark:border-[#1f293d] flex flex-col items-center justify-center text-center hover:border-brand-300 dark:hover:border-brand-700/60 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group h-40 shadow-card"
+                className="p-5 rounded-2xl bg-white dark:bg-[#131f37] border border-slate-200/80 dark:border-[#1e2f52] flex flex-col items-center justify-center text-center hover:border-brand-300 dark:hover:border-brand-700/60 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group h-40 shadow-card"
               >
-                <div className="w-14 h-14 rounded-2xl border border-slate-100 dark:border-[#1f293d] bg-slate-50/80 dark:bg-[#0f172a] overflow-hidden flex items-center justify-center mb-3 shadow-2xs group-hover:scale-105 transition-transform p-2.5">
+                <div className="w-14 h-14 rounded-2xl border border-slate-100 dark:border-[#1e2f52] bg-slate-50/80 dark:bg-[#0e1628] overflow-hidden flex items-center justify-center mb-3 shadow-2xs group-hover:scale-105 transition-transform p-2.5">
                   {company.profile?.logoUrl || company.logoUrl ? (
                     <img
                       src={company.profile?.logoUrl || company.logoUrl}

@@ -9,31 +9,57 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
-          950: '#1e1b4b',
+          50: '#f0f7ff',
+          100: '#e0effe',
+          200: '#bae0fd',
+          300: '#7cc5fb',
+          400: '#38a5f8',
+          500: '#2563eb',
+          600: '#1d4ed8', // Deep Royal Blue Primary
+          700: '#1e40af', // Hover state
+          800: '#1e3a8a', // Active state
+          900: '#172554',
+          950: '#0a122c',
+        },
+        navy: {
+          700: '#1e2f52',
+          750: '#182644',
+          800: '#131f37', // Midnight Navy Card
+          850: '#0f172a',
+          900: '#0b1120',
+          950: '#070b14', // Deepest Canvas
+        },
+        champagne: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#f59e0b',
+          600: '#d97706', // Champagne Gold Accent for PRO
+          700: '#b45309',
+        },
+        platinum: {
+          50: '#ffffff',
+          100: '#fafbfd',
+          200: '#f4f6f9', // Soft Platinum Off-White
+          300: '#e8edf3',
+          400: '#cbd5e1',
+          500: '#94a3b8',
         },
         sidebar: {
-          bg: '#0b0f19',
-          card: '#111827',
-          hover: '#1e293b',
-          active: '#1e1b4b',
+          bg: '#0a0f1d',
+          card: '#131f37',
+          hover: '#182644',
+          active: '#1d4ed8',
           text: '#94a3b8',
           textActive: '#ffffff',
-          border: '#1f293d',
+          border: '#1e2f52',
         },
-        'dark-bg': '#0b0f19',
-        'dark-card': '#111827',
-        'dark-border': '#1f293d',
-        'dark-hover': '#1e293b',
+        'dark-bg': '#0a0f1d',
+        'dark-card': '#131f37',
+        'dark-border': '#1e2f52',
+        'dark-hover': '#182644',
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],

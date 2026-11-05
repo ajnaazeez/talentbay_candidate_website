@@ -17,11 +17,11 @@ const variantClasses: Record<ButtonVariant, string> = {
   primary:
     'bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 shadow-xs hover:shadow-md transition-all duration-150 disabled:bg-brand-300 dark:disabled:bg-brand-900/40',
   secondary:
-    'bg-slate-100 dark:bg-[#1e293b] text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-[#283548] active:bg-slate-300 disabled:opacity-50 transition-all duration-150',
+    'bg-slate-100 dark:bg-[#182644] text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-[#1e2f52] active:bg-slate-300 disabled:opacity-50 transition-all duration-150',
   outline:
-    'bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#1f293d] hover:bg-slate-50 dark:hover:bg-[#1e293b] hover:border-slate-300 dark:hover:border-slate-700 shadow-xs disabled:opacity-50 transition-all duration-150',
+    'bg-white dark:bg-[#131f37] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#1e2f52] hover:bg-slate-50 dark:hover:bg-[#182644] hover:border-slate-300 dark:hover:border-slate-600 shadow-xs disabled:opacity-50 transition-all duration-150',
   ghost:
-    'bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-[#1e293b]/70 hover:text-slate-900 dark:hover:text-white transition-all duration-150 disabled:opacity-40',
+    'bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-[#182644]/80 hover:text-slate-900 dark:hover:text-white transition-all duration-150 disabled:opacity-40',
   danger:
     'bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-xs hover:shadow transition-all duration-150 disabled:bg-rose-300',
   success:

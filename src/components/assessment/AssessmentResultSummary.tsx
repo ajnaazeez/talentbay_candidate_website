@@ -79,7 +79,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-300">
       {/* Top Hero Score Card */}
       <div className={`p-8 rounded-3xl border ${theme.borderColor} ${theme.bgColor} text-center space-y-6 relative overflow-hidden shadow-sm`}>
-        <div className="w-16 h-16 rounded-2xl bg-white dark:bg-[#111827] shadow-md mx-auto flex items-center justify-center text-brand-600 dark:text-brand-400">
+        <div className="w-16 h-16 rounded-2xl bg-white dark:bg-[#131f37] shadow-md mx-auto flex items-center justify-center text-brand-600 dark:text-brand-400">
           <Trophy className="w-8 h-8" />
         </div>
 
@@ -97,7 +97,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
 
         {/* Big Metrics Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto pt-2">
-          <div className="bg-white/80 dark:bg-[#111827]/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-200/60 dark:border-[#1f293d]">
+          <div className="bg-white/80 dark:bg-[#131f37]/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-200/60 dark:border-[#1e2f52]">
             <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100">
               {percentage}%
             </div>
@@ -106,7 +106,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
             </div>
           </div>
 
-          <div className="bg-white/80 dark:bg-[#111827]/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-200/60 dark:border-[#1f293d]">
+          <div className="bg-white/80 dark:bg-[#131f37]/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-200/60 dark:border-[#1e2f52]">
             <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
               {result.score}/{result.totalQuestions}
             </div>
@@ -115,7 +115,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
             </div>
           </div>
 
-          <div className="bg-white/80 dark:bg-[#111827]/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-200/60 dark:border-[#1f293d]">
+          <div className="bg-white/80 dark:bg-[#131f37]/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-200/60 dark:border-[#1e2f52]">
             <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100">
               {result.difficulty}
             </div>
@@ -124,7 +124,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
             </div>
           </div>
 
-          <div className="bg-white/80 dark:bg-[#111827]/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-200/60 dark:border-[#1f293d]">
+          <div className="bg-white/80 dark:bg-[#131f37]/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-200/60 dark:border-[#1e2f52]">
             <div className="text-2xl sm:text-3xl font-extrabold text-brand-600 dark:text-brand-400">
               Saved
             </div>
@@ -163,14 +163,14 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
       </div>
 
       {/* Question Breakdown Accordion Header */}
-      <div className="bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-[#1f293d] overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-[#131f37] rounded-2xl border border-slate-200 dark:border-[#1e2f52] overflow-hidden shadow-sm">
         <button
           type="button"
           onClick={() => setShowReview(!showReview)}
-          className="w-full p-5 sm:p-6 flex items-center justify-between text-left hover:bg-slate-50/50 dark:hover:bg-[#1f293d]/30 transition-colors"
+          className="w-full p-5 sm:p-6 flex items-center justify-between text-left hover:bg-slate-50/50 dark:hover:bg-[#1e2f52]/30 transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-[#1f293d] flex items-center justify-center text-slate-700 dark:text-slate-300 font-bold">
+            <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-[#1e2f52] flex items-center justify-center text-slate-700 dark:text-slate-300 font-bold">
               {result.questions.length}
             </div>
             <div>
@@ -191,7 +191,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
 
         {/* Questions List */}
         {showReview && (
-          <div className="p-5 sm:p-6 pt-0 space-y-4 border-t border-slate-100 dark:border-[#1f293d]">
+          <div className="p-5 sm:p-6 pt-0 space-y-4 border-t border-slate-100 dark:border-[#1e2f52]">
             {result.questions.map((q, idx) => {
               const userAnswer = result.userAnswers[idx];
               const isCorrect = userAnswer === q.correctAnswerIndex;
@@ -236,7 +236,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
                       const isCandidatePick = userAnswer === oIdx;
                       const isActualCorrect = q.correctAnswerIndex === oIdx;
 
-                      let optClasses = 'border-slate-200 dark:border-[#1f293d] bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-300';
+                      let optClasses = 'border-slate-200 dark:border-[#1e2f52] bg-white dark:bg-[#131f37] text-slate-700 dark:text-slate-300';
                       if (isActualCorrect) {
                         optClasses = 'border-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-semibold ring-1 ring-emerald-500/30';
                       } else if (isCandidatePick && !isCorrect) {
@@ -249,7 +249,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
                           className={`p-3 rounded-xl border text-xs sm:text-sm flex items-center justify-between ${optClasses}`}
                         >
                           <div className="flex items-center gap-2.5">
-                            <span className="w-5 h-5 rounded-md bg-slate-100 dark:bg-[#1f293d] flex items-center justify-center font-bold text-xs shrink-0">
+                            <span className="w-5 h-5 rounded-md bg-slate-100 dark:bg-[#1e2f52] flex items-center justify-center font-bold text-xs shrink-0">
                               {['A', 'B', 'C', 'D'][oIdx] || oIdx + 1}
                             </span>
                             <span>{opt}</span>

@@ -229,7 +229,7 @@ export const SettingsPage: React.FC = () => {
                 className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
               >
                 <div className="flex items-center gap-3.5">
-                  <CreditCard className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                  <CreditCard className="w-5 h-5 text-brand-600 dark:text-brand-400 shrink-0" />
                   <div>
                     <div className="text-xs font-bold text-slate-900 dark:text-white">
                       View Subscription Plans
@@ -274,7 +274,7 @@ export const SettingsPage: React.FC = () => {
               className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
             >
               <div className="flex items-center gap-3.5">
-                <CreditCard className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                <CreditCard className="w-5 h-5 text-brand-600 dark:text-brand-400 shrink-0" />
                 <div>
                   <div className="text-xs font-bold text-slate-900 dark:text-white">
                     {hasUsedTrial ? 'Upgrade to Premium' : 'View Subscription Plans'}
@@ -340,7 +340,7 @@ export const SettingsPage: React.FC = () => {
                   <Icon
                     className={`w-5 h-5 ${
                       isSelected
-                        ? 'text-indigo-600 dark:text-indigo-400'
+                        ? 'text-brand-600 dark:text-brand-400'
                         : 'text-slate-400 dark:text-slate-500'
                     }`}
                   />
@@ -355,7 +355,7 @@ export const SettingsPage: React.FC = () => {
                   </span>
                 </div>
                 {isSelected && (
-                  <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                  <CheckCircle2 className="w-4 h-4 text-brand-600 dark:text-brand-400" />
                 )}
               </button>
             );
@@ -433,7 +433,7 @@ export const SettingsPage: React.FC = () => {
               type="button"
               disabled={resetSending || !user?.email}
               onClick={handlePasswordReset}
-              className="px-3 py-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 border border-indigo-600 dark:border-indigo-400 transition cursor-pointer self-start sm:self-auto inline-flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-bold text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 border border-brand-600 dark:border-brand-400 transition cursor-pointer self-start sm:self-auto inline-flex items-center gap-1.5"
             >
               {resetSending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Lock className="w-3.5 h-3.5" />}
               <span>Reset Password</span>
@@ -460,7 +460,7 @@ export const SettingsPage: React.FC = () => {
                 setPhoneInput(candidate?.phoneNumber?.slice(-10) || '');
                 setShowPhoneModal(true);
               }}
-              className="px-3 py-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 border border-indigo-600 dark:border-indigo-400 transition cursor-pointer self-start sm:self-auto"
+              className="px-3 py-1.5 text-xs font-bold text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 border border-brand-600 dark:border-brand-400 transition cursor-pointer self-start sm:self-auto"
             >
               {candidate?.phoneNumber ? 'Update Mobile' : 'Link Mobile'}
             </button>
@@ -575,7 +575,7 @@ export const SettingsPage: React.FC = () => {
             className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
           >
             <div className="flex items-center gap-3.5">
-              <Shield className="w-5 h-5 text-indigo-500 shrink-0" />
+              <Shield className="w-5 h-5 text-brand-500 shrink-0" />
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   Privacy Policy
@@ -749,7 +749,7 @@ export const SettingsPage: React.FC = () => {
                   onChange={(e) => setPhoneInput(e.target.value)}
                   placeholder="9876543210"
                   maxLength={10}
-                  className="flex-1 px-3 py-2 text-xs border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600"
+                  className="flex-1 px-3 py-2 text-xs border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:border-brand-600"
                 />
               </div>
 
@@ -768,7 +768,7 @@ export const SettingsPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={phoneLoading}
-                  className="px-4 py-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition uppercase cursor-pointer disabled:opacity-50"
+                  className="px-4 py-1.5 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 transition uppercase cursor-pointer disabled:opacity-50"
                 >
                   {phoneLoading ? 'Saving...' : 'Save'}
                 </button>

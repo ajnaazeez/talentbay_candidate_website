@@ -124,7 +124,7 @@ export const CompanyDetailsPage: React.FC = () => {
       {/* Header Profile Banner */}
       <div className="relative rounded-3xl bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border shadow-soft overflow-hidden">
         {/* Cover banner */}
-        <div className="h-32 sm:h-44 bg-gradient-to-r from-slate-900 via-indigo-950 to-brand-950 relative">
+        <div className="h-32 sm:h-44 bg-gradient-to-r from-slate-900 via-[#0b1329] to-[#0f1f3d] relative">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
         </div>
 

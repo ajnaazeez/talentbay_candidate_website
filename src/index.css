@@ -8,11 +8,11 @@
   }
 
   body {
-    @apply font-sans bg-slate-50 text-slate-900 antialiased selection:bg-brand-500/20 selection:text-brand-900 transition-colors duration-150;
+    @apply font-sans bg-[#f8fafc] text-slate-900 antialiased selection:bg-brand-500/20 selection:text-brand-900 transition-colors duration-150;
   }
 
   .dark body {
-    @apply bg-[#0b0f19] text-slate-100 selection:bg-brand-500/30 selection:text-brand-200;
+    @apply bg-[#0a0f1d] text-slate-100 selection:bg-brand-500/30 selection:text-brand-200;
   }
 }
 
@@ -22,17 +22,17 @@
 }
 
 .dark .bg-white {
-  background-color: #111827 !important;
+  background-color: #131f37 !important;
   color: #f8fafc;
 }
 
 .dark .bg-slate-50 {
-  background-color: #0b0f19 !important;
+  background-color: #0a0f1d !important;
   color: #f1f5f9;
 }
 
 .dark .bg-slate-100 {
-  background-color: #1e293b !important;
+  background-color: #182644 !important;
   color: #e2e8f0;
 }
 
@@ -53,27 +53,27 @@
 .dark .border-slate-200,
 .dark .border-slate-200\/90,
 .dark .border-slate-100 {
-  border-color: #1f293d !important;
+  border-color: #1e2f52 !important;
 }
 
 .dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
 .dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
-  border-color: #1f293d !important;
+  border-color: #1e2f52 !important;
 }
 
 .dark .hover\:bg-slate-50:hover {
-  background-color: #1e293b !important;
+  background-color: #182644 !important;
 }
 
 .dark .hover\:bg-slate-100:hover {
-  background-color: #1e293b !important;
+  background-color: #182644 !important;
 }
 
 .dark input:not([type="checkbox"]):not([type="radio"]),
 .dark textarea,
 .dark select {
   background-color: #0f172a !important;
-  border-color: #334155 !important;
+  border-color: #1e2f52 !important;
   color: #f8fafc !important;
 }
 
@@ -83,8 +83,8 @@
 }
 
 .dark header {
-  background-color: rgba(11, 15, 25, 0.95) !important;
-  border-bottom-color: #1f293d !important;
+  background-color: rgba(10, 15, 29, 0.95) !important;
+  border-bottom-color: #1e2f52 !important;
 }
 
 /* Custom smooth scrollbar */
@@ -117,15 +117,15 @@
 /* Premium UI Component Utilities */
 @layer components {
   .card-premium {
-    @apply rounded-2xl bg-white dark:bg-[#111827] border border-slate-200/80 dark:border-[#1f293d] shadow-card transition-all duration-200;
+    @apply rounded-2xl bg-white dark:bg-[#131f37] border border-slate-200/80 dark:border-[#1e2f52] shadow-card transition-all duration-200;
   }
 
   .card-interactive {
-    @apply card-premium hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer;
+    @apply card-premium hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer;
   }
 
   .card-nested {
-    @apply rounded-xl bg-slate-50/70 dark:bg-[#0f172a]/60 border border-slate-100 dark:border-[#1f293d]/80 p-4 transition-all duration-150;
+    @apply rounded-xl bg-slate-50/70 dark:bg-[#0e1628]/70 border border-slate-100 dark:border-[#1e2f52]/80 p-4 transition-all duration-150;
   }
 
   .badge-premium {
@@ -137,7 +137,7 @@
   }
 
   .glass-header {
-    @apply bg-white/85 dark:bg-[#0b0f19]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-[#1f293d];
+    @apply bg-white/90 dark:bg-[#0a0f1d]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-[#1e2f52];
   }
 }
 

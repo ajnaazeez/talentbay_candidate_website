@@ -465,7 +465,7 @@ export const JobDetailsPage: React.FC = () => {
               {job.skillsRequired.map((skill) => (
                 <div
                   key={skill}
-                  className="px-3.5 py-1.5 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/50 dark:bg-indigo-950/40 text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300"
+                  className="px-3.5 py-1.5 rounded-xl border border-brand-200 dark:border-brand-800 bg-brand-50/60 dark:bg-brand-950/40 text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300"
                 >
                   {skill}
                 </div>
@@ -529,7 +529,7 @@ export const JobDetailsPage: React.FC = () => {
                 type="button"
                 disabled={isApplying}
                 onClick={handleAcceptInvitation}
-                className="w-full h-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm shadow-indigo-200 dark:shadow-none"
+                className="w-full h-12 rounded-xl bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm shadow-brand-500/20"
               >
                 {isApplying ? 'ACCEPTING...' : 'ACCEPT & APPLY'}
               </button>
@@ -546,7 +546,7 @@ export const JobDetailsPage: React.FC = () => {
                 type="button"
                 disabled={isApplying}
                 onClick={() => setApplyModalOpen(true)}
-                className="w-full h-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm shadow-indigo-200 dark:shadow-none"
+                className="w-full h-12 rounded-xl bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm shadow-brand-500/20"
               >
                 {isApplying ? 'APPLYING...' : 'APPLY NOW'}
               </button>

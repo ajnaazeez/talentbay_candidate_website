@@ -230,7 +230,7 @@ export const CareerReadinessPage: React.FC = () => {
       )}
 
       {/* Target Job Role Selector Card */}
-      <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-slate-200 dark:border-[#1f293d] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#131f37] p-6 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold">
             <Briefcase className="w-5 h-5" />
@@ -250,7 +250,7 @@ export const CareerReadinessPage: React.FC = () => {
             value={selectedJobId}
             onChange={(e) => handleJobChange(e.target.value)}
             disabled={refreshing}
-            className="px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-[#1f293d] text-xs sm:text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+            className="px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-[#0a0f1d] border border-slate-200 dark:border-[#1e2f52] text-xs sm:text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
           >
             <option value="custom">Target Role: {customJobTitle || 'General Software Engineering'}</option>
             {availableJobs.map((j) => (
@@ -265,7 +265,7 @@ export const CareerReadinessPage: React.FC = () => {
       {/* Hero Readiness Overview Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Score Dial Card */}
-        <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-slate-200 dark:border-[#1f293d] shadow-sm flex flex-col items-center justify-center text-center space-y-4">
+        <div className="bg-white dark:bg-[#131f37] p-6 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm flex flex-col items-center justify-center text-center space-y-4">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             Overall Career Readiness Score
           </span>
@@ -277,7 +277,7 @@ export const CareerReadinessPage: React.FC = () => {
                 cx="60"
                 cy="60"
                 r="50"
-                className="stroke-slate-100 dark:stroke-[#1f293d]"
+                className="stroke-slate-100 dark:stroke-[#1e2f52]"
                 strokeWidth="10"
                 fill="transparent"
               />
@@ -321,7 +321,7 @@ export const CareerReadinessPage: React.FC = () => {
         </div>
 
         {/* AI Guidance Summary & Strengths Card */}
-        <div className="lg:col-span-2 bg-white dark:bg-[#111827] p-6 rounded-2xl border border-slate-200 dark:border-[#1f293d] shadow-sm flex flex-col justify-between space-y-6">
+        <div className="lg:col-span-2 bg-white dark:bg-[#131f37] p-6 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm flex flex-col justify-between space-y-6">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-500" />
@@ -369,7 +369,7 @@ export const CareerReadinessPage: React.FC = () => {
       </div>
 
       {/* SECTION 5: AI SKILL GAP ANALYSIS */}
-      <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-slate-200 dark:border-[#1f293d] shadow-sm space-y-6">
+      <div className="bg-white dark:bg-[#131f37] p-6 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm space-y-6">
         <div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <Layers className="w-5 h-5 text-brand-600 dark:text-brand-400" />
@@ -389,7 +389,7 @@ export const CareerReadinessPage: React.FC = () => {
               return (
                 <div
                   key={gap.skill}
-                  className="p-4 rounded-xl border border-slate-200 dark:border-[#1f293d] bg-slate-50/50 dark:bg-[#0b0f19]/40 flex flex-col justify-between space-y-3"
+                  className="p-4 rounded-xl border border-slate-200 dark:border-[#1e2f52] bg-slate-50/50 dark:bg-[#0a0f1d]/40 flex flex-col justify-between space-y-3"
                 >
                   <div className="space-y-1">
                     <div className="flex items-start justify-between gap-2">
@@ -409,7 +409,7 @@ export const CareerReadinessPage: React.FC = () => {
                       <span>Target: <strong>{gap.requiredScore}%</strong></span>
                     </div>
 
-                    <div className="bg-slate-200 dark:bg-[#1f293d] h-2 rounded-full overflow-hidden mt-1">
+                    <div className="bg-slate-200 dark:bg-[#1e2f52] h-2 rounded-full overflow-hidden mt-1">
                       <div
                         className={`h-full rounded-full transition-all ${
                           hasMetRequirement ? 'bg-emerald-500' : 'bg-brand-500'
@@ -439,7 +439,7 @@ export const CareerReadinessPage: React.FC = () => {
       </div>
 
       {/* SECTION 4b: PERSONALIZED LEARNING ROADMAP */}
-      <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-slate-200 dark:border-[#1f293d] shadow-sm space-y-6">
+      <div className="bg-white dark:bg-[#131f37] p-6 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm space-y-6">
         <div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-brand-600 dark:text-brand-400" />
@@ -455,7 +455,7 @@ export const CareerReadinessPage: React.FC = () => {
             {guidance.skillsToStrengthen.map((skillItem) => (
               <div
                 key={skillItem.skill}
-                className="p-5 rounded-2xl border border-slate-100 dark:border-[#1f293d] bg-slate-50/30 dark:bg-[#0b0f19]/30 space-y-4"
+                className="p-5 rounded-2xl border border-slate-100 dark:border-[#1e2f52] bg-slate-50/30 dark:bg-[#0a0f1d]/30 space-y-4"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
@@ -476,7 +476,7 @@ export const CareerReadinessPage: React.FC = () => {
                   {skillItem.roadmapSteps.map((step) => (
                     <div
                       key={step.stepNumber}
-                      className="bg-white dark:bg-[#111827] p-4 rounded-xl border border-slate-200 dark:border-[#1f293d] space-y-2 flex flex-col justify-between"
+                      className="bg-white dark:bg-[#131f37] p-4 rounded-xl border border-slate-200 dark:border-[#1e2f52] space-y-2 flex flex-col justify-between"
                     >
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
@@ -495,7 +495,7 @@ export const CareerReadinessPage: React.FC = () => {
                         </p>
                       </div>
 
-                      <ul className="space-y-1 pt-2 border-t border-slate-100 dark:border-[#1f293d] mt-2">
+                      <ul className="space-y-1 pt-2 border-t border-slate-100 dark:border-[#1e2f52] mt-2">
                         {step.actionItems?.map((item, idx) => (
                           <li
                             key={idx}
@@ -520,7 +520,7 @@ export const CareerReadinessPage: React.FC = () => {
       </div>
 
       {/* SECTION 4c: INTERVIEW PREPARATION PLAN */}
-      <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-slate-200 dark:border-[#1f293d] shadow-sm space-y-6">
+      <div className="bg-white dark:bg-[#131f37] p-6 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm space-y-6">
         <div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <Calendar className="w-5 h-5 text-brand-600 dark:text-brand-400" />
@@ -535,7 +535,7 @@ export const CareerReadinessPage: React.FC = () => {
           {guidance?.interviewPreparationPlan?.map((plan, idx) => (
             <div
               key={idx}
-              className="p-5 rounded-2xl border border-slate-200 dark:border-[#1f293d] bg-white dark:bg-[#111827] space-y-3"
+              className="p-5 rounded-2xl border border-slate-200 dark:border-[#1e2f52] bg-white dark:bg-[#131f37] space-y-3"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950 px-2.5 py-1 rounded-lg">
@@ -554,7 +554,7 @@ export const CareerReadinessPage: React.FC = () => {
               </div>
 
               {plan.actionItems && plan.actionItems.length > 0 && (
-                <ul className="space-y-1.5 pt-2 border-t border-slate-100 dark:border-[#1f293d]">
+                <ul className="space-y-1.5 pt-2 border-t border-slate-100 dark:border-[#1e2f52]">
                   {plan.actionItems.map((act, aIdx) => (
                     <li
                       key={aIdx}

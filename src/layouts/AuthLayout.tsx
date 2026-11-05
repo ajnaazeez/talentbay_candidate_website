@@ -7,12 +7,12 @@ export const AuthLayout: React.FC = () => {
     <div className="min-h-screen bg-[#030712] text-slate-100 flex items-center justify-center p-4 sm:p-6 lg:p-10 relative overflow-hidden selection:bg-brand-500/30 selection:text-brand-200">
       {/* Cinematic Ambient Background Lighting */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Top-left Brand Indigo Glow */}
+        {/* Top-left Brand Royal Blue Glow */}
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl" />
-        {/* Bottom-right Purple Glow */}
-        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
+        {/* Bottom-right Midnight Glow */}
+        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-brand-700/10 rounded-full blur-3xl" />
         {/* Center Ambient Gradient */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-gradient-to-tr from-brand-950/20 via-transparent to-indigo-950/20 rounded-full blur-3xl opacity-60" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-gradient-to-tr from-brand-950/20 via-transparent to-navy-900/30 rounded-full blur-3xl opacity-60" />
         {/* Subtle grid mesh */}
         <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:32px_32px] opacity-20" />
       </div>
@@ -37,7 +37,7 @@ export const AuthLayout: React.FC = () => {
           <div className="relative z-10">
             <div className="flex items-center gap-4 mb-10">
               <div className="relative">
-                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-brand-500 to-purple-500 opacity-30 blur-sm"></div>
+                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-brand-600 to-brand-400 opacity-30 blur-sm"></div>
                 <img
                   src="/candidate.png"
                   alt="TalentBay Candidate"
@@ -47,7 +47,7 @@ export const AuthLayout: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2.5">
                   <span className="text-3xl font-black text-white tracking-tight">
-                    Talent<span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-indigo-300">Bay</span>
+                    Talent<span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-blue-300">Bay</span>
                   </span>
                   <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-brand-500/15 text-brand-300 border border-brand-500/30 uppercase tracking-wider shadow-xs shadow-brand-500/20">
                     Candidate
@@ -61,7 +61,7 @@ export const AuthLayout: React.FC = () => {
 
             <h2 className="text-3xl sm:text-4xl font-black tracking-tight mb-5 leading-[1.2] text-white">
               Discover top jobs, <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-indigo-300 to-purple-200">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-blue-200 to-slate-100">
                 build your future.
               </span>
             </h2>
@@ -82,7 +82,7 @@ export const AuthLayout: React.FC = () => {
             </div>
 
             <div className="flex flex-col items-center text-center p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md hover:border-brand-500/30 transition duration-200">
-              <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 mb-2.5 shadow-sm shadow-purple-500/10">
+              <div className="w-9 h-9 rounded-xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center text-amber-300 mb-2.5 shadow-sm shadow-amber-500/10">
                 <Sparkles className="w-4 h-4" />
               </div>
               <h4 className="text-xs font-bold text-white">AI CV & Skills</h4>
@@ -90,7 +90,7 @@ export const AuthLayout: React.FC = () => {
             </div>
 
             <div className="flex flex-col items-center text-center p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md hover:border-brand-500/30 transition duration-200">
-              <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/25 flex items-center justify-center text-indigo-400 mb-2.5 shadow-sm shadow-indigo-500/10">
+              <div className="w-9 h-9 rounded-xl bg-brand-500/10 border border-brand-500/25 flex items-center justify-center text-brand-400 mb-2.5 shadow-sm shadow-brand-500/10">
                 <ShieldCheck className="w-4 h-4" />
               </div>
               <h4 className="text-xs font-bold text-white">Direct Chat</h4>

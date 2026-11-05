@@ -113,26 +113,26 @@ export const TrialBanner: React.FC = () => {
   if (isEligible) {
     return (
       <>
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-700 text-white p-4 sm:p-5 shadow-sm border border-brand-500/30">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#070b14] via-[#0b1329] to-[#0f1f3d] text-white p-4 sm:p-5 shadow-card border border-brand-500/30">
           <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/15 via-transparent to-transparent pointer-events-none" />
           <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0">
-                <Sparkles className="w-5 h-5 text-yellow-300" />
+              <div className="w-10 h-10 rounded-xl bg-amber-400/20 border border-amber-400/30 backdrop-blur-md flex items-center justify-center shrink-0">
+                <Sparkles className="w-5 h-5 text-amber-300" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/25 text-white border border-white/20">
+                  <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">
                     Introductory Offer
                   </span>
-                  <span className="text-xs font-bold text-yellow-300">
+                  <span className="text-xs font-bold text-amber-300">
                     ₹0 For 7 Days
                   </span>
                 </div>
                 <h4 className="text-sm sm:text-base font-bold text-white mt-0.5">
                   Try TalentBay Premium completely free for 7 days
                 </h4>
-                <p className="text-xs text-indigo-100 hidden sm:block">
+                <p className="text-xs text-slate-300 hidden sm:block">
                   Apply directly, chat with employers, and test your skills. No credit card required.
                 </p>
               </div>

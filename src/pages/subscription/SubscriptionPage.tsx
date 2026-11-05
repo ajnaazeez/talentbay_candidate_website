@@ -142,7 +142,7 @@ export const SubscriptionPage: React.FC = () => {
       )}
 
       {/* Current Membership Status Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1f293d] shadow-card">
+      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#131f37] border border-slate-200 dark:border-[#1e2f52] shadow-card">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2.5">
@@ -155,7 +155,7 @@ export const SubscriptionPage: React.FC = () => {
                   {isPaidActive ? 'PREMIUM ACTIVE' : '7-DAY TRIAL ACTIVE'}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-[#1a2234] px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-[#253248]">
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-[#0e1628] px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-[#1e2f52]">
                   BASIC ACCOUNT
                 </span>
               )}
@@ -197,15 +197,15 @@ export const SubscriptionPage: React.FC = () => {
 
       {/* Free Trial Callout Card (if eligible) */}
       {isEligibleForTrial && (
-        <div className="p-6 rounded-3xl bg-gradient-to-r from-brand-900 via-indigo-900 to-purple-950 text-white border border-brand-800/40 shadow-xl relative overflow-hidden">
+        <div className="p-6 rounded-3xl bg-gradient-to-r from-[#070b14] via-[#0b1329] to-[#0f1f3d] text-white border border-brand-500/20 shadow-xl relative overflow-hidden">
           <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2 max-w-xl">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-yellow-400/20 text-yellow-300 border border-yellow-300/30">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-300/30">
                   Zero Cost
                 </span>
-                <span className="text-xs text-indigo-200">No payment info required</span>
+                <span className="text-xs text-brand-200">No payment info required</span>
               </div>
               <h4 className="text-lg sm:text-xl font-bold tracking-tight">
                 {trialPlan.title} — 100% Free for 7 Days
@@ -250,8 +250,8 @@ export const SubscriptionPage: React.FC = () => {
                 key={plan.id}
                 className={`relative rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 ${
                   plan.isPopular
-                    ? 'bg-white dark:bg-[#111827] border-2 border-brand-500 shadow-xl ring-4 ring-brand-500/10'
-                    : 'bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1f293d] shadow-card hover:border-slate-300 dark:hover:border-slate-700'
+                    ? 'bg-white dark:bg-[#131f37] border-2 border-brand-500 shadow-xl ring-4 ring-brand-500/10'
+                    : 'bg-white dark:bg-[#131f37] border border-slate-200 dark:border-[#1e2f52] shadow-card hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
                 {/* Plan Badge */}
@@ -274,7 +274,7 @@ export const SubscriptionPage: React.FC = () => {
                   </div>
 
                   {/* Price Header */}
-                  <div className="flex items-baseline gap-1.5 pb-4 border-b border-slate-100 dark:border-[#1f293d]">
+                  <div className="flex items-baseline gap-1.5 pb-4 border-b border-slate-100 dark:border-[#1e2f52]">
                     <span className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
                       ₹{plan.displayAmount}
                     </span>
@@ -300,7 +300,7 @@ export const SubscriptionPage: React.FC = () => {
                 </div>
 
                 {/* Card CTA */}
-                <div className="mt-8 pt-5 border-t border-slate-100 dark:border-[#1f293d]">
+                <div className="mt-8 pt-5 border-t border-slate-100 dark:border-[#1e2f52]">
                   <Button
                     variant={plan.isPopular ? 'primary' : 'outline'}
                     onClick={() => handleSubscribe(plan)}
@@ -323,10 +323,10 @@ export const SubscriptionPage: React.FC = () => {
       </div>
 
       {/* Trust & Guarantee Banner */}
-      <div className="p-6 rounded-3xl bg-slate-50 dark:bg-[#111827] border border-slate-200/80 dark:border-[#1f293d] shadow-2xs">
+      <div className="p-6 rounded-3xl bg-slate-50 dark:bg-[#131f37] border border-slate-200/80 dark:border-[#1e2f52] shadow-2xs">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#1a2234] border border-slate-200 dark:border-[#253248] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#0e1628] border border-slate-200 dark:border-[#1e2f52] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100">
@@ -338,7 +338,7 @@ export const SubscriptionPage: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#1a2234] border border-slate-200 dark:border-[#253248] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#0e1628] border border-slate-200 dark:border-[#1e2f52] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
               <Lock className="w-5 h-5" />
             </div>
             <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100">
@@ -350,7 +350,7 @@ export const SubscriptionPage: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#1a2234] border border-slate-200 dark:border-[#253248] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#0e1628] border border-slate-200 dark:border-[#1e2f52] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
               <RotateCw className="w-5 h-5" />
             </div>
             <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100">

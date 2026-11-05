@@ -73,11 +73,11 @@ export const JobCard: React.FC<JobCardProps> = ({
   const salaryDisplay = formatSalary(job.salary.min, job.salary.max, job.salary.currency, job.salary.type);
 
   return (
-    <div className="group relative rounded-2xl bg-white dark:bg-[#111827] border border-slate-200/80 dark:border-[#1f293d] p-5 sm:p-6 shadow-card hover:shadow-card-hover hover:border-brand-300 dark:hover:border-brand-700/60 hover:-translate-y-0.5 transition-all duration-200">
+    <div className="group relative rounded-2xl bg-white dark:bg-[#131f37] border border-slate-200/80 dark:border-[#1e2f52] p-5 sm:p-6 shadow-card hover:shadow-card-hover hover:border-brand-400 dark:hover:border-brand-600 hover:-translate-y-0.5 transition-all duration-200">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         {/* Company Logo & Basic Meta */}
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border border-slate-100 dark:border-[#1f293d] bg-slate-50/80 dark:bg-[#0f172a] overflow-hidden flex-shrink-0 flex items-center justify-center p-2 shadow-2xs group-hover:scale-105 transition-transform">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border border-slate-100 dark:border-[#1e2f52] bg-slate-50/80 dark:bg-[#0e1628] overflow-hidden flex-shrink-0 flex items-center justify-center p-2 shadow-2xs group-hover:scale-105 transition-transform">
             {job.companyLogoUrl ? (
               <img
                 src={job.companyLogoUrl}
@@ -174,7 +174,7 @@ export const JobCard: React.FC<JobCardProps> = ({
               className={`p-2 rounded-xl border transition-all duration-150 active:scale-95 cursor-pointer ${
                 isSaved
                   ? 'bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-950/40 dark:border-rose-900/60 dark:text-rose-400 shadow-2xs'
-                  : 'bg-white dark:bg-[#0f172a] border-slate-200 dark:border-[#1f293d] text-slate-400 hover:text-rose-600 hover:border-rose-200 dark:hover:border-rose-900/60'
+                  : 'bg-white dark:bg-[#0e1628] border-slate-200 dark:border-[#1e2f52] text-slate-400 hover:text-rose-600 hover:border-rose-200 dark:hover:border-rose-900/60'
               }`}
               title={isSaved ? 'Remove from Saved Jobs' : 'Save Job'}
             >
@@ -185,7 +185,7 @@ export const JobCard: React.FC<JobCardProps> = ({
       </div>
 
       {/* Salary & Required Skills */}
-      <div className="mt-4 pt-4 border-t border-slate-100 dark:border-[#1f293d] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="mt-4 pt-4 border-t border-slate-100 dark:border-[#1e2f52] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         {/* Skills Chips */}
         <div className="flex flex-wrap items-center gap-1.5">
           {job.skillsRequired.slice(0, 4).map((skill) => {
@@ -196,7 +196,7 @@ export const JobCard: React.FC<JobCardProps> = ({
                 className={`px-2.5 py-0.5 rounded-lg text-xs font-medium border transition-colors ${
                   isMatched
                     ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/40'
-                    : 'bg-slate-50 dark:bg-[#0f172a] text-slate-600 dark:text-slate-400 border-slate-200/80 dark:border-[#1f293d]'
+                    : 'bg-slate-50 dark:bg-[#0e1628] text-slate-600 dark:text-slate-400 border-slate-200/80 dark:border-[#1e2f52]'
                 }`}
               >
                 {skill}

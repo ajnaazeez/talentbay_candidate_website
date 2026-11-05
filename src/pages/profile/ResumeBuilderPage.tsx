@@ -39,10 +39,10 @@ type PageDensity = 'compact' | 'normal' | 'spacious';
 
 const COLOR_MAP: Record<AccentColor, { hex: string; bgClass: string; textClass: string; borderClass: string }> = {
   indigo: {
-    hex: '#4f46e5',
-    bgClass: 'bg-indigo-600',
-    textClass: 'text-indigo-600',
-    borderClass: 'border-indigo-600',
+    hex: '#1d4ed8',
+    bgClass: 'bg-brand-600',
+    textClass: 'text-brand-600',
+    borderClass: 'border-brand-600',
   },
   slate: {
     hex: '#334155',
@@ -352,7 +352,7 @@ export const ResumeBuilderPage: React.FC = () => {
               </div>
             ) : candidate ? (
               <div className="space-y-6">
-                <div className="bg-gradient-to-r from-brand-600 to-indigo-700 text-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="bg-gradient-to-r from-brand-600 to-brand-800 text-white p-6 rounded-2xl shadow-card flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="space-y-1">
                     <h3 className="text-lg font-bold flex items-center gap-2">
                       <Sparkles className="w-5 h-5 text-yellow-300" />

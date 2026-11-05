@@ -66,7 +66,7 @@ export const CompaniesPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-16">
       {/* Hero Banner */}
-      <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-brand-950 text-white p-6 sm:p-10 shadow-lg overflow-hidden">
+      <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-[#0b1329] to-[#0f1f3d] text-white p-6 sm:p-10 shadow-lg overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
         <div className="relative z-10 max-w-2xl space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 backdrop-blur-md text-white border border-white/20">
@@ -161,7 +161,7 @@ export const CompaniesPage: React.FC = () => {
                     </div>
 
                     {isVerified && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2.5 py-1 rounded-full border border-indigo-200 dark:border-indigo-800">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/40 px-2.5 py-1 rounded-full border border-brand-200 dark:border-brand-800">
                         <ShieldCheck className="w-3.5 h-3.5" /> Verified
                       </span>
                     )}

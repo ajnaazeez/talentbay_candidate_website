@@ -253,8 +253,8 @@ export const SearchPage: React.FC = () => {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm shadow-indigo-200 dark:shadow-none'
-                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                  ? 'bg-brand-600 text-white border-brand-600 shadow-xs'
+                  : 'bg-white dark:bg-[#131f37] text-slate-700 dark:text-slate-300 border-slate-200/80 dark:border-[#1e2f52] hover:border-slate-300 dark:hover:border-slate-600'
               }`}
             >
               {cat.toUpperCase()}
@@ -304,29 +304,29 @@ export const SearchPage: React.FC = () => {
         /* Recent Searches View (Shown when no search query is active) */
         <div className="pt-2">
           {searchHistory.length > 0 ? (
-            <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs p-6 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800/80">
+            <div className="rounded-2xl border border-slate-200/90 dark:border-[#1e2f52] bg-white dark:bg-[#131f37] shadow-card p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#1e2f52]/80">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
                   RECENT SEARCHES
                 </span>
                 <button
                   type="button"
                   onClick={clearAllHistory}
-                  className="text-xs font-semibold text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer transition"
+                  className="text-xs font-semibold text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 cursor-pointer transition"
                 >
                   Clear All
                 </button>
               </div>
 
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-slate-100 dark:divide-[#1e2f52]/60">
                 {searchHistory.map((item) => (
                   <div
                     key={item.query}
                     onClick={() => handleSelectHistoryItem(item.query)}
-                    className="py-3 px-2 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 rounded-xl transition cursor-pointer group"
+                    className="py-3 px-2 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-[#182644]/40 rounded-xl transition cursor-pointer group"
                   >
                     <div className="flex items-center gap-3">
-                      <History className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition" />
+                      <History className="w-4 h-4 text-slate-400 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition" />
                       <span className="text-sm font-medium text-slate-800 dark:text-slate-200">
                         {item.query}
                       </span>

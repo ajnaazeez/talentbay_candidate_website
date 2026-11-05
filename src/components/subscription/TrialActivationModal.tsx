@@ -57,10 +57,10 @@ export const TrialActivationModal: React.FC<TrialActivationModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-white dark:bg-[#111827] rounded-3xl border border-slate-200 dark:border-[#1f293d] shadow-modal overflow-hidden">
+      <div className="relative w-full max-w-lg bg-white dark:bg-[#131f37] rounded-3xl border border-slate-200 dark:border-[#1e2f52] shadow-modal overflow-hidden">
         {/* Header background with brand gradient */}
-        <div className="relative p-6 sm:p-8 bg-gradient-to-br from-brand-600 via-indigo-600 to-purple-700 text-white overflow-hidden">
-          <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent pointer-events-none" />
+        <div className="relative p-6 sm:p-8 bg-gradient-to-br from-[#070b14] via-[#0b1329] to-[#0f1f3d] text-white border-b border-brand-500/20 overflow-hidden">
+          <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
           
           <button
             type="button"
@@ -70,15 +70,15 @@ export const TrialActivationModal: React.FC<TrialActivationModalProps> = ({
             <X className="w-5 h-5" />
           </button>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/20 backdrop-blur-md text-white border border-white/30 mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-400/20 backdrop-blur-md text-amber-300 border border-amber-400/30 mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
             7-DAY FREE TRIAL
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Unlock Full Premium
           </h2>
-          <p className="text-xs sm:text-sm text-indigo-100 mt-1 max-w-sm">
+          <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-sm">
             Experience every premium candidate capability for 7 days. No credit card or payment details needed.
           </p>
         </div>
