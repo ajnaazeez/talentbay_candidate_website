@@ -113,3 +113,42 @@
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #475569;
 }
+
+/* Premium UI Component Utilities */
+@layer components {
+  .card-premium {
+    @apply rounded-2xl bg-white dark:bg-[#111827] border border-slate-200/80 dark:border-[#1f293d] shadow-card transition-all duration-200;
+  }
+
+  .card-interactive {
+    @apply card-premium hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer;
+  }
+
+  .card-nested {
+    @apply rounded-xl bg-slate-50/70 dark:bg-[#0f172a]/60 border border-slate-100 dark:border-[#1f293d]/80 p-4 transition-all duration-150;
+  }
+
+  .badge-premium {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide border transition-all;
+  }
+
+  .btn-micro {
+    @apply transition-all duration-150 ease-out active:scale-[0.98] select-none;
+  }
+
+  .glass-header {
+    @apply bg-white/85 dark:bg-[#0b0f19]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-[#1f293d];
+  }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

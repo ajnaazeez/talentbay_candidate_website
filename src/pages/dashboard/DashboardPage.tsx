@@ -9,6 +9,7 @@ import {
   Bookmark,
   Mail,
   ChevronRight,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -266,69 +267,87 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto pb-20 animate-in fade-in duration-300">
-      {/* 1. Header (Greeting, Subtitle & Action Icons - matching Flutter home_tab.dart) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
-        <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Hello, {candidateFullName}
-          </h1>
-          <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
-            Find your next role and track your recruitment journey.
-          </p>
-        </div>
+      {/* 1. Executive Welcome & Search Hero Banner */}
+      <div className="relative rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-8 shadow-card overflow-hidden">
+        {/* Ambient subtle light glows */}
+        <div className="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-brand-500/15 blur-3xl pointer-events-none" />
+        <div className="absolute -left-20 -bottom-20 w-80 h-80 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
 
-        {/* Minimal Avatar & Notification Bell */}
-        <div className="flex items-center gap-3 self-end sm:self-auto">
-          <Link
-            to={ROUTES.NOTIFICATIONS}
-            className="relative p-2.5 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:border-indigo-400 dark:hover:border-indigo-600 transition shadow-xs"
-            title="Notifications"
-          >
-            <Bell className="w-5 h-5" />
-            {unreadNotificationsCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
-                {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
-              </span>
-            )}
-          </Link>
+        <div className="relative z-10 space-y-6">
+          {/* Top Row: Greeting & Right Quick Actions */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1.5">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 backdrop-blur-md text-brand-200 border border-white/15">
+                <Sparkles className="w-3.5 h-3.5 text-brand-300" />
+                <span>Career Hub</span>
+                {candidate?.isPremium && (
+                  <span className="ml-1 px-1.5 py-0.2 rounded text-[10px] bg-amber-400 text-slate-950 font-bold">
+                    PRO
+                  </span>
+                )}
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+                Welcome back, {candidateFullName}
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+                Discover matching opportunities, assess skills, and monitor recruitment progress.
+              </p>
+            </div>
 
-          <Link
-            to={ROUTES.PROFILE}
-            className="w-10 h-10 rounded-xl border-2 border-indigo-600/30 overflow-hidden bg-white dark:bg-slate-900 flex items-center justify-center hover:opacity-90 transition shadow-xs"
-            title="My Profile"
-          >
-            {candidate?.photoUrl ? (
-              <img
-                src={candidate.photoUrl}
-                alt={candidateFullName}
-                className="w-full h-full object-cover"
+            {/* Quick Action Controls */}
+            <div className="flex items-center gap-3 self-end sm:self-auto shrink-0">
+              <Link
+                to={ROUTES.NOTIFICATIONS}
+                className="relative p-2.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/15 text-white transition backdrop-blur-md"
+                title="Notifications"
+              >
+                <Bell className="w-5 h-5" />
+                {unreadNotificationsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+                    {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
+                  </span>
+                )}
+              </Link>
+
+              <Link
+                to={ROUTES.PROFILE}
+                className="w-10 h-10 rounded-xl border border-white/25 overflow-hidden bg-white/10 hover:bg-white/20 transition flex items-center justify-center backdrop-blur-md"
+                title="My Profile"
+              >
+                {candidate?.photoUrl ? (
+                  <img
+                    src={candidate.photoUrl}
+                    alt={candidateFullName}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <User className="w-5 h-5 text-brand-200" />
+                )}
+              </Link>
+            </div>
+          </div>
+
+          {/* Embedded Glassmorphic Search Bar */}
+          <form onSubmit={handleSearchSubmit} className="relative">
+            <div className="relative flex items-center bg-white/10 dark:bg-black/30 backdrop-blur-md border border-white/20 rounded-2xl p-1.5 focus-within:border-brand-400 focus-within:ring-2 focus-within:ring-brand-400/30 transition-all shadow-inner">
+              <Search className="w-5 h-5 text-slate-300 absolute left-4 pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search jobs, tech stacks, locations or companies..."
+                className="w-full pl-11 pr-28 py-2.5 bg-transparent text-sm font-medium text-white placeholder:text-slate-300 focus:outline-none"
               />
-            ) : (
-              <User className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-            )}
-          </Link>
+              <button
+                type="submit"
+                className="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 active:bg-brand-700 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer shrink-0"
+              >
+                Search Jobs
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-
-      {/* 2. Premium Search Bar */}
-      <form onSubmit={handleSearchSubmit} className="relative">
-        <div className="relative flex items-center bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-xs focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all p-1.5">
-          <Search className="w-5 h-5 text-slate-400 dark:text-slate-500 absolute left-4 pointer-events-none" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search for jobs, companies, skills..."
-            className="w-full pl-11 pr-28 py-2.5 bg-transparent text-sm font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
-          />
-          <button
-            type="submit"
-            className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer shrink-0"
-          >
-            Search
-          </button>
-        </div>
-      </form>
 
       {/* 3. Stat Cards (APPLIED, SAVED, INVITES - matching Flutter) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -404,23 +423,25 @@ export const DashboardPage: React.FC = () => {
 
       {/* 4. Category Filter Chips (ALL, REMOTE, FULL-TIME, etc. - matching Flutter) */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-        {CATEGORIES.map((category) => {
-          const isSelected = selectedCategory === category;
-          return (
-            <button
-              key={category}
-              type="button"
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 text-xs font-semibold rounded-xl whitespace-nowrap transition-all border shadow-2xs cursor-pointer ${
-                isSelected
-                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
-                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              {category}
-            </button>
-          );
-        })}
+        <div className="inline-flex items-center gap-1.5 p-1 rounded-2xl bg-slate-100/80 dark:bg-[#111827] border border-slate-200/80 dark:border-[#1f293d]">
+          {CATEGORIES.map((category) => {
+            const isSelected = selectedCategory === category;
+            return (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 text-xs font-semibold rounded-xl whitespace-nowrap transition-all duration-150 cursor-pointer ${
+                  isSelected
+                    ? 'bg-brand-600 text-white shadow-xs font-bold'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-800/60'
+                }`}
+              >
+                {category}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* 5. Recommended Jobs Section (matching Flutter home_tab.dart) */}
@@ -519,9 +540,9 @@ export const DashboardPage: React.FC = () => {
               <Link
                 key={company.id}
                 to={`/companies/${company.id}`}
-                className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 flex flex-col items-center justify-center text-center hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-card-hover transition-all duration-200 group h-40 shadow-xs"
+                className="p-5 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200/80 dark:border-[#1f293d] flex flex-col items-center justify-center text-center hover:border-brand-300 dark:hover:border-brand-700/60 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group h-40 shadow-card"
               >
-                <div className="w-14 h-14 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 overflow-hidden flex items-center justify-center mb-3 shadow-2xs group-hover:scale-105 transition-transform p-2">
+                <div className="w-14 h-14 rounded-2xl border border-slate-100 dark:border-[#1f293d] bg-slate-50/80 dark:bg-[#0f172a] overflow-hidden flex items-center justify-center mb-3 shadow-2xs group-hover:scale-105 transition-transform p-2.5">
                   {company.profile?.logoUrl || company.logoUrl ? (
                     <img
                       src={company.profile?.logoUrl || company.logoUrl}
@@ -532,10 +553,10 @@ export const DashboardPage: React.FC = () => {
                       }}
                     />
                   ) : (
-                    <Building2 className="w-6 h-6 text-slate-500 dark:text-slate-400" />
+                    <Building2 className="w-6 h-6 text-slate-400 dark:text-slate-500" />
                   )}
                 </div>
-                <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate max-w-full">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate max-w-full tracking-tight group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
                   {company.profile?.companyName || company.companyName}
                 </h4>
                 <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate max-w-full mt-0.5 font-medium">

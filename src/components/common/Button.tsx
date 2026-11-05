@@ -15,17 +15,17 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 shadow-sm hover:shadow transition disabled:bg-brand-300',
+    'bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 shadow-xs hover:shadow-md transition-all duration-150 disabled:bg-brand-300 dark:disabled:bg-brand-900/40',
   secondary:
-    'bg-slate-100 text-slate-800 hover:bg-slate-200 active:bg-slate-300 disabled:bg-slate-100 disabled:text-slate-400',
+    'bg-slate-100 dark:bg-[#1e293b] text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-[#283548] active:bg-slate-300 disabled:opacity-50 transition-all duration-150',
   outline:
-    'bg-white text-slate-700 border border-slate-300/90 hover:bg-slate-50 hover:border-slate-400 active:bg-slate-100 shadow-xs disabled:bg-white disabled:text-slate-300 disabled:border-slate-200',
+    'bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#1f293d] hover:bg-slate-50 dark:hover:bg-[#1e293b] hover:border-slate-300 dark:hover:border-slate-700 shadow-xs disabled:opacity-50 transition-all duration-150',
   ghost:
-    'bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 disabled:text-slate-300',
+    'bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-[#1e293b]/70 hover:text-slate-900 dark:hover:text-white transition-all duration-150 disabled:opacity-40',
   danger:
-    'bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-sm disabled:bg-rose-300',
+    'bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-xs hover:shadow transition-all duration-150 disabled:bg-rose-300',
   success:
-    'bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800 shadow-sm disabled:bg-emerald-300',
+    'bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800 shadow-xs hover:shadow transition-all duration-150 disabled:bg-emerald-300',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -54,7 +54,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || isLoading}
         className={cn(
-          'inline-flex items-center justify-center transition-all duration-150 select-none focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:ring-offset-1 disabled:cursor-not-allowed disabled:shadow-none active:scale-[0.98]',
+          'inline-flex items-center justify-center whitespace-nowrap transition-all duration-150 select-none focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:ring-offset-1 disabled:cursor-not-allowed disabled:shadow-none active:scale-[0.98]',
           variantClasses[variant],
           sizeClasses[size],
           className
@@ -63,7 +63,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading && <Loader2 className="h-4 w-4 animate-spin text-current shrink-0" />}
         {!isLoading && leftIcon && <span className="inline-flex shrink-0">{leftIcon}</span>}
-        {children && <span>{children}</span>}
+        {children}
         {!isLoading && rightIcon && <span className="inline-flex shrink-0">{rightIcon}</span>}
       </button>
     );

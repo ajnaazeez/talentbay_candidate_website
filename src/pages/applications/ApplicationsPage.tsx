@@ -172,36 +172,43 @@ export const ApplicationsPage: React.FC = () => {
   const renderStatusChip = (statusRaw?: string) => {
     const status = (statusRaw || '').toLowerCase().trim();
     let label = 'APPLIED';
-    let chipClass = 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800';
+    let chipClass = 'bg-sky-50 text-sky-700 border-sky-200/80 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/60';
+    let dotColor = 'bg-sky-500';
 
     switch (status) {
       case 'hired':
       case 'accepted':
         label = 'HIRED';
-        chipClass = 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800';
+        chipClass = 'bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60';
+        dotColor = 'bg-emerald-500';
         break;
       case 'rejected':
         label = 'REJECTED';
-        chipClass = 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800';
+        chipClass = 'bg-rose-50 text-rose-700 border-rose-200/80 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60';
+        dotColor = 'bg-rose-500';
         break;
       case 'interview':
       case 'interviewing':
         label = 'INTERVIEW';
-        chipClass = 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800';
+        chipClass = 'bg-purple-50 text-purple-700 border-purple-200/80 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800/60';
+        dotColor = 'bg-purple-500';
         break;
       case 'shortlisted':
       case 'screening':
         label = 'SHORTLISTED';
-        chipClass = 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800';
+        chipClass = 'bg-indigo-50 text-indigo-700 border-indigo-200/80 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800/60';
+        dotColor = 'bg-indigo-500';
         break;
       default:
         label = 'APPLIED';
-        chipClass = 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800';
+        chipClass = 'bg-sky-50 text-sky-700 border-sky-200/80 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/60';
+        dotColor = 'bg-sky-500';
     }
 
     return (
-      <span className={`inline-flex items-center px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider rounded-full border ${chipClass}`}>
-        {label}
+      <span className={`inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-bold uppercase tracking-wider rounded-full border shadow-2xs ${chipClass}`}>
+        <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
+        <span>{label}</span>
       </span>
     );
   };
