@@ -128,6 +128,10 @@
     @apply rounded-xl bg-slate-50/70 dark:bg-[#0e1628]/70 border border-slate-100 dark:border-[#1e2f52]/80 p-4 transition-all duration-150;
   }
 
+  .glass-card {
+    @apply rounded-2xl bg-white/85 dark:bg-[#131f37]/85 backdrop-blur-md border border-slate-200/80 dark:border-[#1e2f52] shadow-card transition-all duration-200;
+  }
+
   .badge-premium {
     @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide border transition-all;
   }
@@ -139,6 +143,61 @@
   .glass-header {
     @apply bg-white/90 dark:bg-[#0a0f1d]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-[#1e2f52];
   }
+
+  .skeleton-shimmer {
+    @apply relative overflow-hidden bg-slate-200/70 dark:bg-slate-800/70 before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/30 dark:before:via-white/10 before:to-transparent;
+  }
+}
+
+/* First-class Animation Utilities for Pages, Cards & Modals */
+@keyframes tbFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tbZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes tbSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: tbFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+.animate-in.fade-in {
+  animation-name: tbFadeIn;
+}
+
+.animate-in.zoom-in-95 {
+  animation-name: tbZoomIn;
+}
+
+.animate-in.slide-down {
+  animation-name: tbSlideDown;
 }
 
 /* Reduced motion accessibility */

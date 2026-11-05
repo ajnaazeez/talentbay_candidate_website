@@ -25,6 +25,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/store/ThemeContext';
 import { authService } from '@/services/authService';
+import { candidateService } from '@/services/candidateService';
 import { PaymentRecoveryModal } from '@/components/subscription/PaymentRecoveryModal';
 import { ROUTES, APP_CONFIG } from '@/utils/constants';
 import { getFriendlyErrorMessage } from '@/utils/errors';
@@ -108,9 +109,12 @@ export const SettingsPage: React.FC = () => {
 
   // 4. Cancel Subscription Handler (Matching Flutter _showCancelSubscriptionDialog)
   const handleCancelSubscription = async () => {
+    if (!candidate?.uid) return;
     try {
       setCancellingSub(true);
-      // In accordance with Flutter implementation, setting cancellation state
+      await candidateService.updateCandidate(candidate.uid, {
+        subscriptionStatus: 'cancelled',
+      });
       setShowCancelSubModal(false);
       showToast('Subscription cancelled successfully. You will still have premium access until the current billing period ends.');
       await refreshProfile();
