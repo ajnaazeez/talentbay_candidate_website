@@ -8,11 +8,11 @@
   }
 
   body {
-    @apply font-sans bg-[#f8fafc] text-slate-900 antialiased selection:bg-brand-500/20 selection:text-brand-900 transition-colors duration-150;
+    @apply font-sans bg-[#fafafa] text-[#09090b] antialiased selection:bg-stone-900/10 selection:text-black transition-colors duration-150;
   }
 
   .dark body {
-    @apply bg-[#0a0f1d] text-slate-100 selection:bg-brand-500/30 selection:text-brand-200;
+    @apply bg-[#090a0f] text-white selection:bg-white/20 selection:text-white;
   }
 }
 
@@ -22,69 +22,74 @@
 }
 
 .dark .bg-white {
-  background-color: #131f37 !important;
-  color: #f8fafc;
+  background-color: #13151d !important;
+  color: #fafafa;
 }
 
 .dark .bg-slate-50 {
-  background-color: #0a0f1d !important;
-  color: #f1f5f9;
+  background-color: #090a0f !important;
+  color: #f4f4f5;
 }
 
 .dark .bg-slate-100 {
-  background-color: #182644 !important;
-  color: #e2e8f0;
+  background-color: #1c1f2b !important;
+  color: #e4e4e7;
 }
 
 .dark .text-slate-900,
 .dark .text-slate-800 {
-  color: #f8fafc !important;
+  color: #ffffff !important;
 }
 
 .dark .text-slate-700,
 .dark .text-slate-600 {
-  color: #cbd5e1 !important;
+  color: #d4d4d8 !important;
 }
 
 .dark .text-slate-500 {
-  color: #94a3b8 !important;
+  color: #a1a1aa !important;
+}
+
+.dark .text-slate-400 {
+  color: #71717a !important;
 }
 
 .dark .border-slate-200,
 .dark .border-slate-200\/90,
+.dark .border-slate-200\/80,
 .dark .border-slate-100 {
-  border-color: #1e2f52 !important;
+  border-color: #20232e !important;
 }
 
 .dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
 .dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
-  border-color: #1e2f52 !important;
+  border-color: #20232e !important;
 }
 
 .dark .hover\:bg-slate-50:hover {
-  background-color: #182644 !important;
+  background-color: #1c1f2b !important;
 }
 
 .dark .hover\:bg-slate-100:hover {
-  background-color: #182644 !important;
+  background-color: #1c1f2b !important;
 }
 
 .dark input:not([type="checkbox"]):not([type="radio"]),
 .dark textarea,
 .dark select {
-  background-color: #0f172a !important;
-  border-color: #1e2f52 !important;
-  color: #f8fafc !important;
+  background-color: #0d0f15 !important;
+  border-color: #20232e !important;
+  color: #ffffff !important;
 }
 
 .dark input::placeholder,
 .dark textarea::placeholder {
-  color: #64748b !important;
+  color: #71717a !important;
 }
 
 .dark header {
-  background-color: rgba(10, 15, 29, 0.95) !important;
-  border-bottom-color: #1e2f52 !important;
+  background-color: rgba(9, 10, 15, 0.95) !important;
+  border-bottom-color: #20232e !important;
 }
 
 /* Custom smooth scrollbar */
@@ -98,26 +103,26 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #d4d4d8;
   border-radius: 9999px;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #272a38;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #a1a1aa;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #3f4455;
 }
 
 /* Premium UI Component Utilities */
 @layer components {
   .card-premium {
-    @apply rounded-2xl bg-white dark:bg-[#131f37] border border-slate-200/80 dark:border-[#1e2f52] shadow-card transition-all duration-200;
+    @apply rounded-2xl bg-white dark:bg-[#13151d] border border-slate-200/90 dark:border-[#20232e] shadow-card transition-all duration-200;
   }
 
   .card-interactive {
@@ -125,11 +130,11 @@
   }
 
   .card-nested {
-    @apply rounded-xl bg-slate-50/70 dark:bg-[#0e1628]/70 border border-slate-100 dark:border-[#1e2f52]/80 p-4 transition-all duration-150;
+    @apply rounded-xl bg-slate-50/70 dark:bg-[#0d0f15]/70 border border-slate-100 dark:border-[#20232e]/80 p-4 transition-all duration-150;
   }
 
   .glass-card {
-    @apply rounded-2xl bg-white/85 dark:bg-[#131f37]/85 backdrop-blur-md border border-slate-200/80 dark:border-[#1e2f52] shadow-card transition-all duration-200;
+    @apply rounded-2xl bg-white/85 dark:bg-[#13151d]/85 backdrop-blur-md border border-slate-200/90 dark:border-[#20232e] shadow-card transition-all duration-200;
   }
 
   .badge-premium {
@@ -141,7 +146,7 @@
   }
 
   .glass-header {
-    @apply bg-white/90 dark:bg-[#0a0f1d]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-[#1e2f52];
+    @apply bg-white/90 dark:bg-[#090a0f]/90 backdrop-blur-md border-b border-slate-200/90 dark:border-[#20232e];
   }
 
   .skeleton-shimmer {

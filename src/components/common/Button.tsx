@@ -15,13 +15,13 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 shadow-xs hover:shadow-md transition-all duration-150 disabled:bg-brand-300 dark:disabled:bg-brand-900/40',
+    'bg-zinc-900 text-white hover:bg-zinc-800 active:bg-black dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 dark:active:bg-zinc-200 shadow-xs hover:shadow transition-all duration-150 disabled:opacity-40',
   secondary:
-    'bg-slate-100 dark:bg-[#182644] text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-[#1e2f52] active:bg-slate-300 disabled:opacity-50 transition-all duration-150',
+    'bg-zinc-100 dark:bg-[#1c1f2b] text-zinc-800 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-[#272a38] active:bg-zinc-300 disabled:opacity-50 transition-all duration-150',
   outline:
-    'bg-white dark:bg-[#131f37] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#1e2f52] hover:bg-slate-50 dark:hover:bg-[#182644] hover:border-slate-300 dark:hover:border-slate-600 shadow-xs disabled:opacity-50 transition-all duration-150',
+    'bg-white dark:bg-[#13151d] text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-[#20232e] hover:bg-zinc-50 dark:hover:bg-[#1c1f2b] hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs disabled:opacity-50 transition-all duration-150',
   ghost:
-    'bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-[#182644]/80 hover:text-slate-900 dark:hover:text-white transition-all duration-150 disabled:opacity-40',
+    'bg-transparent text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100/80 dark:hover:bg-[#1c1f2b]/80 hover:text-zinc-900 dark:hover:text-white transition-all duration-150 disabled:opacity-40',
   danger:
     'bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-xs hover:shadow transition-all duration-150 disabled:bg-rose-300',
   success:

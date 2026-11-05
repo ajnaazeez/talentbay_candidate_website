@@ -5,6 +5,7 @@ import { Sparkles } from 'lucide-react';
 export type BadgeVariant =
   | 'default'
   | 'brand'
+  | 'bronze'
   | 'indigo'
   | 'success'
   | 'warning'
@@ -24,31 +25,33 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  default: 'bg-brand-50 text-brand-700 border-brand-200/80 dark:bg-brand-950/40 dark:text-brand-300 dark:border-brand-800/60',
-  brand: 'bg-brand-600 text-white border-transparent shadow-xs',
-  indigo: 'bg-brand-50 text-brand-700 border-brand-200/80 dark:bg-brand-950/40 dark:text-brand-300 dark:border-brand-800/60',
-  champagne: 'bg-amber-50/80 text-amber-700 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60',
-  success: 'bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60',
-  warning: 'bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60',
-  danger: 'bg-rose-50 text-rose-700 border-rose-200/80 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60',
-  info: 'bg-sky-50 text-sky-700 border-sky-200/80 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/60',
-  purple: 'bg-brand-50 text-brand-700 border-brand-200/80 dark:bg-brand-950/40 dark:text-brand-300 dark:border-brand-800/60',
-  neutral: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-navy-800 dark:text-slate-300 dark:border-[#1e2f52]',
-  outline: 'bg-transparent text-slate-700 border-slate-300 dark:text-slate-300 dark:border-[#1e2f52]',
+  default: 'bg-zinc-100 text-zinc-900 border-zinc-200 dark:bg-[#1c1f2b] dark:text-zinc-100 dark:border-[#20232e]',
+  brand: 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 border-transparent shadow-xs',
+  bronze: 'bg-amber-50 text-amber-900 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60',
+  indigo: 'bg-zinc-100 text-zinc-900 border-zinc-200 dark:bg-[#1c1f2b] dark:text-zinc-100 dark:border-[#20232e]',
+  champagne: 'bg-amber-50/80 text-amber-900 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60',
+  success: 'bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60',
+  warning: 'bg-amber-50 text-amber-800 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60',
+  danger: 'bg-rose-50 text-rose-800 border-rose-200/80 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60',
+  info: 'bg-sky-50 text-sky-800 border-sky-200/80 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/60',
+  purple: 'bg-zinc-100 text-zinc-900 border-zinc-200 dark:bg-[#1c1f2b] dark:text-zinc-100 dark:border-[#20232e]',
+  neutral: 'bg-zinc-100 text-zinc-700 border-zinc-200 dark:bg-[#1c1f2b] dark:text-zinc-300 dark:border-[#20232e]',
+  outline: 'bg-transparent text-zinc-700 border-zinc-300 dark:text-zinc-300 dark:border-[#20232e]',
 };
 
 const dotColors: Record<BadgeVariant, string> = {
-  default: 'bg-brand-500',
-  brand: 'bg-white',
-  indigo: 'bg-brand-500',
+  default: 'bg-zinc-500',
+  brand: 'bg-white dark:bg-zinc-900',
+  bronze: 'bg-amber-600',
+  indigo: 'bg-zinc-500',
   champagne: 'bg-amber-500',
   success: 'bg-emerald-500',
   warning: 'bg-amber-500',
   danger: 'bg-rose-500',
   info: 'bg-sky-500',
-  purple: 'bg-brand-500',
-  neutral: 'bg-slate-400',
-  outline: 'bg-slate-400',
+  purple: 'bg-zinc-500',
+  neutral: 'bg-zinc-400',
+  outline: 'bg-zinc-400',
 };
 
 export const Badge: React.FC<BadgeProps> = ({

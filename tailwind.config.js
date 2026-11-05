@@ -9,25 +9,29 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: '#f0f7ff',
-          100: '#e0effe',
-          200: '#bae0fd',
-          300: '#7cc5fb',
-          400: '#38a5f8',
-          500: '#2563eb',
-          600: '#1d4ed8', // Deep Royal Blue Primary
-          700: '#1e40af', // Hover state
-          800: '#1e3a8a', // Active state
-          900: '#172554',
-          950: '#0a122c',
+          50: '#fafafa',
+          100: '#f4f4f5',
+          200: '#e4e4e7',
+          300: '#d4d4d8',
+          400: '#a1a1aa',
+          500: '#52525b',
+          600: '#18181b', // Rich Onyx Primary CTA
+          700: '#27272a', // Hover state
+          800: '#09090b', // Active state
+          900: '#09090b',
+          950: '#000000',
         },
-        navy: {
-          700: '#1e2f52',
-          750: '#182644',
-          800: '#131f37', // Midnight Navy Card
-          850: '#0f172a',
-          900: '#0b1120',
-          950: '#070b14', // Deepest Canvas
+        bronze: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#d97706',
+          600: '#b45309', // Warm Bronze Accent
+          700: '#92400e',
+          800: '#78350f',
+          900: '#451a03',
         },
         champagne: {
           50: '#fffbeb',
@@ -35,31 +39,48 @@ export default {
           200: '#fde68a',
           300: '#fcd34d',
           400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706', // Champagne Gold Accent for PRO
-          700: '#b45309',
+          500: '#d97706',
+          600: '#b45309',
+          700: '#92400e',
+        },
+        surface: {
+          canvas: '#fafafa',
+          card: '#ffffff',
+          'dark-canvas': '#090a0f',
+          'dark-card': '#13151d',
+          'dark-border': '#20232e',
+          'dark-hover': '#1c1f2b',
+        },
+        navy: {
+          700: '#20232e',
+          750: '#1c1f2b',
+          800: '#13151d',
+          850: '#0f1118',
+          900: '#090a0f',
+          950: '#050608',
         },
         platinum: {
           50: '#ffffff',
-          100: '#fafbfd',
-          200: '#f4f6f9', // Soft Platinum Off-White
-          300: '#e8edf3',
-          400: '#cbd5e1',
-          500: '#94a3b8',
+          100: '#fafafa',
+          200: '#f4f4f5',
+          300: '#e4e4e7',
+          400: '#d4d4d8',
+          500: '#a1a1aa',
         },
         sidebar: {
-          bg: '#0a0f1d',
-          card: '#131f37',
-          hover: '#182644',
-          active: '#1d4ed8',
+          bg: '#090a0f',
+          card: '#13151d',
+          hover: '#1c1f2b',
+          active: '#272a38',
+          accent: '#b45309',
           text: '#94a3b8',
           textActive: '#ffffff',
-          border: '#1e2f52',
+          border: '#20232e',
         },
-        'dark-bg': '#0a0f1d',
-        'dark-card': '#131f37',
-        'dark-border': '#1e2f52',
-        'dark-hover': '#182644',
+        'dark-bg': '#090a0f',
+        'dark-card': '#13151d',
+        'dark-border': '#20232e',
+        'dark-hover': '#1c1f2b',
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
