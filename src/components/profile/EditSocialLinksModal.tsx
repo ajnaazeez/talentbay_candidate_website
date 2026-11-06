@@ -142,7 +142,7 @@ export const EditSocialLinksModal: React.FC<EditSocialLinksModalProps> = ({
                 LinkedIn Profile URL
               </label>
               <div className="relative">
-                <Linkedin className="absolute left-3 top-3 w-4 h-4 text-blue-600" />
+                <Linkedin className="absolute left-3 top-3 w-4 h-4 text-[#494448] dark:text-[#D4CDC7]" />
                 <input
                   type="url"
                   placeholder="https://linkedin.com/in/username"

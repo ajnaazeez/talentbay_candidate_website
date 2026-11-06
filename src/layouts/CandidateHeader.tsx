@@ -80,19 +80,19 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-30 h-16 bg-white/95 dark:bg-[#202A27]/95 backdrop-blur-md border-b border-[#E8E5DC] dark:border-[#2e3b37] px-4 sm:px-6 transition-colors">
+      <header className="sticky top-0 z-30 h-16 bg-white/95 dark:bg-[#29272A]/95 backdrop-blur-md border-b border-[#E6DFD8] dark:border-[#494448] px-4 sm:px-6 transition-colors">
         <div className="flex items-center justify-between h-full gap-4">
           {/* Left section: mobile toggle and page title */}
           <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={onOpenSidebar}
-              className="lg:hidden p-2 rounded-xl text-[#777D78] hover:text-[#252923] dark:text-[#9ea5a1] dark:hover:text-white hover:bg-[#F7F4EC] dark:hover:bg-[#26322f] transition"
+              className="lg:hidden p-2 rounded-xl text-[#736B70] hover:text-[#29272A] dark:text-[#A49D9E] dark:hover:text-[#F5F1EA] hover:bg-[#F5F1EA] dark:hover:bg-[#383439] transition"
               aria-label="Open sidebar"
             >
               <Menu className="w-5 h-5" />
             </button>
             <div className="min-w-0">
-              <h2 className="text-base sm:text-lg font-bold text-[#252923] dark:text-[#F7F4EC] truncate tracking-tight">
+              <h2 className="text-base sm:text-lg font-bold text-[#29272A] dark:text-[#F5F1EA] truncate tracking-tight">
                 {getPageTitle()}
               </h2>
             </div>
@@ -101,46 +101,46 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
           {/* Middle: search input */}
           <div className="hidden md:flex flex-1 max-w-md mx-4">
             <form onSubmit={handleSearchSubmit} className="relative w-full">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#777D78]" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A49D9E]" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search jobs, skills, companies..."
-                className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-[#F7F4EC] dark:bg-[#141a18] text-[#252923] dark:text-[#F7F4EC] placeholder:text-[#777D78] rounded-xl border border-[#E8E5DC] dark:border-[#2e3b37] focus:border-[#123C35] dark:focus:border-[#C5A46D] focus:bg-white dark:focus:bg-[#141a18] focus:outline-none focus:ring-2 focus:ring-[#123C35]/20 transition-all shadow-xs"
+                className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-[#F5F1EA] dark:bg-[#1F1D20] text-[#29272A] dark:text-[#F5F1EA] placeholder:text-[#A49D9E] rounded-xl border border-transparent focus:border-[#B87355] dark:focus:border-[#B87355] focus:bg-white dark:focus:bg-[#222023] focus:outline-none focus:ring-2 focus:ring-[#B87355]/20 transition-all shadow-xs"
               />
             </form>
           </div>
 
           {/* Right section: theme toggle, action buttons, notifications, profile */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {/* Quick Find Jobs CTA - Deep Emerald Primary */}
+            {/* Quick Find Jobs CTA */}
             <NavLink
               to={ROUTES.JOBS}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#123C35] text-white hover:bg-[#0e2f29] active:bg-[#0a221e] transition shadow-xs"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#B87355] text-white hover:bg-[#A46347] transition shadow-xs"
             >
-              <Briefcase className="w-3.5 h-3.5 text-[#C5A46D]" />
+              <Briefcase className="w-3.5 h-3.5" />
               <span>Browse Jobs</span>
             </NavLink>
 
-            {/* AI CV Quick Link - Champagne Gold Accent */}
+            {/* AI CV Quick Link */}
             <NavLink
               to={ROUTES.RESUME_BUILDER}
-              className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#C5A46D]/15 text-[#8b6d3d] dark:text-[#dec49c] border border-[#C5A46D]/30 hover:bg-[#C5A46D]/25 transition shadow-xs"
+              className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#B87355]/15 text-[#B87355] border border-[#B87355]/30 hover:bg-[#B87355]/25 transition shadow-xs"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#C5A46D]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#B87355]" />
               <span>AI Resume</span>
             </NavLink>
 
             {/* Dark / Light Mode Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-xl text-[#777D78] dark:text-[#9ea5a1] hover:text-[#252923] dark:hover:text-white hover:bg-[#F7F4EC] dark:hover:bg-[#26322f] transition"
+              className="p-2 rounded-xl text-[#736B70] dark:text-[#A49D9E] hover:text-[#29272A] dark:hover:text-[#F5F1EA] hover:bg-[#F5F1EA] dark:hover:bg-[#383439] transition"
               title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               aria-label="Toggle theme"
             >
               {theme === 'dark' ? (
-                <Sun className="w-4.5 h-4.5 text-[#C5A46D]" />
+                <Sun className="w-4.5 h-4.5 text-[#B87355]" />
               ) : (
                 <Moon className="w-4.5 h-4.5" />
               )}
@@ -149,12 +149,12 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
             {/* Messages Icon */}
             <NavLink
               to={ROUTES.CHAT}
-              className="relative p-2 rounded-xl text-[#777D78] dark:text-[#9ea5a1] hover:text-[#252923] dark:hover:text-white hover:bg-[#F7F4EC] dark:hover:bg-[#26322f] transition"
+              className="relative p-2 rounded-xl text-[#736B70] dark:text-[#A49D9E] hover:text-[#29272A] dark:hover:text-[#F5F1EA] hover:bg-[#F5F1EA] dark:hover:bg-[#383439] transition"
               title="Messages"
             >
               <MessageSquare className="w-4.5 h-4.5" />
               {unreadChatsCount > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#123C35] text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+                <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#B87355] text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
                   {unreadChatsCount > 9 ? '9+' : unreadChatsCount}
                 </span>
               )}
@@ -163,12 +163,12 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
             {/* Notifications Icon */}
             <NavLink
               to={ROUTES.NOTIFICATIONS}
-              className="relative p-2 rounded-xl text-[#777D78] dark:text-[#9ea5a1] hover:text-[#252923] dark:hover:text-white hover:bg-[#F7F4EC] dark:hover:bg-[#26322f] transition"
+              className="relative p-2 rounded-xl text-[#736B70] dark:text-[#A49D9E] hover:text-[#29272A] dark:hover:text-[#F5F1EA] hover:bg-[#F5F1EA] dark:hover:bg-[#383439] transition"
               title="Notifications"
             >
               <Bell className="w-4.5 h-4.5" />
               {unreadNotificationsCount > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+                <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#B87355] text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
                   {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
                 </span>
               )}
@@ -178,23 +178,23 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
             <div className="relative">
               <button
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="flex items-center gap-2 p-1 pl-1.5 rounded-xl hover:bg-[#F7F4EC] dark:hover:bg-[#26322f] transition border border-transparent hover:border-[#E8E5DC] dark:hover:border-[#2e3b37]"
+                className="flex items-center gap-2 p-1 pl-1.5 rounded-xl hover:bg-[#F5F1EA] dark:hover:bg-[#383439] transition border border-transparent hover:border-[#E6DFD8] dark:hover:border-[#494448]"
               >
                 {candidatePhotoUrl ? (
                   <img
                     src={candidatePhotoUrl}
                     alt={candidateName}
-                    className="w-7 h-7 rounded-lg object-cover ring-1 ring-[#E8E5DC] dark:ring-[#2e3b37]"
+                    className="w-7 h-7 rounded-lg object-cover ring-1 ring-[#E6DFD8] dark:ring-[#494448]"
                   />
                 ) : (
-                  <div className="w-7 h-7 rounded-lg bg-[#123C35] text-white font-bold text-xs flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-lg bg-[#E6DFD8] dark:bg-[#383439] text-[#29272A] dark:text-[#F5F1EA] font-bold text-xs flex items-center justify-center">
                     {candidateName.charAt(0).toUpperCase()}
                   </div>
                 )}
-                <span className="hidden sm:inline-block text-xs font-semibold text-[#252923] dark:text-[#F7F4EC] max-w-[120px] truncate">
+                <span className="hidden sm:inline-block text-xs font-semibold text-[#29272A] dark:text-[#F5F1EA] max-w-[120px] truncate">
                   {candidateName}
                 </span>
-                <ChevronDown className="w-3.5 h-3.5 text-[#777D78]" />
+                <ChevronDown className="w-3.5 h-3.5 text-[#A49D9E]" />
               </button>
 
               {/* Dropdown Menu */}
@@ -204,13 +204,13 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
                     className="fixed inset-0 z-40"
                     onClick={() => setProfileDropdownOpen(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-[#202A27] border border-[#E8E5DC] dark:border-[#2e3b37] shadow-dropdown py-2 z-50 text-xs animate-in fade-in zoom-in-95 duration-100">
-                    <div className="px-4 py-2.5 border-b border-[#E8E5DC] dark:border-[#2e3b37]">
-                      <p className="font-bold text-[#252923] dark:text-[#F7F4EC] truncate">{candidateName}</p>
+                  <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-[#222023] border border-[#E6DFD8] dark:border-[#494448] shadow-dropdown py-2 z-50 text-xs animate-in fade-in zoom-in-95 duration-100">
+                    <div className="px-4 py-2.5 border-b border-[#E6DFD8] dark:border-[#494448]">
+                      <p className="font-bold text-[#29272A] dark:text-[#F5F1EA] truncate">{candidateName}</p>
                       {candidateEmail && (
-                        <p className="text-[11px] text-[#777D78] dark:text-[#9ea5a1] truncate">{candidateEmail}</p>
+                        <p className="text-[11px] text-[#736B70] dark:text-[#A49D9E] truncate">{candidateEmail}</p>
                       )}
-                      <span className="inline-block mt-1 text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#C5A46D]/15 text-[#8b6d3d] dark:text-[#dec49c] border border-[#C5A46D]/30">
+                      <span className="inline-block mt-1 text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#B87355]/15 text-[#B87355] border border-[#B87355]/30">
                         Candidate Account
                       </span>
                     </div>
@@ -219,30 +219,30 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
                       <NavLink
                         to={ROUTES.PROFILE}
                         onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-[#252923] dark:text-[#F7F4EC] hover:bg-[#F7F4EC] dark:hover:bg-[#26322f] transition"
+                        className="flex items-center gap-2.5 px-4 py-2 text-[#494448] dark:text-[#D4CDC7] hover:bg-[#F5F1EA] dark:hover:bg-[#2E2B30] transition"
                       >
-                        <User className="w-4 h-4 text-[#777D78]" />
+                        <User className="w-4 h-4 text-[#A49D9E]" />
                         <span>My Profile</span>
                       </NavLink>
                       <NavLink
                         to={ROUTES.RESUME_BUILDER}
                         onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-[#252923] dark:text-[#F7F4EC] hover:bg-[#F7F4EC] dark:hover:bg-[#26322f] transition"
+                        className="flex items-center gap-2.5 px-4 py-2 text-[#494448] dark:text-[#D4CDC7] hover:bg-[#F5F1EA] dark:hover:bg-[#2E2B30] transition"
                       >
-                        <FileText className="w-4 h-4 text-[#777D78]" />
+                        <FileText className="w-4 h-4 text-[#A49D9E]" />
                         <span>AI Resume Builder</span>
                       </NavLink>
                       <NavLink
                         to={ROUTES.SUBSCRIPTION}
                         onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-[#252923] dark:text-[#F7F4EC] hover:bg-[#F7F4EC] dark:hover:bg-[#26322f] transition"
+                        className="flex items-center gap-2.5 px-4 py-2 text-[#494448] dark:text-[#D4CDC7] hover:bg-[#F5F1EA] dark:hover:bg-[#2E2B30] transition"
                       >
-                        <Sparkles className="w-4 h-4 text-[#C5A46D]" />
+                        <Sparkles className="w-4 h-4 text-[#B87355]" />
                         <span>Premium Plans</span>
                       </NavLink>
                     </div>
 
-                    <div className="pt-1 border-t border-[#E8E5DC] dark:border-[#2e3b37]">
+                    <div className="pt-1 border-t border-[#E6DFD8] dark:border-[#494448]">
                       <button
                         onClick={handleSignOut}
                         className="w-full flex items-center gap-2.5 px-4 py-2 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition text-left"

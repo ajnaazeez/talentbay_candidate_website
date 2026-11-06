@@ -104,7 +104,7 @@ export const SubscriptionPage: React.FC = () => {
         description="Accelerate your job search with verified applicant badges, AI CV creation, and direct employer chat."
         badge={
           <Badge variant="brand" isAi>
-            <Crown className="w-3.5 h-3.5 mr-1 text-amber-500" />
+            <Crown className="w-3.5 h-3.5 mr-1 text-[#B87355]" />
             Premium Membership
           </Badge>
         }
@@ -113,7 +113,7 @@ export const SubscriptionPage: React.FC = () => {
             variant="outline"
             size="sm"
             onClick={() => setRecoveryModalOpen(true)}
-            leftIcon={<RotateCw className="w-4 h-4 text-slate-500" />}
+            leftIcon={<RotateCw className="w-4 h-4 text-[#A49D9E]" />}
           >
             Reconcile Payment
           </Button>
@@ -142,11 +142,11 @@ export const SubscriptionPage: React.FC = () => {
       )}
 
       {/* Current Membership Status Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#202A27] border border-slate-200 dark:border-[#2e3b37] shadow-card">
+      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#222023] border border-[#E6DFD8] dark:border-[#494448] shadow-card">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2.5">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E]">
                 Current Status
               </span>
               {hasPremium ? (
@@ -155,13 +155,13 @@ export const SubscriptionPage: React.FC = () => {
                   {isPaidActive ? 'PREMIUM ACTIVE' : '7-DAY TRIAL ACTIVE'}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-[#141a18] px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-[#2e3b37]">
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-[#494448] dark:text-[#D4CDC7] bg-[#F5F1EA] dark:bg-[#1F1D20] px-2.5 py-0.5 rounded-full border border-[#E6DFD8] dark:border-[#494448]">
                   BASIC ACCOUNT
                 </span>
               )}
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
+            <h3 className="text-xl sm:text-2xl font-black text-[#29272A] dark:text-white tracking-tight">
               {isPaidActive
                 ? currentPlanObj?.title || 'Active Premium Membership'
                 : isTrialActive
@@ -171,7 +171,7 @@ export const SubscriptionPage: React.FC = () => {
                 : 'Free Account — 7-Day Free Trial Available'}
             </h3>
 
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#736B70] dark:text-[#A49D9E] max-w-2xl leading-relaxed">
               {hasPremium
                 ? `You have full candidate access enabled until ${formatDateString(
                     isPaidActive ? candidate?.subscriptionExpiryDate : candidate?.trialExpiryDate
@@ -185,8 +185,8 @@ export const SubscriptionPage: React.FC = () => {
               <Button
                 variant="primary"
                 onClick={() => setTrialModalOpen(true)}
-                className="bg-brand-600 hover:bg-brand-700 text-white font-bold"
-                leftIcon={<Sparkles className="w-4 h-4 text-yellow-300" />}
+                className="bg-[#B87355] hover:bg-[#A46347] text-white font-bold"
+                leftIcon={<Sparkles className="w-4 h-4 text-white" />}
               >
                 Start 7-Day Free Trial
               </Button>
@@ -197,20 +197,20 @@ export const SubscriptionPage: React.FC = () => {
 
       {/* Free Trial Callout Card (if eligible) */}
       {isEligibleForTrial && (
-        <div className="p-6 rounded-3xl bg-gradient-to-r from-[#123C35] via-[#0e2f29] to-[#202A27] text-white border border-[#C5A46D]/30 shadow-xl relative overflow-hidden">
-          <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
+        <div className="p-6 rounded-3xl bg-[#29272A] text-white border border-[#494448] shadow-xl relative overflow-hidden">
+          <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#B87355]/20 via-transparent to-transparent pointer-events-none" />
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2 max-w-xl">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#C5A46D]/20 text-[#C5A46D] border border-[#C5A46D]/40">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#B87355]/20 text-[#B87355] border border-[#B87355]/40">
                   Zero Cost
                 </span>
-                <span className="text-xs text-[#E8E5DC]/80">No payment info required</span>
+                <span className="text-xs text-[#D7A38C]">No payment info required</span>
               </div>
               <h4 className="text-lg sm:text-xl font-bold tracking-tight">
                 {trialPlan.title} — 100% Free for 7 Days
               </h4>
-              <p className="text-xs sm:text-sm text-[#E8E5DC]/80 leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#D4CDC7] leading-relaxed">
                 {trialPlan.description}
               </p>
             </div>
@@ -219,7 +219,7 @@ export const SubscriptionPage: React.FC = () => {
               <Button
                 variant="primary"
                 onClick={() => setTrialModalOpen(true)}
-                className="bg-[#C5A46D] text-[#202A27] hover:bg-[#d2ad77] font-extrabold shadow-md text-xs py-2.5 px-5"
+                className="bg-[#B87355] text-white hover:bg-[#A46347] font-extrabold shadow-md text-xs py-2.5 px-5"
                 rightIcon={<ArrowRight className="w-4 h-4" />}
               >
                 Activate Free Trial (₹0)
@@ -232,10 +232,10 @@ export const SubscriptionPage: React.FC = () => {
       {/* Subscription Plans Grid */}
       <div>
         <div className="mb-6 text-center max-w-xl mx-auto space-y-1">
-          <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
+          <h3 className="text-xl sm:text-2xl font-black text-[#29272A] dark:text-white tracking-tight">
             Select a Subscription Plan
           </h3>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-[#736B70] dark:text-[#A49D9E]">
             Secure billing through Razorpay. Automatic activation upon payment verification.
           </p>
         </div>
@@ -250,14 +250,14 @@ export const SubscriptionPage: React.FC = () => {
                 key={plan.id}
                 className={`relative rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 ${
                   plan.isPopular
-                    ? 'bg-white dark:bg-[#202A27] border-2 border-brand-500 shadow-xl ring-4 ring-brand-500/10'
-                    : 'bg-white dark:bg-[#202A27] border border-slate-200 dark:border-[#2e3b37] shadow-card hover:border-slate-300 dark:hover:border-slate-700'
+                    ? 'bg-white dark:bg-[#222023] border-2 border-[#B87355] shadow-xl ring-4 ring-[#B87355]/10'
+                    : 'bg-white dark:bg-[#222023] border border-[#E6DFD8] dark:border-[#494448] shadow-card hover:border-[#B87355]/60'
                 }`}
               >
                 {/* Plan Badge */}
                 {plan.offer && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-brand-600 text-white shadow-md">
+                    <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#B87355] text-white shadow-md">
                       {plan.offer}
                     </span>
                   </div>
@@ -265,33 +265,33 @@ export const SubscriptionPage: React.FC = () => {
 
                 <div className="space-y-5">
                   <div>
-                    <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                    <h4 className="text-lg font-bold text-[#29272A] dark:text-white">
                       {plan.title}
                     </h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    <p className="text-xs text-[#736B70] dark:text-[#A49D9E] mt-1">
                       {plan.description}
                     </p>
                   </div>
 
                   {/* Price Header */}
-                  <div className="flex items-baseline gap-1.5 pb-4 border-b border-slate-100 dark:border-[#2e3b37]">
-                    <span className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
+                  <div className="flex items-baseline gap-1.5 pb-4 border-b border-[#E6DFD8] dark:border-[#494448]">
+                    <span className="text-3xl sm:text-4xl font-black text-[#29272A] dark:text-white tracking-tight">
                       ₹{plan.displayAmount}
                     </span>
-                    <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">
+                    <span className="text-xs font-semibold text-[#736B70] dark:text-[#A49D9E]">
                       / {plan.durationDays} Days
                     </span>
                   </div>
 
                   {/* Features List */}
                   <div className="space-y-3 pt-1">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E] block">
                       Included with plan:
                     </span>
-                    <ul className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+                    <ul className="space-y-2.5 text-xs text-[#494448] dark:text-[#D4CDC7]">
                       {plan.features.map((feature, fIdx) => (
                         <li key={fIdx} className="flex items-start gap-2.5">
-                          <CheckCircle2 className="w-4 h-4 text-brand-600 dark:text-brand-400 shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-4 h-4 text-[#B87355] shrink-0 mt-0.5" />
                           <span>{feature}</span>
                         </li>
                       ))}
@@ -300,17 +300,13 @@ export const SubscriptionPage: React.FC = () => {
                 </div>
 
                 {/* Card CTA */}
-                <div className="mt-8 pt-5 border-t border-slate-100 dark:border-[#2e3b37]">
+                <div className="mt-8 pt-5 border-t border-[#E6DFD8] dark:border-[#494448]">
                   <Button
                     variant={plan.isPopular ? 'primary' : 'outline'}
                     onClick={() => handleSubscribe(plan)}
                     isLoading={isProcessing}
                     disabled={isProcessing || isCurrent}
-                    className={`w-full justify-center py-2.5 font-bold text-xs ${
-                      plan.isPopular
-                        ? 'bg-brand-600 hover:bg-brand-700 text-white shadow-md'
-                        : ''
-                    }`}
+                    className="w-full justify-center py-2.5 font-bold text-xs"
                     rightIcon={!isCurrent ? <ArrowRight className="w-3.5 h-3.5" /> : undefined}
                   >
                     {isCurrent ? 'Current Plan' : isPaidActive ? 'Renew / Extend' : 'Subscribe Now'}
@@ -323,40 +319,40 @@ export const SubscriptionPage: React.FC = () => {
       </div>
 
       {/* Trust & Guarantee Banner */}
-      <div className="p-6 rounded-3xl bg-slate-50 dark:bg-[#202A27] border border-slate-200/80 dark:border-[#2e3b37] shadow-2xs">
+      <div className="p-6 rounded-3xl bg-[#F5F1EA]/80 dark:bg-[#222023] border border-[#E6DFD8] dark:border-[#494448] shadow-2xs">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#141a18] border border-slate-200 dark:border-[#2e3b37] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#1F1D20] border border-[#E6DFD8] dark:border-[#494448] text-[#B87355] flex items-center justify-center shadow-xs">
               <ShieldCheck className="w-5 h-5" />
             </div>
-            <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100">
+            <h5 className="text-xs font-bold text-[#29272A] dark:text-white">
               Authoritative Backend Verification
             </h5>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-xs">
+            <p className="text-[11px] text-[#736B70] dark:text-[#A49D9E] max-w-xs">
               Every payment signature is cryptographically validated server-side by Firebase Admin SDK.
             </p>
           </div>
 
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#141a18] border border-slate-200 dark:border-[#2e3b37] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#1F1D20] border border-[#E6DFD8] dark:border-[#494448] text-[#B87355] flex items-center justify-center shadow-xs">
               <Lock className="w-5 h-5" />
             </div>
-            <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100">
+            <h5 className="text-xs font-bold text-[#29272A] dark:text-white">
               Razorpay Secured Gateway
             </h5>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-xs">
+            <p className="text-[11px] text-[#736B70] dark:text-[#A49D9E] max-w-xs">
               Supports UPI, Google Pay, PhonePe, Netbanking, Debit, and Credit Cards with 256-bit encryption.
             </p>
           </div>
 
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#141a18] border border-slate-200 dark:border-[#2e3b37] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#1F1D20] border border-[#E6DFD8] dark:border-[#494448] text-[#B87355] flex items-center justify-center shadow-xs">
               <RotateCw className="w-5 h-5" />
             </div>
-            <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100">
+            <h5 className="text-xs font-bold text-[#29272A] dark:text-white">
               Automated Reversal Protection
             </h5>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-xs">
+            <p className="text-[11px] text-[#736B70] dark:text-[#A49D9E] max-w-xs">
               If an interrupted connection prevents activation, click Reconcile or receive automated bank refund in 5–7 days.
             </p>
           </div>

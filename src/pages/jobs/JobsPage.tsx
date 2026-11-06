@@ -120,43 +120,36 @@ export const JobsPage: React.FC = () => {
     const recommended: Job[] = [];
     const others: Job[] = [];
 
-    const candidateDesignation = (candidate?.designation || '').toLowerCase();
-    const candidateSkills = (candidate?.skills || []).map((s) => s.name.toLowerCase());
+    const candidateRole = (candidate?.designation || '').toLowerCase();
+    const candidateSkillNames = (candidate?.skills || []).map((s) => s.name.toLowerCase());
 
     for (const job of validJobs) {
       let matchesProfile = false;
+      let matchesSearch = false;
 
-      // 1. Match designation
-      if (candidateDesignation) {
+      // Check role/designation match
+      if (candidateRole) {
         if (
-          (job.roleName || '').toLowerCase().includes(candidateDesignation) ||
-          (job.designationName || '').toLowerCase().includes(candidateDesignation)
+          (job.roleName || '').toLowerCase().includes(candidateRole) ||
+          (job.designationName || '').toLowerCase().includes(candidateRole)
         ) {
           matchesProfile = true;
         }
       }
 
-      // 2. Match skills
-      if (!matchesProfile && candidateSkills.length > 0) {
-        const jobSkills = [
-          ...(job.skillsRequired || []),
-          ...(job.mustHaveSkills || []),
-          ...(job.niceToHaveSkills || []),
-        ].map((s) => s.toLowerCase());
-
-        for (const skill of candidateSkills) {
-          if (jobSkills.some((js) => js.includes(skill))) {
-            matchesProfile = true;
-            break;
-          }
+      // Check skills match
+      if (!matchesProfile && candidateSkillNames.length > 0) {
+        const reqSkills = (job.skillsRequired || []).map((s) => s.toLowerCase());
+        const hasSkillMatch = candidateSkillNames.some((cs) => reqSkills.includes(cs));
+        if (hasSkillMatch) {
+          matchesProfile = true;
         }
       }
 
-      // 3. Match recent search queries
-      let matchesSearch = false;
+      // Check recent search matches
       if (!matchesProfile && recentSearches.length > 0) {
-        for (const query of recentSearches) {
-          const q = query.toLowerCase();
+        for (const search of recentSearches.slice(0, 5)) {
+          const q = search.toLowerCase();
           if (
             (job.roleName || '').toLowerCase().includes(q) ||
             (job.designationName || '').toLowerCase().includes(q) ||
@@ -185,17 +178,17 @@ export const JobsPage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20 animate-in fade-in duration-300">
       {/* Header Row */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E8E5DC] dark:border-[#2e3b37]">
-        <h1 className="text-2xl font-extrabold tracking-tight text-[#252923] dark:text-white">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E6DFD8] dark:border-[#494448]">
+        <h1 className="text-2xl font-extrabold tracking-tight text-[#29272A] dark:text-white">
           All Jobs
         </h1>
 
         {/* Quick Search Shortcut */}
         <div
           onClick={() => navigate(ROUTES.SEARCH)}
-          className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-[#E8E5DC] dark:border-[#2e3b37] bg-white dark:bg-[#202A27] text-[#777D78] hover:text-[#252923] dark:hover:text-white hover:border-[#C5A46D]/50 dark:hover:border-[#C5A46D]/50 shadow-xs transition cursor-pointer text-xs font-medium"
+          className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-[#E6DFD8] dark:border-[#494448] bg-white dark:bg-[#222023] text-[#736B70] dark:text-[#A49D9E] hover:text-[#29272A] dark:hover:text-[#F5F1EA] hover:border-[#B87355]/40 dark:hover:border-[#B87355]/40 shadow-xs transition cursor-pointer text-xs font-medium"
         >
-          <Search className="w-4 h-4 text-[#777D78]" />
+          <Search className="w-4 h-4 text-[#A49D9E]" />
           <span>Search jobs, companies, skills...</span>
         </div>
       </div>
@@ -211,8 +204,8 @@ export const JobsPage: React.FC = () => {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-[#123C35] text-white border-[#123C35] shadow-xs'
-                  : 'bg-white dark:bg-[#202A27] text-[#252923] dark:text-[#E8E5DC] border-[#E8E5DC] dark:border-[#2e3b37] hover:border-[#C5A46D]/60 dark:hover:border-[#C5A46D]/50'
+                  ? 'bg-[#B87355] text-white border-[#B87355] shadow-xs'
+                  : 'bg-white dark:bg-[#222023] text-[#494448] dark:text-[#D4CDC7] border-[#E6DFD8] dark:border-[#494448] hover:border-[#B87355]/40 dark:hover:border-[#B87355]/40'
               }`}
             >
               {cat.toUpperCase()}
@@ -227,14 +220,14 @@ export const JobsPage: React.FC = () => {
           <LoadingSpinner size="lg" label="Loading opportunities..." />
         </div>
       ) : validJobs.length === 0 ? (
-        <div className="rounded-2xl border border-[#E8E5DC] dark:border-[#2e3b37] bg-white dark:bg-[#202A27] shadow-card p-12 text-center space-y-3">
-          <div className="w-14 h-14 rounded-2xl bg-[#F7F4EC] dark:bg-[#141a18] border border-[#E8E5DC] dark:border-[#2e3b37] flex items-center justify-center mx-auto text-[#777D78]">
+        <div className="rounded-2xl border border-[#E6DFD8] dark:border-[#494448] bg-white dark:bg-[#222023] shadow-card p-12 text-center space-y-3">
+          <div className="w-14 h-14 rounded-2xl bg-[#F5F1EA] dark:bg-[#1F1D20] border border-[#E6DFD8] dark:border-[#494448] flex items-center justify-center mx-auto text-[#736B70] dark:text-[#A49D9E]">
             <Briefcase className="w-7 h-7" />
           </div>
-          <div className="text-base font-bold text-[#252923] dark:text-white">
+          <div className="text-base font-bold text-[#29272A] dark:text-[#F5F1EA]">
             No jobs available
           </div>
-          <p className="text-xs text-[#777D78]">
+          <p className="text-xs text-[#736B70] dark:text-[#A49D9E]">
             Check back later or try clearing selected category filters.
           </p>
         </div>
@@ -243,7 +236,7 @@ export const JobsPage: React.FC = () => {
           {/* Section 1: RECOMMENDED FOR YOU */}
           {recommendedJobs.length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E]">
                 Recommended For You
               </h2>
 
@@ -265,7 +258,7 @@ export const JobsPage: React.FC = () => {
           {/* Section 2: ALL AVAILABLE JOBS */}
           {otherJobs.length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E]">
                 All Available Jobs
               </h2>
 

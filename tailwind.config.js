@@ -8,154 +8,102 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Deep Emerald Palette (#123C35)
-        emerald: {
-          50: '#eef6f4',
-          100: '#d8ebe6',
-          200: '#b3d7cd',
-          300: '#83bdb0',
-          400: '#4f9d8d',
-          500: '#297d6e',
-          600: '#1b5d52',
-          700: '#123C35', // Primary Deep Emerald
-          800: '#0e2f29',
-          900: '#0a221e',
-          950: '#051411',
-          DEFAULT: '#123C35',
-        },
-        brand: {
-          50: '#eef6f4',
-          100: '#d8ebe6',
-          200: '#b3d7cd',
-          300: '#83bdb0',
-          400: '#4f9d8d',
-          500: '#297d6e',
-          600: '#123C35', // Deep Emerald Primary
-          700: '#0e2f29', // Hover state
-          800: '#0a221e', // Active state
-          900: '#061815',
-          950: '#030d0b',
-          DEFAULT: '#123C35',
-        },
-        // Champagne Gold Palette (#C5A46D)
-        gold: {
-          50: '#fbf8f3',
-          100: '#f5eee2',
-          200: '#eadbc2',
-          300: '#dec49c',
-          400: '#d2ad77',
-          500: '#C5A46D', // Secondary Champagne Gold
-          600: '#aa8950',
-          700: '#8b6d3d',
-          800: '#6f5634',
-          900: '#5a452c',
-          DEFAULT: '#C5A46D',
-        },
-        champagne: {
-          50: '#fbf8f3',
-          100: '#f5eee2',
-          200: '#eadbc2',
-          300: '#dec49c',
-          400: '#d2ad77',
-          500: '#C5A46D', // Secondary Champagne Gold
-          600: '#aa8950',
-          700: '#8b6d3d',
-          800: '#6f5634',
-          900: '#5a452c',
-          DEFAULT: '#C5A46D',
-        },
-        bronze: {
-          50: '#fbf8f3',
-          100: '#f5eee2',
-          200: '#eadbc2',
-          300: '#dec49c',
-          400: '#d2ad77',
-          500: '#C5A46D',
-          600: '#aa8950',
-          700: '#8b6d3d',
-          800: '#6f5634',
-          900: '#5a452c',
-          DEFAULT: '#C5A46D',
-        },
-        amber: {
-          50: '#fbf8f3',
-          100: '#f5eee2',
-          200: '#eadbc2',
-          300: '#dec49c',
-          400: '#d2ad77',
-          500: '#C5A46D', // Harmonized to Champagne Gold
-          600: '#aa8950',
-          700: '#8b6d3d',
-          800: '#6f5634',
-          900: '#5a452c',
-          DEFAULT: '#C5A46D',
-        },
-        // Warm Ivory Palette (#F7F4EC)
-        ivory: {
-          50: '#ffffff',
-          100: '#fbfaf7',
-          200: '#F7F4EC', // Main Background Warm Ivory
-          300: '#ede8dc',
-          400: '#ded5bf',
-          500: '#c8bc9f',
-          DEFAULT: '#F7F4EC',
-        },
-        // Charcoal Palette (#202A27 & #252923)
+        // Midnight Charcoal + Burnt Copper + Porcelain Palette
         charcoal: {
-          600: '#384843',
-          700: '#2e3b37',
-          800: '#252923', // Primary Text Deep Charcoal
-          900: '#202A27', // Dark Surface Charcoal
-          950: '#141a18', // Dark Canvas
-          DEFAULT: '#202A27',
+          DEFAULT: '#29272A',
+          50: '#F5F1EA',
+          100: '#E6DFD8',
+          200: '#C7BFB9',
+          300: '#9E9493',
+          400: '#736B70',
+          500: '#494448', // Soft Graphite
+          600: '#383439',
+          700: '#29272A', // Midnight Charcoal
+          800: '#222023',
+          900: '#1A181B',
+          950: '#121113',
         },
-        // Muted Grey (#777D78)
-        muted: {
-          400: '#9ea5a1',
-          500: '#777D78', // Secondary Text Muted Grey
-          600: '#5c625d',
-          DEFAULT: '#777D78',
+        copper: {
+          DEFAULT: '#B87355',
+          50: '#FAF4F0',
+          100: '#F4E5DE',
+          200: '#E6C5B5',
+          300: '#D7A38C',
+          400: '#C78469',
+          500: '#B87355', // Burnt Copper
+          600: '#A46347',
+          700: '#8D5239',
+          800: '#73412B',
+          900: '#5C3322',
+          950: '#3D2014',
         },
-        // Soft Warm Grey Border (#E8E5DC)
-        warmborder: {
-          DEFAULT: '#E8E5DC',
+        porcelain: {
+          DEFAULT: '#F5F1EA',
+          50: '#FAF8F5',
+          100: '#F5F1EA',
+          200: '#E6DFD8',
+          300: '#D7CDC4',
+          400: '#C4B7AC',
+          500: '#A8998C',
+        },
+        graphite: {
+          DEFAULT: '#494448', // Soft Graphite
+          light: '#736B70',
+          dark: '#383439',
+        },
+        softborder: {
+          DEFAULT: '#E6DFD8', // Soft Border
+          dark: '#494448',
+        },
+        // Brand is mapped to Burnt Copper for primary actions & accents
+        brand: {
+          50: '#FAF4F0',
+          100: '#F4E5DE',
+          200: '#E6C5B5',
+          300: '#D7A38C',
+          400: '#C78469',
+          500: '#B87355', // Burnt Copper Primary
+          600: '#A46347', // Hover state
+          700: '#8D5239', // Active state
+          800: '#73412B',
+          900: '#5C3322',
+          950: '#3D2014',
         },
         surface: {
-          canvas: '#F7F4EC',
-          card: '#FFFFFF',
-          border: '#E8E5DC',
-          'dark-canvas': '#141a18',
-          'dark-card': '#202A27',
-          'dark-border': '#2e3b37',
-          'dark-hover': '#26322f',
+          canvas: '#F5F1EA',          // Porcelain
+          card: '#FFFFFF',            // Pure White
+          'dark-canvas': '#29272A',   // Midnight Charcoal
+          'dark-card': '#222023',     // Dark card surface
+          'dark-border': '#494448',   // Soft Graphite
+          'dark-hover': '#383439',    // Dark hover surface
         },
         sidebar: {
-          bg: '#202A27',
-          card: '#26322f',
-          hover: '#2e3b37',
-          active: '#123C35',
-          accent: '#C5A46D',
-          text: '#9ea5a1',
+          bg: '#29272A',              // Midnight Charcoal
+          card: '#222023',
+          hover: '#383439',
+          active: '#B87355',          // Burnt Copper
+          accent: '#B87355',
+          text: '#D4CDC7',
           textActive: '#FFFFFF',
-          border: '#2e3b37',
+          border: '#494448',          // Soft Graphite
         },
-        'dark-bg': '#141a18',
-        'dark-card': '#202A27',
-        'dark-border': '#2e3b37',
-        'dark-hover': '#26322f',
+        'dark-bg': '#29272A',
+        'dark-card': '#222023',
+        'dark-border': '#494448',
+        'dark-hover': '#383439',
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
       boxShadow: {
-        '2xs': '0 1px 2px 0 rgba(32, 42, 39, 0.03)',
-        xs: '0 1px 2px 0 rgba(32, 42, 39, 0.04)',
-        soft: '0 1px 3px 0 rgba(32, 42, 39, 0.05), 0 1px 2px -1px rgba(32, 42, 39, 0.04)',
-        card: '0 1px 3px 0 rgba(32, 42, 39, 0.06), 0 1px 2px -1px rgba(32, 42, 39, 0.04)',
-        'card-hover': '0 12px 24px -6px rgba(18, 60, 53, 0.10), 0 4px 8px -2px rgba(18, 60, 53, 0.04)',
-        hover: '0 12px 24px -6px rgba(18, 60, 53, 0.10), 0 4px 8px -2px rgba(18, 60, 53, 0.04)',
-        dropdown: '0 10px 25px -5px rgba(18, 60, 53, 0.12), 0 8px 10px -6px rgba(18, 60, 53, 0.06)',
-        modal: '0 25px 50px -12px rgba(18, 60, 53, 0.25)',
+        '2xs': '0 1px 2px 0 rgba(41, 39, 42, 0.03)',
+        xs: '0 1px 2px 0 rgba(41, 39, 42, 0.04)',
+        soft: '0 1px 3px 0 rgba(41, 39, 42, 0.05), 0 1px 2px -1px rgba(41, 39, 42, 0.04)',
+        card: '0 1px 3px 0 rgba(41, 39, 42, 0.05), 0 1px 2px -1px rgba(41, 39, 42, 0.04)',
+        'card-hover': '0 12px 24px -6px rgba(41, 39, 42, 0.09), 0 4px 8px -2px rgba(41, 39, 42, 0.04)',
+        hover: '0 12px 24px -6px rgba(41, 39, 42, 0.09), 0 4px 8px -2px rgba(41, 39, 42, 0.04)',
+        dropdown: '0 10px 25px -5px rgba(41, 39, 42, 0.12), 0 8px 10px -6px rgba(41, 39, 42, 0.06)',
+        modal: '0 25px 50px -12px rgba(41, 39, 42, 0.35)',
       },
       borderRadius: {
         '2xl': '1rem',

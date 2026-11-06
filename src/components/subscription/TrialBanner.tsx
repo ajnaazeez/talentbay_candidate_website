@@ -33,18 +33,18 @@ export const TrialBanner: React.FC = () => {
   if (isTrialActive) {
     const daysLeft = subscriptionService.getDaysRemaining(candidate.trialExpiryDate);
     return (
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-800 text-white p-4 sm:p-5 shadow-sm border border-emerald-500/30">
+      <div className="relative overflow-hidden rounded-2xl bg-[#29272A] text-white p-4 sm:p-5 shadow-sm border border-[#B87355]/40">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center shrink-0">
-              <Clock className="w-5 h-5 text-emerald-200" />
+            <div className="w-10 h-10 rounded-xl bg-[#B87355]/20 flex items-center justify-center shrink-0">
+              <Clock className="w-5 h-5 text-[#B87355]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/20 text-white border border-white/20">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#B87355]/20 text-[#F5F1EA] border border-[#B87355]/30">
                   Trial Active
                 </span>
-                <span className="text-xs font-bold text-emerald-100">
+                <span className="text-xs font-bold text-[#D4CDC7]">
                   {daysLeft} {daysLeft === 1 ? 'day' : 'days'} remaining
                 </span>
               </div>
@@ -59,7 +59,7 @@ export const TrialBanner: React.FC = () => {
               <Button
                 variant="primary"
                 size="sm"
-                className="bg-white text-emerald-950 hover:bg-emerald-50 font-bold shadow-xs text-xs"
+                className="bg-[#B87355] text-white hover:bg-[#A46347] font-bold shadow-xs text-xs"
                 rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
               >
                 View Plans
@@ -74,15 +74,15 @@ export const TrialBanner: React.FC = () => {
   // State 2: Trial Expired (Needs Upgrade)
   if (hasUsedTrial && !candidate.isPremium) {
     return (
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white p-4 sm:p-5 shadow-sm border border-amber-500/30">
+      <div className="relative overflow-hidden rounded-2xl bg-[#29272A] text-white p-4 sm:p-5 shadow-sm border border-rose-500/30">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center shrink-0">
-              <ShieldAlert className="w-5 h-5 text-amber-200" />
+            <div className="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center shrink-0">
+              <ShieldAlert className="w-5 h-5 text-rose-300" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-full bg-black/20 text-white border border-white/20">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-200 border border-rose-500/30">
                   Trial Expired
                 </span>
               </div>
@@ -97,8 +97,8 @@ export const TrialBanner: React.FC = () => {
               <Button
                 variant="primary"
                 size="sm"
-                className="bg-white text-amber-950 hover:bg-amber-50 font-bold shadow-xs text-xs"
-                rightIcon={<Crown className="w-3.5 h-3.5 text-amber-600" />}
+                className="bg-[#B87355] text-white hover:bg-[#A46347] font-bold shadow-xs text-xs"
+                rightIcon={<Crown className="w-3.5 h-3.5 text-white" />}
               >
                 Upgrade to Premium
               </Button>
@@ -113,26 +113,26 @@ export const TrialBanner: React.FC = () => {
   if (isEligible) {
     return (
       <>
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#070b14] via-[#0b1329] to-[#0f1f3d] text-white p-4 sm:p-5 shadow-card border border-brand-500/30">
-          <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/15 via-transparent to-transparent pointer-events-none" />
+        <div className="relative overflow-hidden rounded-2xl bg-[#29272A] text-white p-4 sm:p-5 shadow-card border border-[#B87355]/40">
+          <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#B87355]/20 via-transparent to-transparent pointer-events-none" />
           <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-amber-400/20 border border-amber-400/30 backdrop-blur-md flex items-center justify-center shrink-0">
-                <Sparkles className="w-5 h-5 text-amber-300" />
+              <div className="w-10 h-10 rounded-xl bg-[#B87355]/20 border border-[#B87355]/30 flex items-center justify-center shrink-0">
+                <Sparkles className="w-5 h-5 text-[#B87355]" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                  <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#B87355]/20 text-[#F5F1EA] border border-[#B87355]/30">
                     Introductory Offer
                   </span>
-                  <span className="text-xs font-bold text-amber-300">
+                  <span className="text-xs font-bold text-[#B87355]">
                     ₹0 For 7 Days
                   </span>
                 </div>
                 <h4 className="text-sm sm:text-base font-bold text-white mt-0.5">
                   Try TalentBay Premium completely free for 7 days
                 </h4>
-                <p className="text-xs text-slate-300 hidden sm:block">
+                <p className="text-xs text-[#D4CDC7] hidden sm:block">
                   Apply directly, chat with employers, and test your skills. No credit card required.
                 </p>
               </div>
@@ -143,7 +143,7 @@ export const TrialBanner: React.FC = () => {
                 variant="primary"
                 size="sm"
                 onClick={() => setModalOpen(true)}
-                className="bg-white text-brand-950 hover:bg-slate-100 font-extrabold shadow-sm text-xs"
+                className="bg-[#B87355] text-white hover:bg-[#A46347] font-extrabold shadow-sm text-xs"
                 rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
               >
                 Start Free Trial

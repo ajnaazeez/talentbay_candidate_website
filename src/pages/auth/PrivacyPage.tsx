@@ -13,8 +13,8 @@ export const PrivacyPage: React.FC = () => {
         <ArrowLeft className="w-4 h-4" /> Back to Registration
       </NavLink>
 
-      <div className="p-8 rounded-3xl bg-white dark:bg-[#202A27] border border-slate-200 dark:border-[#2e3b37] shadow-card space-y-6">
-        <div className="flex items-center gap-3 pb-4 border-b border-slate-100 dark:border-[#2e3b37]">
+      <div className="p-8 rounded-3xl bg-white dark:bg-[#222023] border border-[#E6DFD8] dark:border-[#494448] shadow-card space-y-6">
+        <div className="flex items-center gap-3 pb-4 border-b border-[#E6DFD8] dark:border-[#494448]">
           <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 flex items-center justify-center">
             <Lock className="w-5 h-5" />
           </div>

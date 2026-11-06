@@ -39,7 +39,7 @@ const RootRedirect: React.FC = () => {
 
   if (initialLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0b0f19]">
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F1EA] dark:bg-[#29272A]">
         <LoadingSpinner size="lg" label="Connecting to TalentBay..." />
       </div>
     );

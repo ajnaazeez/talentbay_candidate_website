@@ -178,8 +178,8 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       {feedbackMessage && (
-        <div className="p-4 border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+        <div className="p-4 border border-[#B87355]/30 bg-[#B87355]/10 dark:bg-[#B87355]/20 text-[#B87355] dark:text-[#E6DFD8] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-[#B87355] shrink-0" />
           <span>{feedbackMessage}</span>
         </div>
       )}
@@ -198,7 +198,7 @@ export const SettingsPage: React.FC = () => {
               {/* Premium Status Header */}
               <div className="p-5 bg-slate-50/50 dark:bg-slate-950/30">
                 <div className="flex items-center gap-2.5">
-                  <Award className="w-5 h-5 text-amber-500 fill-amber-500" />
+                  <Award className="w-5 h-5 text-[#B87355] fill-[#B87355]" />
                   <span className="font-black text-sm tracking-wide text-slate-900 dark:text-white uppercase">
                     PREMIUM MEMBER
                   </span>
@@ -383,7 +383,7 @@ export const SettingsPage: React.FC = () => {
             className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
           >
             <div className="flex items-center gap-3.5">
-              <LogOut className="w-5 h-5 text-amber-500 shrink-0" />
+              <LogOut className="w-5 h-5 text-[#B87355] shrink-0" />
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   Logout
@@ -487,7 +487,7 @@ export const SettingsPage: React.FC = () => {
             className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
           >
             <div className="flex items-center gap-3.5">
-              <Info className="w-5 h-5 text-emerald-500 shrink-0" />
+              <Info className="w-5 h-5 text-[#B87355] shrink-0" />
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   About Us
@@ -537,7 +537,7 @@ export const SettingsPage: React.FC = () => {
             className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
           >
             <div className="flex items-center gap-3.5">
-              <Mail className="w-5 h-5 text-[#123C35] dark:text-[#C5A46D] shrink-0" />
+              <Mail className="w-5 h-5 text-[#B87355] shrink-0" />
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   Contact Support
@@ -558,7 +558,7 @@ export const SettingsPage: React.FC = () => {
             className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
           >
             <div className="flex items-center gap-3.5">
-              <Globe className="w-5 h-5 text-emerald-500 shrink-0" />
+              <Globe className="w-5 h-5 text-[#B87355] shrink-0" />
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   Visit Website

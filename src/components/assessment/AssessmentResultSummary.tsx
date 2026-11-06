@@ -48,18 +48,18 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
         };
       case 'Advanced':
         return {
-          textColor: 'text-amber-500 dark:text-amber-400',
-          bgColor: 'bg-amber-500/10',
-          borderColor: 'border-amber-500/30',
-          badgeVariant: 'warning',
+          textColor: 'text-[#B87355]',
+          bgColor: 'bg-[#B87355]/15',
+          borderColor: 'border-[#B87355]/30',
+          badgeVariant: 'brand',
           description: 'Strong competence! You are well-prepared for complex real-world challenges.',
         };
       case 'Intermediate':
         return {
-          textColor: 'text-amber-600 dark:text-amber-400',
-          bgColor: 'bg-amber-50 dark:bg-amber-950/40',
-          borderColor: 'border-amber-200 dark:border-amber-900/60',
-          badgeVariant: 'warning',
+          textColor: 'text-[#B87355]',
+          bgColor: 'bg-[#B87355]/10',
+          borderColor: 'border-[#B87355]/25',
+          badgeVariant: 'bronze',
           description: 'Good foundation. Focused practice will help bridge remaining skill gaps.',
         };
       default:
@@ -79,7 +79,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-300">
       {/* Top Hero Score Card */}
       <div className={`p-8 rounded-3xl border ${theme.borderColor} ${theme.bgColor} text-center space-y-6 relative overflow-hidden shadow-sm`}>
-        <div className="w-16 h-16 rounded-2xl bg-white dark:bg-[#202A27] shadow-md mx-auto flex items-center justify-center text-amber-500 dark:text-amber-400">
+        <div className="w-16 h-16 rounded-2xl bg-white dark:bg-[#222023] shadow-md mx-auto flex items-center justify-center text-[#B87355]">
           <Trophy className="w-8 h-8" />
         </div>
 
@@ -87,48 +87,48 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
           <Badge variant={theme.badgeVariant} size="lg">
             {result.proficiencyLevel} Level
           </Badge>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#29272A] dark:text-white">
             {result.skill} Assessment Complete
           </h1>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-xl mx-auto">
+          <p className="text-sm sm:text-base text-[#494448] dark:text-[#D4CDC7] max-w-xl mx-auto">
             {theme.description}
           </p>
         </div>
 
         {/* Big Metrics Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto pt-2">
-          <div className="bg-white/80 dark:bg-[#202A27]/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-200/60 dark:border-[#2e3b37]">
-            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100">
+          <div className="bg-white/80 dark:bg-[#222023]/80 backdrop-blur-sm rounded-2xl p-4 border border-[#E6DFD8] dark:border-[#494448]">
+            <div className="text-2xl sm:text-3xl font-extrabold text-[#29272A] dark:text-white">
               {percentage}%
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+            <div className="text-xs text-[#736B70] dark:text-[#A49D9E] font-medium mt-0.5">
               Final Score
             </div>
           </div>
 
-          <div className="bg-white/80 dark:bg-[#202A27]/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-200/60 dark:border-[#2e3b37]">
+          <div className="bg-white/80 dark:bg-[#222023]/80 backdrop-blur-sm rounded-2xl p-4 border border-[#E6DFD8] dark:border-[#494448]">
             <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
               {result.score}/{result.totalQuestions}
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+            <div className="text-xs text-[#736B70] dark:text-[#A49D9E] font-medium mt-0.5">
               Correct Answers
             </div>
           </div>
 
-          <div className="bg-white/80 dark:bg-[#202A27]/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-200/60 dark:border-[#2e3b37]">
-            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100">
+          <div className="bg-white/80 dark:bg-[#222023]/80 backdrop-blur-sm rounded-2xl p-4 border border-[#E6DFD8] dark:border-[#494448]">
+            <div className="text-2xl sm:text-3xl font-extrabold text-[#29272A] dark:text-white">
               {result.difficulty}
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+            <div className="text-xs text-[#736B70] dark:text-[#A49D9E] font-medium mt-0.5">
               Difficulty
             </div>
           </div>
 
-          <div className="bg-white/80 dark:bg-[#202A27]/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-200/60 dark:border-[#2e3b37]">
-            <div className="text-2xl sm:text-3xl font-extrabold text-amber-500 dark:text-amber-400">
+          <div className="bg-white/80 dark:bg-[#222023]/80 backdrop-blur-sm rounded-2xl p-4 border border-[#E6DFD8] dark:border-[#494448]">
+            <div className="text-2xl sm:text-3xl font-extrabold text-[#B87355]">
               Saved
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+            <div className="text-xs text-[#736B70] dark:text-[#A49D9E] font-medium mt-0.5">
               Profile Synced
             </div>
           </div>
@@ -163,35 +163,35 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
       </div>
 
       {/* Question Breakdown Accordion Header */}
-      <div className="bg-white dark:bg-[#202A27] rounded-2xl border border-slate-200 dark:border-[#2e3b37] overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-[#222023] rounded-2xl border border-[#E6DFD8] dark:border-[#494448] overflow-hidden shadow-sm">
         <button
           type="button"
           onClick={() => setShowReview(!showReview)}
-          className="w-full p-5 sm:p-6 flex items-center justify-between text-left hover:bg-slate-50/50 dark:hover:bg-[#2e3b37]/30 transition-colors"
+          className="w-full p-5 sm:p-6 flex items-center justify-between text-left hover:bg-[#F5F1EA]/60 dark:hover:bg-[#383439]/60 transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-[#2e3b37] flex items-center justify-center text-slate-700 dark:text-slate-300 font-bold">
+            <div className="w-9 h-9 rounded-xl bg-[#F5F1EA] dark:bg-[#383439] flex items-center justify-center text-[#29272A] dark:text-[#F5F1EA] font-bold">
               {result.questions.length}
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 dark:text-slate-100">
+              <h3 className="font-bold text-[#29272A] dark:text-white">
                 Detailed Question & Answer Review
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-[#736B70] dark:text-[#A49D9E]">
                 Review your selections, correct answers, and learning takeaways
               </p>
             </div>
           </div>
           {showReview ? (
-            <ChevronUp className="w-5 h-5 text-slate-400" />
+            <ChevronUp className="w-5 h-5 text-[#A49D9E]" />
           ) : (
-            <ChevronDown className="w-5 h-5 text-slate-400" />
+            <ChevronDown className="w-5 h-5 text-[#A49D9E]" />
           )}
         </button>
 
         {/* Questions List */}
         {showReview && (
-          <div className="p-5 sm:p-6 pt-0 space-y-4 border-t border-slate-100 dark:border-[#2e3b37]">
+          <div className="p-5 sm:p-6 pt-0 space-y-4 border-t border-[#E6DFD8] dark:border-[#494448]">
             {result.questions.map((q, idx) => {
               const userAnswer = result.userAnswers[idx];
               const isCorrect = userAnswer === q.correctAnswerIndex;
@@ -208,7 +208,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
                 >
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E]">
                         Question {idx + 1}
                       </span>
                       {isCorrect ? (
@@ -216,7 +216,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
                           <CheckCircle2 className="w-3.5 h-3.5" /> Correct
                         </span>
                       ) : isSkipped ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#B87355]">
                           <AlertTriangle className="w-3.5 h-3.5" /> Unanswered
                         </span>
                       ) : (
@@ -227,7 +227,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
                     </div>
                   </div>
 
-                  <p className="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 mb-4 leading-relaxed">
+                  <p className="text-sm sm:text-base font-semibold text-[#29272A] dark:text-white mb-4 leading-relaxed">
                     {q.question}
                   </p>
 
@@ -236,7 +236,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
                       const isCandidatePick = userAnswer === oIdx;
                       const isActualCorrect = q.correctAnswerIndex === oIdx;
 
-                      let optClasses = 'border-slate-200 dark:border-[#2e3b37] bg-white dark:bg-[#202A27] text-slate-700 dark:text-slate-300';
+                      let optClasses = 'border-[#E6DFD8] dark:border-[#494448] bg-white dark:bg-[#222023] text-[#494448] dark:text-[#D4CDC7]';
                       if (isActualCorrect) {
                         optClasses = 'border-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-semibold ring-1 ring-emerald-500/30';
                       } else if (isCandidatePick && !isCorrect) {
@@ -249,7 +249,7 @@ export const AssessmentResultSummary: React.FC<AssessmentResultSummaryProps> = (
                           className={`p-3 rounded-xl border text-xs sm:text-sm flex items-center justify-between ${optClasses}`}
                         >
                           <div className="flex items-center gap-2.5">
-                            <span className="w-5 h-5 rounded-md bg-slate-100 dark:bg-[#2e3b37] flex items-center justify-center font-bold text-xs shrink-0">
+                            <span className="w-5 h-5 rounded-md bg-[#F5F1EA] dark:bg-[#383439] flex items-center justify-center font-bold text-xs shrink-0">
                               {['A', 'B', 'C', 'D'][oIdx] || oIdx + 1}
                             </span>
                             <span>{opt}</span>

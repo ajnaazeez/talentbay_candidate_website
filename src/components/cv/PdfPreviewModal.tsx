@@ -49,7 +49,7 @@ export const PdfPreviewModal: React.FC<PdfPreviewModalProps> = ({
                 <h3 className="text-base font-bold text-gray-900 dark:text-white">
                   ATS Resume Preview
                 </h3>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#B87355]/15 dark:bg-[#B87355]/20 text-[#B87355] dark:text-[#E6DFD8] border border-[#B87355]/30 dark:border-[#B87355]/40">
                   <CheckCircle2 className="w-3 h-3" />
                   ATS Vector Format
                 </span>

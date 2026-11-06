@@ -69,10 +69,10 @@ export const EditBasicInfoModal: React.FC<EditBasicInfoModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="w-full max-w-2xl bg-white dark:bg-[#202A27] rounded-3xl border border-slate-200 dark:border-[#2e3b37] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
+      <div className="w-full max-w-2xl bg-white dark:bg-[#222023] rounded-3xl border border-[#E6DFD8] dark:border-[#494448] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-[#2e3b37]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E6DFD8] dark:border-[#494448]">
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <User className="w-5 h-5 text-brand-600" />
             Edit Personal Information
@@ -261,7 +261,7 @@ export const EditBasicInfoModal: React.FC<EditBasicInfoModalProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-[#2e3b37]">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E6DFD8] dark:border-[#494448]">
             <Button type="button" variant="ghost" onClick={onClose}>
               Cancel
             </Button>

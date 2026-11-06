@@ -115,7 +115,7 @@ export const AddEditCertificationModal: React.FC<AddEditCertificationModalProps>
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-dark-border">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400">
+            <div className="p-2 rounded-xl bg-[#B87355]/15 text-[#B87355]">
               <Award className="w-5 h-5" />
             </div>
             <h3 className="text-lg font-bold text-gray-900 dark:text-white">

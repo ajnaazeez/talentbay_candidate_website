@@ -129,7 +129,16 @@ export const SearchPage: React.FC = () => {
     };
   }, [candidate?.uid, loadSearchHistory]);
 
-  // Handle bookmark
+  // Handle URL query changes
+  useEffect(() => {
+    const q = searchParams.get('q');
+    if (q !== null && q !== searchQuery) {
+      setSearchQuery(q);
+      if (q.trim()) addToHistory(q);
+    }
+  }, [searchParams]);
+
+  // Bookmark save / unsave handler
   const handleSaveToggle = async (jobId: string, currentSaved: boolean) => {
     if (!candidate?.uid) return;
     if (currentSaved) {
@@ -140,59 +149,51 @@ export const SearchPage: React.FC = () => {
     await refreshCandidate();
   };
 
-  // Filter jobs based on query & category (matching Flutter search logic)
+  // Multi-field exact and partial query filtering
   const filteredJobs = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-
-    if (!q && selectedCategory === 'All') {
-      return [];
-    }
+    const query = searchQuery.trim().toLowerCase();
 
     return allJobs.filter((job) => {
-      // Text match
-      const roleMatch = (job.roleName || '').toLowerCase().includes(q);
-      const designationMatch = (job.designationName || '').toLowerCase().includes(q);
-      const companyMatch = (job.companyName || '').toLowerCase().includes(q);
-      const expMatch = (job.experienceLevel || '').toLowerCase().includes(q);
-
-      const locationCity = job.jobLocation?.city || '';
-      const locationState = job.jobLocation?.state || '';
-      const locationCountry = job.jobLocation?.country || '';
-      const locationMatch =
-        (job.locations || []).some((loc) => loc.toLowerCase().includes(q)) ||
-        locationCity.toLowerCase().includes(q) ||
-        locationState.toLowerCase().includes(q) ||
-        locationCountry.toLowerCase().includes(q);
-
-      const skillsMatch = (job.skillsRequired || []).some((s) => s.toLowerCase().includes(q));
-
-      const matchesText =
-        !q ||
-        roleMatch ||
-        designationMatch ||
-        companyMatch ||
-        expMatch ||
-        locationMatch ||
-        skillsMatch;
-
-      // Category match
-      let matchesCategory = true;
+      // 1. Category filter
       if (selectedCategory === 'Remote') {
-        matchesCategory = (job.workMode || '').toLowerCase().includes('remote');
+        const isRemote =
+          (job.workMode || '').toLowerCase().includes('remote') ||
+          (job.jobLocation?.city || '').toLowerCase().includes('remote');
+        if (!isRemote) return false;
       } else if (selectedCategory !== 'All') {
-        matchesCategory =
+        const matchesType =
           (job.employmentType || '').toLowerCase() === selectedCategory.toLowerCase();
+        if (!matchesType) return false;
       }
 
-      return matchesText && matchesCategory;
+      // 2. Query filter
+      if (!query) return true;
+
+      const roleMatch = (job.roleName || (job as any).title || '').toLowerCase().includes(query);
+      const designationMatch = (job.designationName || '').toLowerCase().includes(query);
+      const companyMatch = (job.companyName || '').toLowerCase().includes(query);
+      const locationMatch =
+        (job.jobLocation?.city || '').toLowerCase().includes(query) ||
+        (job.jobLocation?.country || '').toLowerCase().includes(query);
+
+      const skillMatch = (job.skillsRequired || []).some((s) =>
+        s.toLowerCase().includes(query)
+      );
+
+      const descMatch = (job.jobDescription || '').toLowerCase().includes(query);
+
+      return roleMatch || designationMatch || companyMatch || locationMatch || skillMatch || descMatch;
     });
   }, [allJobs, searchQuery, selectedCategory]);
 
-  const handleSearchSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (searchQuery.trim()) {
-      addToHistory(searchQuery.trim());
-      setSearchParams({ q: searchQuery.trim() });
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = searchQuery.trim();
+    if (trimmed) {
+      addToHistory(trimmed);
+      setSearchParams({ q: trimmed });
+    } else {
+      setSearchParams({});
     }
   };
 
@@ -212,20 +213,20 @@ export const SearchPage: React.FC = () => {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="p-2.5 rounded-xl border border-[#E8E5DC] dark:border-[#2e3b37] bg-white dark:bg-[#202A27] text-[#777D78] hover:text-[#252923] dark:hover:text-white shadow-xs transition cursor-pointer"
+          className="p-2.5 rounded-xl border border-[#E6DFD8] dark:border-[#494448] bg-white dark:bg-[#222023] text-[#736B70] dark:text-[#A49D9E] hover:text-[#29272A] dark:hover:text-white shadow-xs transition cursor-pointer"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
 
-        <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center rounded-2xl border border-[#E8E5DC] dark:border-[#2e3b37] bg-white dark:bg-[#202A27] shadow-xs px-4 py-1.5 focus-within:border-[#123C35] dark:focus-within:border-[#C5A46D] transition-colors">
-          <Search className="w-5 h-5 text-[#777D78] mr-2 flex-shrink-0" />
+        <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center rounded-2xl border border-[#E6DFD8] dark:border-[#494448] bg-white dark:bg-[#222023] shadow-xs px-4 py-1.5 focus-within:border-[#B87355] focus-within:ring-2 focus-within:ring-[#B87355]/20 transition-all">
+          <Search className="w-5 h-5 text-[#A49D9E] mr-2 flex-shrink-0" />
           <input
             type="text"
             autoFocus
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search title, skill, or company..."
-            className="w-full py-2.5 text-sm md:text-base font-medium bg-transparent border-0 focus:outline-none focus:ring-0 text-[#252923] dark:text-white placeholder:text-[#777D78]"
+            className="w-full py-2.5 text-sm md:text-base font-medium bg-transparent border-0 focus:outline-none focus:ring-0 text-[#29272A] dark:text-white placeholder:text-[#A49D9E]"
           />
           {searchQuery && (
             <button
@@ -234,7 +235,7 @@ export const SearchPage: React.FC = () => {
                 setSearchQuery('');
                 setSearchParams({});
               }}
-              className="p-1 rounded-lg text-[#777D78] hover:text-[#252923] dark:hover:text-white"
+              className="p-1 rounded-lg text-[#A49D9E] hover:text-[#29272A] dark:hover:text-white"
             >
               <X className="w-4 h-4" />
             </button>
@@ -242,7 +243,7 @@ export const SearchPage: React.FC = () => {
         </form>
       </div>
 
-      {/* Category Filter Chips (Matching Flutter exactly) */}
+      {/* Category Filter Chips */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
         {CATEGORIES.map((cat) => {
           const isSelected = selectedCategory === cat;
@@ -253,8 +254,8 @@ export const SearchPage: React.FC = () => {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-[#123C35] text-white border-[#123C35] shadow-xs'
-                  : 'bg-white dark:bg-[#202A27] text-[#252923] dark:text-[#E8E5DC] border-[#E8E5DC] dark:border-[#2e3b37] hover:border-[#C5A46D]/60 dark:hover:border-[#C5A46D]/50'
+                  ? 'bg-[#B87355] text-white border-[#B87355] shadow-xs'
+                  : 'bg-white dark:bg-[#222023] text-[#494448] dark:text-[#D4CDC7] border-[#E6DFD8] dark:border-[#494448] hover:border-[#B87355]/40 dark:hover:border-[#B87355]/40'
               }`}
             >
               {cat.toUpperCase()}
@@ -271,7 +272,7 @@ export const SearchPage: React.FC = () => {
       ) : isFiltering ? (
         /* Search Results View */
         <div className="space-y-4">
-          <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400">
+          <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E]">
             <span>RESULTS ({filteredJobs.length})</span>
           </div>
 
@@ -290,11 +291,11 @@ export const SearchPage: React.FC = () => {
             </div>
           ) : (
             <div className="py-20 text-center space-y-4">
-              <SearchX className="w-16 h-16 mx-auto text-slate-300 dark:text-slate-700" />
-              <div className="text-base font-bold text-slate-700 dark:text-slate-300">
+              <SearchX className="w-16 h-16 mx-auto text-[#A49D9E] dark:text-[#736B70]" />
+              <div className="text-base font-bold text-[#29272A] dark:text-white">
                 No jobs found
               </div>
-              <p className="text-xs text-slate-500 max-w-sm mx-auto">
+              <p className="text-xs text-[#736B70] dark:text-[#A49D9E] max-w-sm mx-auto">
                 No opportunities matched "{searchQuery}". Try different keywords or reset category filters.
               </p>
             </div>
@@ -304,30 +305,30 @@ export const SearchPage: React.FC = () => {
         /* Recent Searches View (Shown when no search query is active) */
         <div className="pt-2">
           {searchHistory.length > 0 ? (
-            <div className="rounded-2xl border border-slate-200/90 dark:border-[#2e3b37] bg-white dark:bg-[#202A27] shadow-card p-6 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#2e3b37]/80">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
+            <div className="rounded-2xl border border-[#E6DFD8] dark:border-[#494448] bg-white dark:bg-[#222023] shadow-card p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-[#E6DFD8] dark:border-[#494448]">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#29272A] dark:text-white">
                   RECENT SEARCHES
                 </span>
                 <button
                   type="button"
                   onClick={clearAllHistory}
-                  className="text-xs font-semibold text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 cursor-pointer transition"
+                  className="text-xs font-semibold text-[#736B70] dark:text-[#A49D9E] hover:text-[#B87355] dark:hover:text-[#B87355] cursor-pointer transition"
                 >
                   Clear All
                 </button>
               </div>
 
-              <div className="divide-y divide-slate-100 dark:divide-[#2e3b37]/60">
+              <div className="divide-y divide-[#E6DFD8] dark:divide-[#494448]">
                 {searchHistory.map((item) => (
                   <div
                     key={item.query}
                     onClick={() => handleSelectHistoryItem(item.query)}
-                    className="py-3 px-2 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-[#182644]/40 rounded-xl transition cursor-pointer group"
+                    className="py-3 px-2 flex items-center justify-between hover:bg-[#F5F1EA] dark:hover:bg-[#383439] rounded-xl transition cursor-pointer group"
                   >
                     <div className="flex items-center gap-3">
-                      <History className="w-4 h-4 text-slate-400 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition" />
-                      <span className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                      <History className="w-4 h-4 text-[#A49D9E] group-hover:text-[#B87355] transition" />
+                      <span className="text-sm font-medium text-[#29272A] dark:text-[#F5F1EA]">
                         {item.query}
                       </span>
                     </div>
@@ -335,7 +336,7 @@ export const SearchPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={(e) => removeFromHistory(item.query, e)}
-                      className="p-1 rounded-md text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition"
+                      className="p-1 rounded-md text-[#A49D9E] hover:text-rose-600 transition"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -344,7 +345,7 @@ export const SearchPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs py-16 text-center text-slate-400 text-xs font-medium">
+            <div className="rounded-2xl border border-[#E6DFD8] dark:border-[#494448] bg-white dark:bg-[#222023] shadow-xs py-16 text-center text-[#736B70] dark:text-[#A49D9E] text-xs font-medium">
               Type in the search bar above to discover roles, skills, or companies.
             </div>
           )}

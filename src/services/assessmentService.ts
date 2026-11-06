@@ -23,6 +23,17 @@ import type {
 import type { CandidateModel } from '@/types/candidate';
 import { candidateService } from './candidateService';
 
+export type {
+  AssessmentDifficulty,
+  AssessmentQuestion,
+  AssessmentResult,
+  CareerReadinessGuidance,
+  ProficiencyLevel,
+  SkillPerformanceMetric,
+  SkillPerformanceSummary,
+  AICareerReadinessResponse,
+};
+
 export function calculateProficiencyLevel(percentage: number): ProficiencyLevel {
   if (percentage >= 90) return 'Expert';
   if (percentage >= 75) return 'Advanced';
@@ -232,6 +243,30 @@ export const assessmentService = {
     }
 
     return assessmentResult;
+  },
+
+  /**
+   * Submits and saves assessment result.
+   */
+  async submitAssessment(
+    candidateId: string,
+    skill: string,
+    difficulty: AssessmentDifficulty,
+    score: number,
+    totalQuestions: number,
+    questions: AssessmentQuestion[],
+    userAnswers: number[],
+    _timeSpentSeconds?: number
+  ): Promise<AssessmentResult> {
+    return this.saveAssessmentResult({
+      candidateId,
+      skill,
+      questions,
+      userAnswers,
+      score,
+      totalQuestions,
+      difficulty,
+    });
   },
 
   /**

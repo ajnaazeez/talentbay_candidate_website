@@ -124,8 +124,8 @@ export const CompanyDetailsPage: React.FC = () => {
       {/* Header Profile Banner */}
       <div className="relative rounded-3xl bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border shadow-soft overflow-hidden">
         {/* Cover banner */}
-        <div className="h-32 sm:h-44 bg-gradient-to-r from-slate-900 via-[#0b1329] to-[#0f1f3d] relative">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
+        <div className="h-32 sm:h-44 bg-[#29272A] border-b border-[#494448] relative">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#B87355]/20 via-transparent to-transparent pointer-events-none" />
         </div>
 
         {/* Company Identity Details */}
@@ -157,8 +157,8 @@ export const CompanyDetailsPage: React.FC = () => {
                 {name}
               </h1>
               {isVerified && (
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-[#8b6d3d] dark:text-[#dec49c] bg-[#C5A46D]/15 dark:bg-[#C5A46D]/20 px-2.5 py-1 rounded-full border border-[#C5A46D]/30">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#C5A46D]" /> Verified Employer
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-[#B87355] bg-[#B87355]/15 dark:bg-[#B87355]/20 px-2.5 py-1 rounded-full border border-[#B87355]/30 dark:border-[#B87355]/40">
+                  <ShieldCheck className="w-3.5 h-3.5" /> Verified Employer
                 </span>
               )}
             </div>

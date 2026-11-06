@@ -122,14 +122,13 @@ export const CareerReadinessPage: React.FC = () => {
       setRefreshing(true);
       setError(null);
 
-      const latestScores = assessmentService.extractLatestSkillScores(assessmentResults);
       let targetTitle = customJobTitle;
       let targetSkills: string[] = [];
 
       if (jobId !== 'custom') {
-        const found = availableJobs.find((j) => j.id === jobId || j.jobId === jobId);
+        const found = availableJobs.find((j) => (j.id || j.jobId) === jobId);
         if (found) {
-          targetTitle = found.roleName || found.title || 'Software Engineer';
+          targetTitle = found.roleName || found.title || targetTitle;
           targetSkills = [
             ...(found.skillsRequired || []),
             ...(found.mustHaveSkills || []),
@@ -138,46 +137,8 @@ export const CareerReadinessPage: React.FC = () => {
       } else {
         targetSkills = candidate?.skills?.map((s) => s.name).slice(0, 5) || [];
       }
-
-      const res = await assessmentService.getCareerReadiness({
-        skillScores: latestScores,
-        targetJobTitle: targetTitle,
-        targetJobSkills: targetSkills,
-        forceRefresh: false,
-      });
-
-      setGuidance(res);
-    } catch (err: any) {
-      console.error('Error switching target job:', err);
-      setError(err?.message || 'Failed to update career readiness guidance.');
-    } finally {
-      setRefreshing(false);
-    }
-  };
-
-  // Force refresh analysis with AI
-  const handleForceRefresh = async () => {
-    if (!user?.uid) return;
-    try {
-      setRefreshing(true);
-      setError(null);
 
       const latestScores = assessmentService.extractLatestSkillScores(assessmentResults);
-      let targetTitle = customJobTitle;
-      let targetSkills: string[] = [];
-
-      if (selectedJobId !== 'custom') {
-        const found = availableJobs.find((j) => j.id === selectedJobId || j.jobId === selectedJobId);
-        if (found) {
-          targetTitle = found.roleName || found.title || 'Software Engineer';
-          targetSkills = [
-            ...(found.skillsRequired || []),
-            ...(found.mustHaveSkills || []),
-          ];
-        }
-      } else {
-        targetSkills = candidate?.skills?.map((s) => s.name).slice(0, 5) || [];
-      }
 
       const res = await assessmentService.getCareerReadiness({
         skillScores: latestScores,
@@ -188,8 +149,49 @@ export const CareerReadinessPage: React.FC = () => {
 
       setGuidance(res);
     } catch (err: any) {
-      console.error('Error refreshing AI guidance:', err);
-      setError(err?.message || 'Could not refresh AI guidance. Please try again.');
+      console.error('Error switching target job:', err);
+      setError('Failed to recalculate guidance for this position.');
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  // Force Refresh AI guidance
+  const handleForceRefresh = async () => {
+    if (!user?.uid) return;
+    try {
+      setRefreshing(true);
+      setError(null);
+
+      let targetTitle = customJobTitle;
+      let targetSkills: string[] = [];
+
+      if (selectedJobId !== 'custom') {
+        const found = availableJobs.find((j) => (j.id || j.jobId) === selectedJobId);
+        if (found) {
+          targetTitle = found.roleName || found.title || targetTitle;
+          targetSkills = [
+            ...(found.skillsRequired || []),
+            ...(found.mustHaveSkills || []),
+          ];
+        }
+      } else {
+        targetSkills = candidate?.skills?.map((s) => s.name).slice(0, 5) || [];
+      }
+
+      const latestScores = assessmentService.extractLatestSkillScores(assessmentResults);
+
+      const res = await assessmentService.getCareerReadiness({
+        skillScores: latestScores,
+        targetJobTitle: targetTitle,
+        targetJobSkills: targetSkills,
+        forceRefresh: true,
+      });
+
+      setGuidance(res);
+    } catch (err: any) {
+      console.error('Error refreshing guidance:', err);
+      setError('Failed to refresh AI analysis.');
     } finally {
       setRefreshing(false);
     }
@@ -198,25 +200,25 @@ export const CareerReadinessPage: React.FC = () => {
   if (initialLoading || (loading && !guidance)) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <LoadingSpinner size="lg" label="Generating AI Career Readiness..." />
+        <LoadingSpinner size="lg" label="Analyzing Career Readiness & Diagnostics..." />
       </div>
     );
   }
 
-  const latestScores = assessmentService.extractLatestSkillScores(assessmentResults);
   const readinessScore = guidance?.overallScore ?? 0;
+  const latestScores = assessmentService.extractLatestSkillScores(assessmentResults);
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-20 animate-in fade-in duration-300">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight flex items-center gap-3">
-            <Target className="w-8 h-8 text-amber-500" />
-            AI Career Readiness & Skill Gaps
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#29272A] dark:text-white tracking-tight flex items-center gap-3">
+            <Target className="w-8 h-8 text-[#B87355]" />
+            Career Readiness & Diagnostics
           </h1>
-          <p className="text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-400 mt-1">
-            Personalized diagnostics comparing your verified assessment scores against target industry job requirements.
+          <p className="text-xs sm:text-sm font-medium text-[#736B70] dark:text-[#A49D9E] mt-1">
+            Real performance analysis, skill gap diagnostics, and interview roadmaps backed by your verified scores.
           </p>
         </div>
 
@@ -225,7 +227,7 @@ export const CareerReadinessPage: React.FC = () => {
             variant="secondary"
             onClick={handleForceRefresh}
             isLoading={refreshing}
-            leftIcon={<RotateCw className="w-4 h-4" />}
+            leftIcon={<RotateCw className="w-4 h-4 text-[#B87355]" />}
           >
             Refresh Guidance
           </Button>
@@ -253,16 +255,16 @@ export const CareerReadinessPage: React.FC = () => {
       )}
 
       {/* Target Job Role Selector Card */}
-      <div className="bg-white dark:bg-[#202A27] p-6 rounded-2xl border border-zinc-200/90 dark:border-[#2e3b37] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#222023] p-6 rounded-2xl border border-[#E6DFD8] dark:border-[#494448] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center font-bold">
+          <div className="w-10 h-10 rounded-xl bg-[#B87355]/15 text-[#B87355] flex items-center justify-center font-bold">
             <Briefcase className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
+            <h2 className="text-sm font-bold text-[#29272A] dark:text-white">
               Target Position for Analysis
             </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs text-[#736B70] dark:text-[#A49D9E]">
               Select an open job or analyze against your preferred target role
             </p>
           </div>
@@ -273,7 +275,7 @@ export const CareerReadinessPage: React.FC = () => {
             value={selectedJobId}
             onChange={(e) => handleJobChange(e.target.value)}
             disabled={refreshing}
-            className="px-3.5 py-2.5 rounded-xl bg-zinc-50 dark:bg-[#141a18] border border-zinc-200 dark:border-[#2e3b37] text-xs sm:text-sm font-medium text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-amber-500/30 cursor-pointer"
+            className="px-3.5 py-2.5 rounded-xl bg-[#F5F1EA] dark:bg-[#1F1D20] border border-[#E6DFD8] dark:border-[#494448] text-xs sm:text-sm font-medium text-[#29272A] dark:text-[#F5F1EA] focus:outline-none focus:ring-2 focus:ring-[#B87355]/20 cursor-pointer"
           >
             <option value="custom">General Profile: {customJobTitle || 'Software Engineer'}</option>
             {availableJobs.map((j) => (
@@ -288,8 +290,8 @@ export const CareerReadinessPage: React.FC = () => {
       {/* Hero Readiness Overview Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Score Dial Card */}
-        <div className="bg-white dark:bg-[#202A27] p-6 rounded-2xl border border-zinc-200/90 dark:border-[#2e3b37] shadow-xs flex flex-col items-center justify-center text-center space-y-4">
-          <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        <div className="bg-white dark:bg-[#222023] p-6 rounded-2xl border border-[#E6DFD8] dark:border-[#494448] shadow-xs flex flex-col items-center justify-center text-center space-y-4">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E]">
             Overall Career Readiness Score
           </span>
 
@@ -300,7 +302,7 @@ export const CareerReadinessPage: React.FC = () => {
                 cx="60"
                 cy="60"
                 r="50"
-                className="stroke-zinc-100 dark:stroke-[#2e3b37]"
+                className="stroke-[#E6DFD8] dark:stroke-[#383439]"
                 strokeWidth="10"
                 fill="transparent"
               />
@@ -308,7 +310,7 @@ export const CareerReadinessPage: React.FC = () => {
                 cx="60"
                 cy="60"
                 r="50"
-                className="stroke-amber-500 transition-all duration-1000 ease-out"
+                className="stroke-[#B87355] transition-all duration-1000 ease-out"
                 strokeWidth="10"
                 strokeDasharray={314.159}
                 strokeDashoffset={314.159 - (314.159 * readinessScore) / 100}
@@ -318,15 +320,15 @@ export const CareerReadinessPage: React.FC = () => {
             </svg>
 
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-3xl font-extrabold text-zinc-900 dark:text-white">
+              <span className="text-3xl font-extrabold text-[#29272A] dark:text-white">
                 {readinessScore}%
               </span>
-              <span className="text-[10px] uppercase font-bold text-zinc-400">Readiness</span>
+              <span className="text-[10px] uppercase font-bold text-[#736B70] dark:text-[#A49D9E]">Readiness</span>
             </div>
           </div>
 
           <Badge
-            variant={readinessScore >= 75 ? 'success' : readinessScore >= 60 ? 'warning' : 'default'}
+            variant={readinessScore >= 75 ? 'success' : readinessScore >= 60 ? 'brand' : 'default'}
             size="md"
           >
             {readinessScore >= 85
@@ -338,28 +340,28 @@ export const CareerReadinessPage: React.FC = () => {
               : 'Early Stage'}
           </Badge>
 
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-xs">
+          <p className="text-xs text-[#736B70] dark:text-[#A49D9E] max-w-xs">
             Calculated across {Object.keys(latestScores).length} assessed skills using genuine candidate performance data
           </p>
         </div>
 
         {/* AI Guidance Summary & Strengths Card */}
-        <div className="lg:col-span-2 bg-white dark:bg-[#202A27] p-6 rounded-2xl border border-zinc-200/90 dark:border-[#2e3b37] shadow-xs flex flex-col justify-between space-y-6">
+        <div className="lg:col-span-2 bg-white dark:bg-[#222023] p-6 rounded-2xl border border-[#E6DFD8] dark:border-[#494448] shadow-xs flex flex-col justify-between space-y-6">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-amber-500" />
-              <h3 className="font-bold text-zinc-900 dark:text-white text-base">
+              <Sparkles className="w-5 h-5 text-[#B87355]" />
+              <h3 className="font-bold text-[#29272A] dark:text-white text-base">
                 AI Career Assessment Summary
               </h3>
             </div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed bg-zinc-50 dark:bg-[#141a18] p-4 rounded-xl border border-zinc-100 dark:border-[#2e3b37]">
+            <p className="text-sm text-[#494448] dark:text-[#D4CDC7] leading-relaxed bg-[#F5F1EA]/80 dark:bg-[#1F1D20] p-4 rounded-xl border border-[#E6DFD8] dark:border-[#494448]">
               {guidance?.overallSummary || 'Complete technical assessments to unlock detailed career guidance.'}
             </p>
           </div>
 
           {/* Strengths Showcase */}
           <div className="space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E] flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
               Key Technical Strengths
             </span>
@@ -375,7 +377,7 @@ export const CareerReadinessPage: React.FC = () => {
                   </span>
                 ))
               ) : (
-                <span className="text-xs text-zinc-400">
+                <span className="text-xs text-[#A49D9E]">
                   Assess skills at 70%+ to showcase verified strengths.
                 </span>
               )}
@@ -384,7 +386,7 @@ export const CareerReadinessPage: React.FC = () => {
 
           {/* Target Job Advice */}
           {guidance?.jobMatchAdvice && (
-            <div className="pt-2 text-xs text-zinc-500 dark:text-zinc-400 border-t border-zinc-100 dark:border-[#2e3b37]">
+            <div className="pt-2 text-xs text-[#736B70] dark:text-[#A49D9E] border-t border-[#E6DFD8] dark:border-[#494448]">
               <strong>Role Focus:</strong> {guidance.jobMatchAdvice}
             </div>
           )}
@@ -392,13 +394,13 @@ export const CareerReadinessPage: React.FC = () => {
       </div>
 
       {/* AI SKILL GAP DIAGNOSTICS */}
-      <div className="bg-white dark:bg-[#202A27] p-6 rounded-2xl border border-zinc-200/90 dark:border-[#2e3b37] shadow-xs space-y-6">
+      <div className="bg-white dark:bg-[#222023] p-6 rounded-2xl border border-[#E6DFD8] dark:border-[#494448] shadow-xs space-y-6">
         <div>
-          <h3 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-            <Layers className="w-5 h-5 text-amber-500" />
+          <h3 className="text-lg font-bold text-[#29272A] dark:text-white flex items-center gap-2">
+            <Layers className="w-5 h-5 text-[#B87355]" />
             AI Skill Gap Diagnostics
           </h3>
-          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-xs sm:text-sm text-[#736B70] dark:text-[#A49D9E]">
             Comparing your assessed capabilities against requirements for your target role
           </p>
         </div>
@@ -412,30 +414,30 @@ export const CareerReadinessPage: React.FC = () => {
               return (
                 <div
                   key={gap.skill}
-                  className="p-4 rounded-xl border border-zinc-200 dark:border-[#2e3b37] bg-zinc-50/50 dark:bg-[#141a18]/40 flex flex-col justify-between space-y-3"
+                  className="p-4 rounded-xl border border-[#E6DFD8] dark:border-[#494448] bg-[#F5F1EA]/50 dark:bg-[#1F1D20]/50 flex flex-col justify-between space-y-3"
                 >
                   <div className="space-y-1">
                     <div className="flex items-start justify-between gap-2">
-                      <span className="font-semibold text-sm text-zinc-900 dark:text-white">
+                      <span className="font-semibold text-sm text-[#29272A] dark:text-white">
                         {gap.skill}
                       </span>
                       <Badge
-                        variant={gap.priority === 'High' ? 'danger' : gap.priority === 'Medium' ? 'warning' : 'default'}
+                        variant={gap.priority === 'High' ? 'danger' : gap.priority === 'Medium' ? 'brand' : 'default'}
                         size="sm"
                       >
                         {gap.priority} Priority
                       </Badge>
                     </div>
 
-                    <div className="text-xs text-zinc-500 dark:text-zinc-400 flex items-center justify-between pt-1">
+                    <div className="text-xs text-[#736B70] dark:text-[#A49D9E] flex items-center justify-between pt-1">
                       <span>Current: <strong>{isAssessed ? `${gap.currentScore}%` : 'Unassessed'}</strong></span>
                       <span>Target: <strong>{gap.requiredScore}%</strong></span>
                     </div>
 
-                    <div className="bg-zinc-200 dark:bg-[#2e3b37] h-2 rounded-full overflow-hidden mt-1">
+                    <div className="bg-[#E6DFD8] dark:bg-[#383439] h-2 rounded-full overflow-hidden mt-1">
                       <div
                         className={`h-full rounded-full transition-all ${
-                          hasMetRequirement ? 'bg-emerald-500' : 'bg-amber-500'
+                          hasMetRequirement ? 'bg-emerald-500' : 'bg-[#B87355]'
                         }`}
                         style={{ width: `${Math.min(100, gap.currentScore)}%` }}
                       />
@@ -445,9 +447,9 @@ export const CareerReadinessPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => navigate(`${ROUTES.ASSESSMENTS}?skill=${encodeURIComponent(gap.skill)}`)}
-                    className="w-full py-2 px-3 rounded-lg border border-zinc-300 dark:border-[#2e3b37] hover:border-amber-500 text-zinc-900 dark:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    className="w-full py-2 px-3 rounded-lg border border-[#E6DFD8] dark:border-[#494448] hover:border-[#B87355] text-[#29272A] dark:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer hover:bg-[#F5F1EA] dark:hover:bg-[#383439]"
                   >
-                    <Zap className="w-3.5 h-3.5 text-amber-500" />
+                    <Zap className="w-3.5 h-3.5 text-[#B87355]" />
                     <span>{isAssessed ? 'Retake Test' : 'Take Assessment'}</span>
                   </button>
                 </div>
@@ -455,20 +457,20 @@ export const CareerReadinessPage: React.FC = () => {
             })}
           </div>
         ) : (
-          <p className="text-xs text-zinc-400 py-4 text-center">
+          <p className="text-xs text-[#736B70] dark:text-[#A49D9E] py-4 text-center">
             No specific skill gaps detected for this selection. Select another job to analyze different requirements.
           </p>
         )}
       </div>
 
       {/* PERSONALIZED LEARNING ROADMAP */}
-      <div className="bg-white dark:bg-[#202A27] p-6 rounded-2xl border border-zinc-200/90 dark:border-[#2e3b37] shadow-xs space-y-6">
+      <div className="bg-white dark:bg-[#222023] p-6 rounded-2xl border border-[#E6DFD8] dark:border-[#494448] shadow-xs space-y-6">
         <div>
-          <h3 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-amber-500" />
+          <h3 className="text-lg font-bold text-[#29272A] dark:text-white flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-[#B87355]" />
             Personalized Learning Roadmap
           </h3>
-          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-xs sm:text-sm text-[#736B70] dark:text-[#A49D9E]">
             Actionable step-by-step roadmap to eliminate skill gaps and prepare for technical interviews
           </p>
         </div>
@@ -478,53 +480,53 @@ export const CareerReadinessPage: React.FC = () => {
             {guidance.skillsToStrengthen.map((skillItem) => (
               <div
                 key={skillItem.skill}
-                className="p-5 rounded-2xl border border-zinc-100 dark:border-[#2e3b37] bg-zinc-50/30 dark:bg-[#141a18]/30 space-y-4"
+                className="p-5 rounded-2xl border border-[#E6DFD8] dark:border-[#494448] bg-[#F5F1EA]/30 dark:bg-[#1F1D20]/30 space-y-4"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
-                    <h4 className="font-bold text-zinc-900 dark:text-white text-base">
+                    <h4 className="font-bold text-[#29272A] dark:text-white text-base">
                       {skillItem.skill}
                     </h4>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                    <p className="text-xs text-[#736B70] dark:text-[#A49D9E] mt-0.5">
                       {skillItem.guidance}
                     </p>
                   </div>
-                  <Badge variant="warning" size="sm">
+                  <Badge variant="brand" size="sm">
                     Current: {skillItem.score}%
                   </Badge>
                 </div>
 
-                {/* Steps Grid (4 steps: LEARN, DO, FOCUS ON, CHECK YOUR PROGRESS) */}
+                {/* Steps Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
                   {skillItem.roadmapSteps.map((step) => (
                     <div
                       key={step.stepNumber}
-                      className="bg-white dark:bg-[#202A27] p-4 rounded-xl border border-zinc-200 dark:border-[#2e3b37] space-y-2 flex flex-col justify-between"
+                      className="bg-white dark:bg-[#222023] p-4 rounded-xl border border-[#E6DFD8] dark:border-[#494448] space-y-2 flex flex-col justify-between"
                     >
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-700 dark:text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#B87355] bg-[#B87355]/15 px-2 py-0.5 rounded">
                             Step {step.stepNumber}
                           </span>
-                          <span className="text-[10px] font-bold text-zinc-400">
+                          <span className="text-[10px] font-bold text-[#736B70] dark:text-[#A49D9E]">
                             {step.actionHeader}
                           </span>
                         </div>
-                        <h5 className="font-bold text-xs text-zinc-900 dark:text-white">
+                        <h5 className="font-bold text-xs text-[#29272A] dark:text-white">
                           {step.title}
                         </h5>
-                        <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1">
+                        <p className="text-[11px] text-[#736B70] dark:text-[#A49D9E] mt-1">
                           {step.description}
                         </p>
                       </div>
 
-                      <ul className="space-y-1 pt-2 border-t border-zinc-100 dark:border-[#2e3b37] mt-2">
+                      <ul className="space-y-1 pt-2 border-t border-[#E6DFD8] dark:border-[#494448] mt-2">
                         {step.actionItems?.map((item, idx) => (
                           <li
                             key={idx}
-                            className="text-[10px] text-zinc-600 dark:text-zinc-300 flex items-start gap-1"
+                            className="text-[10px] text-[#494448] dark:text-[#D4CDC7] flex items-start gap-1"
                           >
-                            <span className="text-amber-500 shrink-0">•</span>
+                            <span className="text-[#B87355] shrink-0">•</span>
                             <span>{item}</span>
                           </li>
                         ))}
@@ -536,20 +538,20 @@ export const CareerReadinessPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <p className="text-xs text-zinc-400 py-4 text-center">
+          <p className="text-xs text-[#736B70] dark:text-[#A49D9E] py-4 text-center">
             No specific weak areas detected. You are in good standing across your evaluated skills!
           </p>
         )}
       </div>
 
       {/* INTERVIEW PREPARATION PLAN */}
-      <div className="bg-white dark:bg-[#202A27] p-6 rounded-2xl border border-zinc-200/90 dark:border-[#2e3b37] shadow-xs space-y-6">
+      <div className="bg-white dark:bg-[#222023] p-6 rounded-2xl border border-[#E6DFD8] dark:border-[#494448] shadow-xs space-y-6">
         <div>
-          <h3 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-amber-500" />
+          <h3 className="text-lg font-bold text-[#29272A] dark:text-white flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-[#B87355]" />
             Interview Preparation Plan
           </h3>
-          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-xs sm:text-sm text-[#736B70] dark:text-[#A49D9E]">
             Structured milestone framework to ace candidate screening and technical rounds
           </p>
         </div>
@@ -558,32 +560,32 @@ export const CareerReadinessPage: React.FC = () => {
           {guidance?.interviewPreparationPlan?.map((plan, idx) => (
             <div
               key={idx}
-              className="p-5 rounded-2xl border border-zinc-200 dark:border-[#2e3b37] bg-white dark:bg-[#202A27] space-y-3"
+              className="p-5 rounded-2xl border border-[#E6DFD8] dark:border-[#494448] bg-white dark:bg-[#222023] space-y-3"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-lg">
+                <span className="text-xs font-bold text-[#B87355] bg-[#B87355]/15 px-2.5 py-1 rounded-lg">
                   {plan.timeline}
                 </span>
-                <span className="text-xs text-zinc-400 font-semibold">Phase {idx + 1}</span>
+                <span className="text-xs text-[#736B70] dark:text-[#A49D9E] font-semibold">Phase {idx + 1}</span>
               </div>
 
               <div>
-                <h4 className="font-bold text-sm text-zinc-900 dark:text-white">
+                <h4 className="font-bold text-sm text-[#29272A] dark:text-white">
                   {plan.phase}
                 </h4>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                <p className="text-xs text-[#736B70] dark:text-[#A49D9E] mt-1">
                   {plan.description}
                 </p>
               </div>
 
               {plan.actionItems && plan.actionItems.length > 0 && (
-                <ul className="space-y-1.5 pt-2 border-t border-zinc-100 dark:border-[#2e3b37]">
+                <ul className="space-y-1.5 pt-2 border-t border-[#E6DFD8] dark:border-[#494448]">
                   {plan.actionItems.map((act, aIdx) => (
                     <li
                       key={aIdx}
-                      className="text-xs text-zinc-600 dark:text-zinc-300 flex items-start gap-1.5"
+                      className="text-xs text-[#494448] dark:text-[#D4CDC7] flex items-start gap-1.5"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#B87355] shrink-0 mt-0.5" />
                       <span>{act}</span>
                     </li>
                   ))}
