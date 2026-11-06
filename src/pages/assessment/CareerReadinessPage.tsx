@@ -208,6 +208,13 @@ export const CareerReadinessPage: React.FC = () => {
   const readinessScore = guidance?.overallScore ?? 0;
   const latestScores = assessmentService.extractLatestSkillScores(assessmentResults);
 
+  // Helper: Format long target role labels cleanly
+  const formatTargetRoleLabel = (title: string, maxLength = 45): string => {
+    if (!title) return 'Software Engineer';
+    if (title.length <= maxLength) return title;
+    return `${title.slice(0, maxLength).trim()}...`;
+  };
+
   return (
     <div className="max-w-5xl mx-auto w-full min-w-0 space-y-8 pb-20 animate-in fade-in duration-300">
       {/* Top Header */}
@@ -255,13 +262,13 @@ export const CareerReadinessPage: React.FC = () => {
       )}
 
       {/* Target Job Role Selector Card */}
-      <div className="bg-white dark:bg-[#0E2233] p-6 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#00BFA6]/15 text-[#00BFA6] flex items-center justify-center font-bold">
+      <div className="bg-white dark:bg-[#0E2233] p-5 sm:p-6 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 min-w-0">
+        <div className="flex items-center gap-3.5 shrink-0">
+          <div className="w-11 h-11 rounded-2xl bg-[#00BFA6]/15 text-[#00BFA6] border border-[#00BFA6]/30 flex items-center justify-center font-bold shrink-0 shadow-2xs">
             <Briefcase className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-[#1F2D3D] dark:text-white">
+            <h2 className="text-sm sm:text-base font-bold text-[#1F2D3D] dark:text-white">
               Target Position for Analysis
             </h2>
             <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7]">
@@ -270,17 +277,19 @@ export const CareerReadinessPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div className="w-full md:w-auto md:max-w-md lg:max-w-lg min-w-0 flex items-center justify-start md:justify-end">
           <select
             value={selectedJobId}
             onChange={(e) => handleJobChange(e.target.value)}
             disabled={refreshing}
-            className="px-3.5 py-2.5 rounded-xl bg-[#E8F1F5] dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] text-xs sm:text-sm font-medium text-[#1F2D3D] dark:text-[#E8F1F5] focus:outline-none focus:ring-2 focus:ring-[#00BFA6]/20 cursor-pointer"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-[#E8F1F5] dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] text-xs sm:text-sm font-medium text-[#1F2D3D] dark:text-[#E8F1F5] focus:outline-none focus:ring-2 focus:ring-[#00BFA6]/20 cursor-pointer truncate"
           >
-            <option value="custom">General Profile: {customJobTitle || 'Software Engineer'}</option>
+            <option value="custom">
+              General Profile: {formatTargetRoleLabel(customJobTitle)}
+            </option>
             {availableJobs.map((j) => (
               <option key={j.id || j.jobId} value={j.id || j.jobId}>
-                {j.roleName || j.title || 'Job Opening'} ({j.companyName})
+                {j.roleName || j.title || 'Job Opening'} {j.companyName ? `(${j.companyName})` : ''}
               </option>
             ))}
           </select>
