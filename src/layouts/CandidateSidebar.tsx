@@ -127,16 +127,16 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         />
       )}
 
-      {/* Sidebar Container - Midnight Charcoal Background & Soft Graphite Border */}
+      {/* Sidebar Container - Midnight Navy Background & Slate Ink Border */}
       <aside
         className={cn(
-          'fixed top-0 left-0 bottom-0 z-50 flex flex-col bg-[#29272A] border-r border-[#494448] transition-all duration-300 ease-in-out lg:translate-x-0',
+          'fixed top-0 left-0 bottom-0 z-50 flex flex-col bg-[#142B3B] border-r border-[#243746] transition-all duration-300 ease-in-out lg:translate-x-0',
           isOpen ? 'translate-x-0' : '-translate-x-full',
           isCollapsed ? 'lg:w-[72px]' : 'lg:w-64 w-64'
         )}
       >
         {/* Brand Header */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-[#494448] bg-[#29272A]">
+        <div className="flex items-center justify-between h-16 px-4 border-b border-[#243746] bg-[#142B3B]">
           <NavLink
             to={ROUTES.DASHBOARD}
             className={cn(
@@ -153,11 +153,11 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
               <div className="flex flex-col min-w-0">
                 <span className="font-bold text-white text-sm tracking-tight flex items-center gap-1.5">
                   TalentBay
-                  <span className="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded bg-[#B87355]/20 text-[#B87355] border border-[#B87355]/40">
+                  <span className="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded bg-[#16B8A6]/20 text-[#16B8A6] border border-[#16B8A6]/40">
                     Candidate
                   </span>
                 </span>
-                <span className="text-[10px] text-[#A49D9E] font-medium">Career Workspace</span>
+                <span className="text-[10px] text-[#8CA6B7] font-medium">Career Workspace</span>
               </div>
             )}
           </NavLink>
@@ -166,7 +166,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
           {onClose && (
             <button
               onClick={onClose}
-              className="lg:hidden text-[#A49D9E] hover:text-white p-1 rounded-lg hover:bg-[#383439] transition"
+              className="lg:hidden text-[#8CA6B7] hover:text-white p-1 rounded-lg hover:bg-[#1A374B] transition"
               aria-label="Close sidebar"
             >
               <X className="w-5 h-5" />
@@ -175,16 +175,16 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         </div>
 
         {/* Navigation items list */}
-        <div className="flex-1 overflow-y-auto px-2.5 py-4 space-y-5 scrollbar-thin scrollbar-thumb-[#494448]">
+        <div className="flex-1 overflow-y-auto px-2.5 py-4 space-y-5 scrollbar-thin scrollbar-thumb-[#243746]">
           {navSections.map((section, idx) => (
             <div key={idx} className="space-y-1">
               {section.title && !isCollapsed && (
-                <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-[#9E9493] mb-1.5">
+                <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-[#7A95A8] mb-1.5">
                   {section.title}
                 </p>
               )}
               {isCollapsed && section.title && (
-                <div className="w-6 h-px bg-[#494448] mx-auto my-2" />
+                <div className="w-6 h-px bg-[#243746] mx-auto my-2" />
               )}
               {section.items.map((item) => {
                 const Icon = item.icon;
@@ -212,8 +212,8 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                           'flex items-center px-3 py-2 rounded-xl text-xs font-medium transition-all duration-150 group relative',
                           isCollapsed ? 'justify-center px-2' : 'justify-between',
                           matchActive || isActive
-                            ? 'bg-[#B87355]/20 text-white font-semibold border border-[#B87355]/40 shadow-xs'
-                            : 'text-[#D4CDC7] hover:text-white hover:bg-white/5'
+                            ? 'bg-[#16B8A6]/15 text-white font-semibold border border-[#16B8A6]/40 shadow-xs'
+                            : 'text-[#BACDD8] hover:text-white hover:bg-white/5'
                         )
                       }
                     >
@@ -221,7 +221,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                         <Icon
                           className={cn(
                             'w-4 h-4 shrink-0 transition-colors',
-                            isActive ? 'text-[#B87355]' : 'text-[#A49D9E] group-hover:text-white'
+                            isActive ? 'text-[#16B8A6]' : 'text-[#8CA6B7] group-hover:text-white'
                           )}
                         />
                         {!isCollapsed && <span className="truncate">{item.title}</span>}
@@ -230,12 +230,12 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                       {!isCollapsed && (
                         <div className="flex items-center gap-1.5 shrink-0">
                           {item.badge !== undefined && (
-                            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[#383439] text-[#F5F1EA] border border-[#494448]">
+                            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[#1A374B] text-[#E7EFF3] border border-[#243746]">
                               {item.badge}
                             </span>
                           )}
                           {isActive && (
-                            <div className="w-1.5 h-1.5 rounded-full bg-[#B87355] shadow-xs shadow-[#B87355]/60" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#16B8A6] shadow-xs shadow-[#16B8A6]/60" />
                           )}
                         </div>
                       )}
@@ -243,10 +243,10 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
 
                     {/* Tooltip for collapsed sidebar */}
                     {isCollapsed && hoveredItem === item.to && (
-                      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 rounded-lg bg-[#222023] border border-[#494448] text-[#F5F1EA] text-xs font-semibold whitespace-nowrap shadow-xl z-50">
+                      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 rounded-lg bg-[#142B3B] border border-[#243746] text-[#F5F8FA] text-xs font-semibold whitespace-nowrap shadow-xl z-50">
                         {item.title}
                         {item.badge !== undefined && (
-                          <span className="ml-2 text-[10px] px-1.5 py-0.2 rounded-full bg-[#383439] text-white font-bold border border-[#494448]">
+                          <span className="ml-2 text-[10px] px-1.5 py-0.2 rounded-full bg-[#1A374B] text-white font-bold border border-[#243746]">
                             {item.badge}
                           </span>
                         )}
@@ -261,17 +261,17 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
 
         {/* Sidebar Collapse Toggle Button on Desktop */}
         {onToggleCollapse && (
-          <div className="hidden lg:flex items-center justify-between p-3 border-t border-[#494448] bg-[#29272A]">
+          <div className="hidden lg:flex items-center justify-between p-3 border-t border-[#243746] bg-[#142B3B]">
             {!isCollapsed && (
               <div className="flex items-center gap-2 min-w-0">
-                <div className="w-2 h-2 rounded-full bg-[#B87355] animate-pulse" />
-                <span className="text-xs text-[#A49D9E] font-medium truncate">Candidate Hub</span>
+                <div className="w-2 h-2 rounded-full bg-[#16B8A6] animate-pulse" />
+                <span className="text-xs text-[#8CA6B7] font-medium truncate">Candidate Hub</span>
               </div>
             )}
             <button
               onClick={onToggleCollapse}
               className={cn(
-                'p-1.5 rounded-lg text-[#A49D9E] hover:text-white hover:bg-[#383439] transition flex items-center justify-center',
+                'p-1.5 rounded-lg text-[#8CA6B7] hover:text-white hover:bg-[#1A374B] transition flex items-center justify-center',
                 isCollapsed && 'w-full'
               )}
               title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}

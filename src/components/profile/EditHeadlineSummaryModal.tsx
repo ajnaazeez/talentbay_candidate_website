@@ -95,9 +95,9 @@ export const EditHeadlineSummaryModal: React.FC<EditHeadlineSummaryModalProps> =
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="w-full max-w-2xl bg-white dark:bg-[#222023] rounded-3xl border border-[#E6DFD8] dark:border-[#494448] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="w-full max-w-2xl bg-white dark:bg-[#142B3B] rounded-3xl border border-[#DCE5EB] dark:border-[#243746] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E6DFD8] dark:border-[#494448]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#DCE5EB] dark:border-[#243746]">
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <FileText className="w-5 h-5 text-brand-600" />
             Headline & Professional Summary
@@ -161,7 +161,7 @@ export const EditHeadlineSummaryModal: React.FC<EditHeadlineSummaryModalProps> =
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{enhancingSummary ? 'Enhancing...' : 'AI Enhance'}</span>
-                {summaryAiSuccess && <CheckCircle2 className="w-3.5 h-3.5 text-[#B87355]" />}
+                {summaryAiSuccess && <CheckCircle2 className="w-3.5 h-3.5 text-[#16B8A6]" />}
               </button>
             </div>
             <textarea
@@ -169,12 +169,12 @@ export const EditHeadlineSummaryModal: React.FC<EditHeadlineSummaryModalProps> =
               value={aboutMe}
               onChange={(e) => setAboutMe(e.target.value)}
               placeholder="Write a concise overview of your professional career, key accomplishments, domain expertise, and the value you bring to engineering and product teams..."
-              className="w-full p-3.5 text-sm bg-slate-50 dark:bg-slate-900 border border-[#E6DFD8] dark:border-[#494448] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-brand-500 resize-none leading-relaxed"
+              className="w-full p-3.5 text-sm bg-slate-50 dark:bg-slate-900 border border-[#DCE5EB] dark:border-[#243746] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-brand-500 resize-none leading-relaxed"
             />
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E6DFD8] dark:border-[#494448]">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#DCE5EB] dark:border-[#243746]">
             <Button type="button" variant="ghost" onClick={onClose}>
               Cancel
             </Button>

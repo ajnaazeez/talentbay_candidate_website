@@ -66,17 +66,17 @@ export const CompaniesPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-16">
       {/* Hero Banner */}
-      <div className="relative rounded-3xl bg-[#29272A] border border-[#494448] text-white p-6 sm:p-10 shadow-lg overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#B87355]/20 via-transparent to-transparent pointer-events-none" />
+      <div className="relative rounded-3xl bg-[#142B3B] border border-[#243746] text-white p-6 sm:p-10 shadow-lg overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#16B8A6]/20 via-transparent to-transparent pointer-events-none" />
         <div className="relative z-10 max-w-2xl space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 backdrop-blur-md text-white border border-white/20">
-            <Building2 className="w-3.5 h-3.5 text-[#B87355]" />
+            <Building2 className="w-3.5 h-3.5 text-[#16B8A6]" />
             Verified Employer Directory
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
             Top Companies Hiring on TalentBay
           </h1>
-          <p className="text-xs sm:text-sm text-[#D4CDC7] font-normal leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#BACDD8] font-normal leading-relaxed">
             Explore company cultures, employee benefits, and open positions across top tech companies, high-growth startups, and global enterprises.
           </p>
         </div>

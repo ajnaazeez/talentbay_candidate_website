@@ -57,25 +57,25 @@ export const SkillSelectorModal: React.FC<SkillSelectorModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-[#222023] w-full max-w-2xl rounded-2xl shadow-2xl border border-[#E6DFD8] dark:border-[#494448] overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-white dark:bg-[#142B3B] w-full max-w-2xl rounded-2xl shadow-2xl border border-[#DCE5EB] dark:border-[#243746] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="p-6 border-b border-[#E6DFD8] dark:border-[#494448] flex items-center justify-between">
+        <div className="p-6 border-b border-[#DCE5EB] dark:border-[#243746] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#B87355]/15 text-[#B87355] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-[#16B8A6]/15 text-[#16B8A6] flex items-center justify-center">
               <Zap className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-[#29272A] dark:text-white">
+              <h2 className="text-xl font-bold text-[#243746] dark:text-white">
                 Start AI Skill Assessment
               </h2>
-              <p className="text-xs sm:text-sm text-[#736B70] dark:text-[#A49D9E]">
+              <p className="text-xs sm:text-sm text-[#6B8699] dark:text-[#8CA6B7]">
                 Select any skill to test your technical proficiency with AI-generated questions
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-[#A49D9E] hover:text-[#29272A] dark:hover:text-white rounded-lg hover:bg-[#F5F1EA] dark:hover:bg-[#383439] transition-colors cursor-pointer"
+            className="p-2 text-[#8CA6B7] hover:text-[#243746] dark:hover:text-white rounded-lg hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -85,11 +85,11 @@ export const SkillSelectorModal: React.FC<SkillSelectorModalProps> = ({
         <div className="p-6 overflow-y-auto space-y-6 flex-1">
           {/* Search or Custom Skill Input */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E] mb-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7] mb-2">
               Search or Enter Skill Name
             </label>
             <div className="relative">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A49D9E]" />
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8CA6B7]" />
               <input
                 type="text"
                 placeholder="e.g. React, Flutter, Python, Docker, SQL..."
@@ -98,14 +98,14 @@ export const SkillSelectorModal: React.FC<SkillSelectorModalProps> = ({
                   setSearch(e.target.value);
                   setSelectedSkill(e.target.value);
                 }}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F5F1EA] dark:bg-[#1F1D20] border border-[#E6DFD8] dark:border-[#494448] text-sm text-[#29272A] dark:text-[#F5F1EA] focus:outline-none focus:ring-2 focus:ring-[#B87355]/20 focus:border-[#B87355] transition-all placeholder:text-[#A49D9E]"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#E7EFF3] dark:bg-[#102230] border border-[#DCE5EB] dark:border-[#243746] text-sm text-[#243746] dark:text-[#E7EFF3] focus:outline-none focus:ring-2 focus:ring-[#16B8A6]/20 focus:border-[#16B8A6] transition-all placeholder:text-[#8CA6B7]"
               />
             </div>
           </div>
 
           {/* Difficulty Level Selector */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E] mb-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7] mb-2">
               Select Difficulty Level
             </label>
             <div className="grid grid-cols-3 gap-3">
@@ -118,8 +118,8 @@ export const SkillSelectorModal: React.FC<SkillSelectorModalProps> = ({
                     onClick={() => setDifficulty(level)}
                     className={`py-2.5 px-3 rounded-xl border text-sm font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                       isSelected
-                        ? 'border-[#B87355] bg-[#B87355]/15 text-[#B87355] ring-2 ring-[#B87355]/20'
-                        : 'border-[#E6DFD8] dark:border-[#494448] text-[#494448] dark:text-[#D4CDC7] hover:bg-[#F5F1EA] dark:hover:bg-[#383439]'
+                        ? 'border-[#16B8A6] bg-[#16B8A6]/15 text-[#16B8A6] ring-2 ring-[#16B8A6]/20'
+                        : 'border-[#DCE5EB] dark:border-[#243746] text-[#243746] dark:text-[#BACDD8] hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B]'
                     }`}
                   >
                     <span>{level}</span>
@@ -133,11 +133,11 @@ export const SkillSelectorModal: React.FC<SkillSelectorModalProps> = ({
           {candidateSkills.length > 0 && (
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E] flex items-center gap-1.5">
-                  <BookOpen className="w-3.5 h-3.5 text-[#B87355]" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7] flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-[#16B8A6]" />
                   Your Profile Skills
                 </span>
-                <span className="text-xs text-[#A49D9E]">
+                <span className="text-xs text-[#8CA6B7]">
                   {candidateSkills.length} available
                 </span>
               </div>
@@ -155,15 +155,15 @@ export const SkillSelectorModal: React.FC<SkillSelectorModalProps> = ({
                       }}
                       className={`p-3 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                         isSelected
-                          ? 'border-[#B87355] bg-[#B87355]/10 text-[#29272A] dark:text-white ring-2 ring-[#B87355]/20'
-                          : 'border-[#E6DFD8] dark:border-[#494448] hover:border-[#B87355]/60 bg-white dark:bg-[#222023]'
+                          ? 'border-[#16B8A6] bg-[#16B8A6]/10 text-[#243746] dark:text-white ring-2 ring-[#16B8A6]/20'
+                          : 'border-[#DCE5EB] dark:border-[#243746] hover:border-[#16B8A6]/60 bg-white dark:bg-[#142B3B]'
                       }`}
                     >
                       <div>
-                        <div className="font-semibold text-sm text-[#29272A] dark:text-white">
+                        <div className="font-semibold text-sm text-[#243746] dark:text-white">
                           {s.name}
                         </div>
-                        <div className="text-xs text-[#736B70] dark:text-[#A49D9E]">
+                        <div className="text-xs text-[#6B8699] dark:text-[#8CA6B7]">
                           {s.level || 'Intermediate'} • {s.type || 'Primary'}
                         </div>
                       </div>
@@ -172,7 +172,7 @@ export const SkillSelectorModal: React.FC<SkillSelectorModalProps> = ({
                           {score}%
                         </Badge>
                       ) : (
-                        <span className="text-xs text-[#A49D9E] font-medium">Unassessed</span>
+                        <span className="text-xs text-[#8CA6B7] font-medium">Unassessed</span>
                       )}
                     </button>
                   );
@@ -184,8 +184,8 @@ export const SkillSelectorModal: React.FC<SkillSelectorModalProps> = ({
           {/* Popular Industry Skills */}
           <div>
             <div className="flex items-center gap-1.5 mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#B87355]" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E]">
+              <Sparkles className="w-3.5 h-3.5 text-[#16B8A6]" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7]">
                 Popular In-Demand Skills
               </span>
             </div>
@@ -202,8 +202,8 @@ export const SkillSelectorModal: React.FC<SkillSelectorModalProps> = ({
                     }}
                     className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-[#B87355] bg-[#B87355] text-white'
-                        : 'border-[#E6DFD8] dark:border-[#494448] text-[#494448] dark:text-[#D4CDC7] bg-[#F5F1EA] dark:bg-[#1F1D20] hover:bg-[#E6DFD8] dark:hover:bg-[#383439]'
+                        ? 'border-[#16B8A6] bg-[#16B8A6] text-white'
+                        : 'border-[#DCE5EB] dark:border-[#243746] text-[#243746] dark:text-[#BACDD8] bg-[#E7EFF3] dark:bg-[#102230] hover:bg-[#DCE5EB] dark:hover:bg-[#1A374B]'
                     }`}
                   >
                     {skill}
@@ -215,11 +215,11 @@ export const SkillSelectorModal: React.FC<SkillSelectorModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-4 sm:p-6 border-t border-[#E6DFD8] dark:border-[#494448] bg-[#F5F1EA]/50 dark:bg-[#1F1D20]/50 flex items-center justify-between gap-3">
-          <div className="text-xs text-[#736B70] dark:text-[#A49D9E] hidden sm:block">
+        <div className="p-4 sm:p-6 border-t border-[#DCE5EB] dark:border-[#243746] bg-[#E7EFF3]/50 dark:bg-[#102230]/50 flex items-center justify-between gap-3">
+          <div className="text-xs text-[#6B8699] dark:text-[#8CA6B7] hidden sm:block">
             {selectedSkill ? (
               <span>
-                Selected: <strong className="text-[#29272A] dark:text-white">{selectedSkill}</strong> ({difficulty})
+                Selected: <strong className="text-[#243746] dark:text-white">{selectedSkill}</strong> ({difficulty})
               </span>
             ) : (
               <span>Choose or type a skill to continue</span>

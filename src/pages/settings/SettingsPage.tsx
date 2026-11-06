@@ -17,7 +17,6 @@ import {
   RefreshCw,
   Loader2,
   X,
-  XCircle,
   Info,
   Globe,
   Award,
@@ -25,7 +24,6 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/store/ThemeContext';
 import { authService } from '@/services/authService';
-import { candidateService } from '@/services/candidateService';
 import { PaymentRecoveryModal } from '@/components/subscription/PaymentRecoveryModal';
 import { ROUTES, APP_CONFIG } from '@/utils/constants';
 import { getFriendlyErrorMessage } from '@/utils/errors';
@@ -38,8 +36,6 @@ export const SettingsPage: React.FC = () => {
   // Modals state
   const [showPaymentRecovery, setShowPaymentRecovery] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [showCancelSubModal, setShowCancelSubModal] = useState(false);
-  const [cancellingSub, setCancellingSub] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -107,26 +103,7 @@ export const SettingsPage: React.FC = () => {
     navigate(ROUTES.LOGIN, { replace: true });
   };
 
-  // 4. Cancel Subscription Handler (Matching Flutter _showCancelSubscriptionDialog)
-  const handleCancelSubscription = async () => {
-    if (!candidate?.uid) return;
-    try {
-      setCancellingSub(true);
-      await candidateService.updateCandidate(candidate.uid, {
-        subscriptionStatus: 'cancelled',
-      });
-      setShowCancelSubModal(false);
-      showToast('Subscription cancelled successfully. You will still have premium access until the current billing period ends.');
-      await refreshProfile();
-    } catch (err: unknown) {
-      console.error('[Settings] Error cancelling subscription:', err);
-      showToast('Error cancelling subscription. Please try again.');
-    } finally {
-      setCancellingSub(false);
-    }
-  };
-
-  // 5. Delete Account Handler (Cloud Function Only)
+  // 4. Delete Account Handler (Cloud Function Only)
   const handleDeleteAccount = async () => {
     if (deleteConfirmText.trim().toUpperCase() !== 'DELETE') return;
     try {
@@ -178,8 +155,8 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       {feedbackMessage && (
-        <div className="p-4 border border-[#B87355]/30 bg-[#B87355]/10 dark:bg-[#B87355]/20 text-[#B87355] dark:text-[#E6DFD8] text-xs font-semibold flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-[#B87355] shrink-0" />
+        <div className="p-4 border border-[#16B8A6]/30 bg-[#16B8A6]/10 dark:bg-[#16B8A6]/20 text-[#16B8A6] dark:text-[#DCE5EB] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-[#16B8A6] shrink-0" />
           <span>{feedbackMessage}</span>
         </div>
       )}
@@ -198,7 +175,7 @@ export const SettingsPage: React.FC = () => {
               {/* Premium Status Header */}
               <div className="p-5 bg-slate-50/50 dark:bg-slate-950/30">
                 <div className="flex items-center gap-2.5">
-                  <Award className="w-5 h-5 text-[#B87355] fill-[#B87355]" />
+                  <Award className="w-5 h-5 text-[#16B8A6] fill-[#16B8A6]" />
                   <span className="font-black text-sm tracking-wide text-slate-900 dark:text-white uppercase">
                     PREMIUM MEMBER
                   </span>
@@ -248,27 +225,6 @@ export const SettingsPage: React.FC = () => {
                 <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition" />
               </button>
 
-              {/* Cancel Subscription Tile (Only if not cancelled and active) */}
-              {candidate?.subscriptionStatus !== 'cancelled' && (
-                <button
-                  type="button"
-                  onClick={() => setShowCancelSubModal(true)}
-                  className="w-full p-4 flex items-center justify-between text-left hover:bg-rose-50/40 dark:hover:bg-rose-950/20 transition group cursor-pointer"
-                >
-                  <div className="flex items-center gap-3.5">
-                    <XCircle className="w-5 h-5 text-rose-500 shrink-0" />
-                    <div>
-                      <div className="text-xs font-bold text-rose-600 dark:text-rose-400">
-                        Cancel Subscription
-                      </div>
-                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                        Cancel your premium membership at any time
-                      </div>
-                    </div>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-rose-500 transition" />
-                </button>
-              )}
             </>
           ) : (
             /* Free / Expired Membership Tile */
@@ -383,7 +339,7 @@ export const SettingsPage: React.FC = () => {
             className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
           >
             <div className="flex items-center gap-3.5">
-              <LogOut className="w-5 h-5 text-[#B87355] shrink-0" />
+              <LogOut className="w-5 h-5 text-[#16B8A6] shrink-0" />
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   Logout
@@ -487,7 +443,7 @@ export const SettingsPage: React.FC = () => {
             className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
           >
             <div className="flex items-center gap-3.5">
-              <Info className="w-5 h-5 text-[#B87355] shrink-0" />
+              <Info className="w-5 h-5 text-[#16B8A6] shrink-0" />
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   About Us
@@ -537,7 +493,7 @@ export const SettingsPage: React.FC = () => {
             className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
           >
             <div className="flex items-center gap-3.5">
-              <Mail className="w-5 h-5 text-[#B87355] shrink-0" />
+              <Mail className="w-5 h-5 text-[#16B8A6] shrink-0" />
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   Contact Support
@@ -558,7 +514,7 @@ export const SettingsPage: React.FC = () => {
             className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
           >
             <div className="flex items-center gap-3.5">
-              <Globe className="w-5 h-5 text-[#B87355] shrink-0" />
+              <Globe className="w-5 h-5 text-[#16B8A6] shrink-0" />
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   Visit Website
@@ -628,38 +584,7 @@ export const SettingsPage: React.FC = () => {
         </div>
       )}
 
-      {/* 2. CANCEL SUBSCRIPTION DIALOG (Matching Flutter _showCancelSubscriptionDialog) */}
-      {showCancelSubModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-full max-w-md p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
-            <h3 className="text-base font-black uppercase tracking-wider text-rose-600 dark:text-rose-400">
-              CANCEL SUBSCRIPTION
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
-              Are you sure you want to cancel your premium subscription? You will still be able to access premium features until your current billing period ends.
-            </p>
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowCancelSubModal(false)}
-                className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition uppercase tracking-wider cursor-pointer"
-              >
-                GO BACK
-              </button>
-              <button
-                type="button"
-                disabled={cancellingSub}
-                onClick={handleCancelSubscription}
-                className="px-5 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 transition uppercase tracking-wider cursor-pointer disabled:opacity-50"
-              >
-                {cancellingSub ? 'CANCELLING...' : 'CONFIRM'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 3. DELETE ACCOUNT DIALOG (Matching Flutter _showDeleteAccountDialog) */}
+      {/* 2. DELETE ACCOUNT DIALOG (Matching Flutter _showDeleteAccountDialog) */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-full max-w-md p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">

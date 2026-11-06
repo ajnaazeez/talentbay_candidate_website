@@ -92,9 +92,9 @@ export const AddEditExperienceModal: React.FC<AddEditExperienceModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="w-full max-w-2xl bg-white dark:bg-[#222023] rounded-3xl border border-[#E6DFD8] dark:border-[#494448] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="w-full max-w-2xl bg-white dark:bg-[#142B3B] rounded-3xl border border-[#DCE5EB] dark:border-[#243746] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E6DFD8] dark:border-[#494448]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#DCE5EB] dark:border-[#243746]">
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <Briefcase className="w-5 h-5 text-brand-600" />
             {experience ? 'Edit Work Experience' : 'Add Work Experience'}
@@ -218,7 +218,7 @@ export const AddEditExperienceModal: React.FC<AddEditExperienceModalProps> = ({
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{enhancing ? 'Enhancing...' : 'AI Enhance'}</span>
-                {aiSuccess && <CheckCircle2 className="w-3.5 h-3.5 text-[#B87355]" />}
+                {aiSuccess && <CheckCircle2 className="w-3.5 h-3.5 text-[#16B8A6]" />}
               </button>
             </div>
             <textarea
@@ -226,12 +226,12 @@ export const AddEditExperienceModal: React.FC<AddEditExperienceModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="• Architected and shipped scalable web features reducing latency by 40%&#10;• Collaborated with cross-functional teams to deliver customer-facing solutions"
-              className="w-full p-3.5 text-sm bg-slate-50 dark:bg-slate-900 border border-[#E6DFD8] dark:border-[#494448] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-brand-500 resize-none leading-relaxed"
+              className="w-full p-3.5 text-sm bg-slate-50 dark:bg-slate-900 border border-[#DCE5EB] dark:border-[#243746] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-brand-500 resize-none leading-relaxed"
             />
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-between pt-4 border-t border-[#E6DFD8] dark:border-[#494448]">
+          <div className="flex items-center justify-between pt-4 border-t border-[#DCE5EB] dark:border-[#243746]">
             {experience && onDelete ? (
               <button
                 type="button"

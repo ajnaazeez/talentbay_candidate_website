@@ -8,11 +8,11 @@
   }
 
   body {
-    @apply font-sans bg-[#F5F1EA] text-[#29272A] antialiased selection:bg-[#B87355]/20 selection:text-[#29272A] transition-colors duration-150;
+    @apply font-sans bg-[#F5F8FA] text-[#243746] antialiased selection:bg-[#16B8A6]/20 selection:text-[#142B3B] transition-colors duration-150;
   }
 
   .dark body {
-    @apply bg-[#29272A] text-[#F5F1EA] selection:bg-[#B87355]/30 selection:text-white;
+    @apply bg-[#0F1D27] text-[#F5F8FA] selection:bg-[#16B8A6]/30 selection:text-white;
   }
 }
 
@@ -22,20 +22,20 @@
 }
 
 .dark .bg-white {
-  background-color: #222023 !important;
-  color: #F5F1EA !important;
+  background-color: #142B3B !important;
+  color: #F5F8FA !important;
 }
 
 .dark .bg-slate-50,
 .dark .bg-zinc-50 {
-  background-color: #1F1D20 !important;
-  color: #F5F1EA !important;
+  background-color: #102230 !important;
+  color: #F5F8FA !important;
 }
 
 .dark .bg-slate-100,
 .dark .bg-zinc-100 {
-  background-color: #332F34 !important;
-  color: #F5F1EA !important;
+  background-color: #1A374B !important;
+  color: #F5F8FA !important;
 }
 
 .dark .text-slate-900,
@@ -49,17 +49,17 @@
 .dark .text-slate-600,
 .dark .text-zinc-700,
 .dark .text-zinc-600 {
-  color: #D4CDC7 !important;
+  color: #BACDD8 !important;
 }
 
 .dark .text-slate-500,
 .dark .text-zinc-500 {
-  color: #A49D9E !important;
+  color: #8CA6B7 !important;
 }
 
 .dark .text-slate-400,
 .dark .text-zinc-400 {
-  color: #878083 !important;
+  color: #6B8699 !important;
 }
 
 .dark .border-slate-200,
@@ -70,42 +70,42 @@
 .dark .border-zinc-200\/90,
 .dark .border-zinc-200\/80,
 .dark .border-zinc-100 {
-  border-color: #494448 !important;
+  border-color: #243746 !important;
 }
 
 .dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
 .dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]),
 .dark .divide-zinc-100 > :not([hidden]) ~ :not([hidden]),
 .dark .divide-zinc-200 > :not([hidden]) ~ :not([hidden]) {
-  border-color: #494448 !important;
+  border-color: #243746 !important;
 }
 
 .dark .hover\:bg-slate-50:hover,
 .dark .hover\:bg-zinc-50:hover {
-  background-color: #2E2B30 !important;
+  background-color: #1B364A !important;
 }
 
 .dark .hover\:bg-slate-100:hover,
 .dark .hover\:bg-zinc-100:hover {
-  background-color: #383439 !important;
+  background-color: #1F3F56 !important;
 }
 
 .dark input:not([type="checkbox"]):not([type="radio"]),
 .dark textarea,
 .dark select {
-  background-color: #1F1D20 !important;
-  border-color: #494448 !important;
-  color: #F5F1EA !important;
+  background-color: #102230 !important;
+  border-color: #243746 !important;
+  color: #F5F8FA !important;
 }
 
 .dark input::placeholder,
 .dark textarea::placeholder {
-  color: #878083 !important;
+  color: #6B8699 !important;
 }
 
 .dark header {
-  background-color: rgba(41, 39, 42, 0.95) !important;
-  border-bottom-color: #494448 !important;
+  background-color: rgba(20, 43, 59, 0.95) !important;
+  border-bottom-color: #243746 !important;
 }
 
 /* Custom smooth scrollbar */
@@ -119,38 +119,38 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D4CDC7;
+  background: #BACDD8;
   border-radius: 9999px;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #494448;
+  background: #243746;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #B87355;
+  background: #16B8A6;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #A46347;
+  background: #0D9488;
 }
 
 /* Premium UI Component Utilities */
 @layer components {
   .card-premium {
-    @apply rounded-2xl bg-white dark:bg-[#222023] border border-[#E6DFD8] dark:border-[#494448] shadow-card transition-all duration-200;
+    @apply rounded-2xl bg-white dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] shadow-card transition-all duration-200;
   }
 
   .card-interactive {
-    @apply card-premium hover:border-[#B87355]/60 dark:hover:border-[#B87355]/60 hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer;
+    @apply card-premium hover:border-[#16B8A6]/60 dark:hover:border-[#16B8A6]/60 hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer;
   }
 
   .card-nested {
-    @apply rounded-xl bg-[#F5F1EA]/80 dark:bg-[#1F1D20]/80 border border-[#E6DFD8] dark:border-[#494448] p-4 transition-all duration-150;
+    @apply rounded-xl bg-[#E7EFF3]/60 dark:bg-[#102230]/80 border border-[#DCE5EB] dark:border-[#243746] p-4 transition-all duration-150;
   }
 
   .glass-card {
-    @apply rounded-2xl bg-white/95 dark:bg-[#222023]/95 backdrop-blur-md border border-[#E6DFD8] dark:border-[#494448] shadow-card transition-all duration-200;
+    @apply rounded-2xl bg-white/95 dark:bg-[#142B3B]/95 backdrop-blur-md border border-[#DCE5EB] dark:border-[#243746] shadow-card transition-all duration-200;
   }
 
   .badge-premium {
@@ -162,11 +162,11 @@
   }
 
   .glass-header {
-    @apply bg-white/95 dark:bg-[#29272A]/95 backdrop-blur-md border-b border-[#E6DFD8] dark:border-[#494448];
+    @apply bg-white/95 dark:bg-[#142B3B]/95 backdrop-blur-md border-b border-[#DCE5EB] dark:border-[#243746];
   }
 
   .skeleton-shimmer {
-    @apply relative overflow-hidden bg-[#E6DFD8]/80 dark:bg-[#383439]/80 before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/40 dark:before:via-white/10 before:to-transparent;
+    @apply relative overflow-hidden bg-[#DCE5EB]/80 dark:bg-[#1A374B]/80 before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/40 dark:before:via-white/10 before:to-transparent;
   }
 }
 

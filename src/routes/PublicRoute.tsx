@@ -10,7 +10,7 @@ export const PublicRoute: React.FC<{ children?: React.ReactNode }> = ({ children
 
   if (initialLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F5F1EA] dark:bg-[#29272A]">
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F8FA] dark:bg-[#0F1D27]">
         <LoadingSpinner size="lg" />
       </div>
     );

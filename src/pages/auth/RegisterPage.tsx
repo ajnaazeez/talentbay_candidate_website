@@ -230,7 +230,7 @@ export const RegisterPage: React.FC = () => {
               Email Address <span className="text-brand-400">*</span>
             </label>
             {isEmailVerified ? (
-              <span className="text-[11px] font-bold text-[#B87355] flex items-center gap-1">
+              <span className="text-[11px] font-bold text-[#16B8A6] flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Verified
               </span>
             ) : (

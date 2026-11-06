@@ -159,14 +159,14 @@ export const InvitationsPage: React.FC = () => {
 
       {/* Notifications */}
       {successMessage && (
-        <div className="p-4 rounded-xl bg-[#B87355]/10 dark:bg-[#B87355]/20 border border-[#B87355]/30 text-[#B87355] dark:text-[#E6DFD8] text-xs flex items-center justify-between animate-in fade-in">
+        <div className="p-4 rounded-xl bg-[#16B8A6]/10 dark:bg-[#16B8A6]/20 border border-[#16B8A6]/30 text-[#16B8A6] dark:text-[#DCE5EB] text-xs flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 shrink-0 text-[#B87355]" />
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-[#16B8A6]" />
             <span>{successMessage}</span>
           </div>
           <NavLink
             to={ROUTES.APPLICATIONS}
-            className="font-bold underline text-[#B87355] hover:text-[#A46347] ml-4 shrink-0"
+            className="font-bold underline text-[#16B8A6] hover:text-[#0D9488] ml-4 shrink-0"
           >
             Go to Applications →
           </NavLink>

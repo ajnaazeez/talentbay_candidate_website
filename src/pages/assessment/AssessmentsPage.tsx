@@ -147,7 +147,7 @@ export const AssessmentsPage: React.FC = () => {
 
   const getScoreColorClass = (pct: number): string => {
     if (pct >= 75) return 'text-emerald-600 dark:text-emerald-400';
-    if (pct >= 50) return 'text-[#B87355]';
+    if (pct >= 50) return 'text-[#16B8A6]';
     return 'text-rose-600 dark:text-rose-400';
   };
 
@@ -239,10 +239,10 @@ export const AssessmentsPage: React.FC = () => {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center space-y-4">
         <LoadingSpinner size="lg" />
-        <h3 className="text-base font-bold uppercase tracking-wider text-[#29272A] dark:text-white">
+        <h3 className="text-base font-bold uppercase tracking-wider text-[#243746] dark:text-white">
           Generating your assessment questions...
         </h3>
-        <p className="text-xs text-[#736B70] dark:text-[#A49D9E] max-w-sm">
+        <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] max-w-sm">
           Curating genuine multiple-choice technical questions for {activeSkill} ({activeDifficulty}) via Cloud AI
         </p>
       </div>
@@ -299,11 +299,11 @@ export const AssessmentsPage: React.FC = () => {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#29272A] dark:text-white tracking-tight flex items-center gap-3">
-            <GraduationCap className="w-8 h-8 text-[#B87355]" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#243746] dark:text-white tracking-tight flex items-center gap-3">
+            <GraduationCap className="w-8 h-8 text-[#16B8A6]" />
             Skill Assessments
           </h1>
-          <p className="text-xs sm:text-sm font-medium text-[#736B70] dark:text-[#A49D9E] mt-1">
+          <p className="text-xs sm:text-sm font-medium text-[#6B8699] dark:text-[#8CA6B7] mt-1">
             Validate your technical proficiency with AI-powered skill evaluations and earn verified badges.
           </p>
         </div>
@@ -311,7 +311,7 @@ export const AssessmentsPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setIsSkillSelectorOpen(true)}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#B87355] text-white hover:bg-[#A46347] active:bg-[#8D5239] text-xs font-bold uppercase tracking-wider transition shadow-xs cursor-pointer self-start sm:self-auto"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#16B8A6] text-white hover:bg-[#0D9488] active:bg-[#0F766E] text-xs font-bold uppercase tracking-wider transition shadow-xs cursor-pointer self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           <span>Assess Any Skill</span>
@@ -335,13 +335,13 @@ export const AssessmentsPage: React.FC = () => {
       )}
 
       {/* Assessment Stats Box */}
-      <div className="rounded-2xl border border-[#E6DFD8] dark:border-[#494448] bg-white dark:bg-[#222023] p-6 sm:p-8 shadow-xs space-y-6">
-        <div className="grid grid-cols-3 text-center divide-x divide-[#E6DFD8] dark:divide-[#494448]">
+      <div className="rounded-2xl border border-[#DCE5EB] dark:border-[#243746] bg-white dark:bg-[#142B3B] p-6 sm:p-8 shadow-xs space-y-6">
+        <div className="grid grid-cols-3 text-center divide-x divide-[#DCE5EB] dark:divide-[#243746]">
           <div>
-            <div className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#29272A] dark:text-white">
+            <div className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#243746] dark:text-white">
               {completedCount}
             </div>
-            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E] mt-1">
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7] mt-1">
               COMPLETED
             </div>
           </div>
@@ -350,25 +350,25 @@ export const AssessmentsPage: React.FC = () => {
             <div className={`text-3xl md:text-4xl font-extrabold tracking-tight ${getScoreColorClass(averageScore)}`}>
               {averageScore}%
             </div>
-            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E] mt-1">
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7] mt-1">
               AVG SCORE
             </div>
           </div>
 
           <div>
-            <div className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#29272A] dark:text-white">
+            <div className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#243746] dark:text-white">
               {skillsCount}
             </div>
-            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E] mt-1">
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7] mt-1">
               SKILLS
             </div>
           </div>
         </div>
 
         {/* AI-POWERED ASSESSMENTS ACTIVE Banner */}
-        <div className="rounded-xl border border-[#B87355]/30 bg-[#B87355]/10 p-2.5 flex items-center justify-center gap-2 text-center">
-          <Sparkles className="w-4 h-4 text-[#B87355]" />
-          <span className="text-xs font-bold text-[#B87355]">
+        <div className="rounded-xl border border-[#16B8A6]/30 bg-[#16B8A6]/10 p-2.5 flex items-center justify-center gap-2 text-center">
+          <Sparkles className="w-4 h-4 text-[#16B8A6]" />
+          <span className="text-xs font-bold text-[#16B8A6]">
             AI-POWERED ASSESSMENTS ACTIVE
           </span>
         </div>
@@ -378,9 +378,9 @@ export const AssessmentsPage: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate(ROUTES.CAREER_READINESS)}
-            className="w-full py-3 px-4 rounded-xl border border-[#E6DFD8] dark:border-[#494448] hover:border-[#B87355] text-[#29272A] dark:text-white hover:bg-[#F5F1EA] dark:hover:bg-[#383439] transition flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider cursor-pointer shadow-xs"
+            className="w-full py-3 px-4 rounded-xl border border-[#DCE5EB] dark:border-[#243746] hover:border-[#16B8A6] text-[#243746] dark:text-white hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B] transition flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider cursor-pointer shadow-xs"
           >
-            <BarChart2 className="w-4 h-4 text-[#B87355]" />
+            <BarChart2 className="w-4 h-4 text-[#16B8A6]" />
             <span>HOW AM I PERFORMING?</span>
           </button>
         </div>
@@ -389,10 +389,10 @@ export const AssessmentsPage: React.FC = () => {
       {/* YOUR SKILLS Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between pb-1">
-          <h2 className="text-lg font-bold text-[#29272A] dark:text-white tracking-tight">
+          <h2 className="text-lg font-bold text-[#243746] dark:text-white tracking-tight">
             Your Skills
           </h2>
-          <span className="text-xs font-medium text-[#736B70] dark:text-[#A49D9E]">
+          <span className="text-xs font-medium text-[#6B8699] dark:text-[#8CA6B7]">
             {candidateSkills.length} {candidateSkills.length === 1 ? 'skill' : 'skills'} added
           </span>
         </div>
@@ -408,39 +408,39 @@ export const AssessmentsPage: React.FC = () => {
                 <div
                   key={skillName}
                   onClick={() => handleOpenDifficulty(skillName)}
-                  className="rounded-2xl bg-white dark:bg-[#222023] border border-[#E6DFD8] dark:border-[#494448] p-5 hover:border-[#B87355]/60 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-between group"
+                  className="rounded-2xl bg-white dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] p-5 hover:border-[#16B8A6]/60 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-between group"
                 >
                   <div className="space-y-1.5 min-w-0">
                     <div className="flex items-center gap-2.5">
-                      <span className="text-base font-bold text-[#29272A] dark:text-white truncate">
+                      <span className="text-base font-bold text-[#243746] dark:text-white truncate">
                         {skillName}
                       </span>
-                      <span className="bg-[#F5F1EA] text-[#494448] dark:bg-[#383439] dark:text-[#D4CDC7] text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border border-[#E6DFD8] dark:border-[#494448]">
+                      <span className="bg-[#E7EFF3] text-[#243746] dark:bg-[#1A374B] dark:text-[#BACDD8] text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border border-[#DCE5EB] dark:border-[#243746]">
                         Added
                       </span>
                     </div>
 
                     {hasAssessment && bestAssessment ? (
                       <div className="flex items-center gap-2 text-xs font-semibold">
-                        <span className="text-[#494448] dark:text-[#D4CDC7]">
+                        <span className="text-[#243746] dark:text-[#BACDD8]">
                           {bestAssessment.proficiencyLevel}
                         </span>
-                        <span className="text-[#A49D9E]">•</span>
+                        <span className="text-[#8CA6B7]">•</span>
                         <span className={getScoreColorClass(getResultPercentage(bestAssessment))}>
                           {getResultPercentage(bestAssessment)}% score
                         </span>
-                        <span className="border border-[#E6DFD8] dark:border-[#494448] uppercase px-1.5 py-0.5 text-[9px] font-bold text-[#736B70] dark:text-[#A49D9E] rounded-md">
+                        <span className="border border-[#DCE5EB] dark:border-[#243746] uppercase px-1.5 py-0.5 text-[9px] font-bold text-[#6B8699] dark:text-[#8CA6B7] rounded-md">
                           {bestAssessment.difficulty}
                         </span>
                       </div>
                     ) : (
-                      <div className="text-xs font-medium text-[#736B70] dark:text-[#A49D9E]">
+                      <div className="text-xs font-medium text-[#6B8699] dark:text-[#8CA6B7]">
                         15 questions • ~10 min
                       </div>
                     )}
                   </div>
 
-                  <div className="w-8 h-8 rounded-xl bg-[#F5F1EA] dark:bg-[#1F1D20] flex items-center justify-center text-[#A49D9E] group-hover:text-[#B87355] group-hover:translate-x-0.5 transition-all shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-[#E7EFF3] dark:bg-[#102230] flex items-center justify-center text-[#8CA6B7] group-hover:text-[#16B8A6] group-hover:translate-x-0.5 transition-all shrink-0">
                     <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>
@@ -448,14 +448,14 @@ export const AssessmentsPage: React.FC = () => {
             })}
           </div>
         ) : (
-          <div className="p-8 rounded-2xl border border-dashed border-[#E6DFD8] dark:border-[#494448] bg-white dark:bg-[#222023] text-center space-y-3">
-            <p className="text-xs text-[#736B70] dark:text-[#A49D9E]">
+          <div className="p-8 rounded-2xl border border-dashed border-[#DCE5EB] dark:border-[#243746] bg-white dark:bg-[#142B3B] text-center space-y-3">
+            <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7]">
               No skills added to your profile yet. You can assess any skill right now:
             </p>
             <button
               type="button"
               onClick={() => setIsSkillSelectorOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#B87355] text-white hover:bg-[#A46347] text-xs font-bold uppercase"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#16B8A6] text-white hover:bg-[#0D9488] text-xs font-bold uppercase"
             >
               <Plus className="w-4 h-4" />
               <span>Choose a Skill to Assess</span>
@@ -468,10 +468,10 @@ export const AssessmentsPage: React.FC = () => {
       {(relatedSkills.length > 0 || loadingRelated) && (
         <div className="space-y-4 pt-2">
           <div className="flex items-center justify-between pb-1">
-            <h2 className="text-lg font-bold text-[#29272A] dark:text-white tracking-tight">
+            <h2 className="text-lg font-bold text-[#243746] dark:text-white tracking-tight">
               Recommended for You
             </h2>
-            <span className="text-xs font-medium text-[#736B70] dark:text-[#A49D9E]">
+            <span className="text-xs font-medium text-[#6B8699] dark:text-[#8CA6B7]">
               Related to your technical profile
             </span>
           </div>
@@ -490,34 +490,34 @@ export const AssessmentsPage: React.FC = () => {
                   <div
                     key={relSkill}
                     onClick={() => handleOpenDifficulty(relSkill)}
-                    className="rounded-2xl bg-white dark:bg-[#222023] border border-[#E6DFD8] dark:border-[#494448] p-5 hover:border-[#B87355]/60 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-between group"
+                    className="rounded-2xl bg-white dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] p-5 hover:border-[#16B8A6]/60 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-between group"
                   >
                     <div className="space-y-1.5 min-w-0">
-                      <span className="text-base font-bold text-[#29272A] dark:text-white truncate block">
+                      <span className="text-base font-bold text-[#243746] dark:text-white truncate block">
                         {relSkill}
                       </span>
 
                       {hasAssessment && bestAssessment ? (
                         <div className="flex items-center gap-2 text-xs font-semibold">
-                          <span className="text-[#494448] dark:text-[#D4CDC7]">
+                          <span className="text-[#243746] dark:text-[#BACDD8]">
                             {bestAssessment.proficiencyLevel}
                           </span>
-                          <span className="text-[#A49D9E]">•</span>
+                          <span className="text-[#8CA6B7]">•</span>
                           <span className={getScoreColorClass(getResultPercentage(bestAssessment))}>
                             {getResultPercentage(bestAssessment)}% score
                           </span>
-                          <span className="border border-[#E6DFD8] dark:border-[#494448] uppercase px-1.5 py-0.5 text-[9px] font-bold text-[#736B70] dark:text-[#A49D9E] rounded-md">
+                          <span className="border border-[#DCE5EB] dark:border-[#243746] uppercase px-1.5 py-0.5 text-[9px] font-bold text-[#6B8699] dark:text-[#8CA6B7] rounded-md">
                             {bestAssessment.difficulty}
                           </span>
                         </div>
                       ) : (
-                        <div className="text-xs font-medium text-[#736B70] dark:text-[#A49D9E]">
+                        <div className="text-xs font-medium text-[#6B8699] dark:text-[#8CA6B7]">
                           15 questions • ~10 min
                         </div>
                       )}
                     </div>
 
-                    <div className="w-8 h-8 rounded-xl bg-[#F5F1EA] dark:bg-[#1F1D20] flex items-center justify-center text-[#A49D9E] group-hover:text-[#B87355] group-hover:translate-x-0.5 transition-all shrink-0">
+                    <div className="w-8 h-8 rounded-xl bg-[#E7EFF3] dark:bg-[#102230] flex items-center justify-center text-[#8CA6B7] group-hover:text-[#16B8A6] group-hover:translate-x-0.5 transition-all shrink-0">
                       <ArrowRight className="w-4 h-4" />
                     </div>
                   </div>
@@ -531,45 +531,45 @@ export const AssessmentsPage: React.FC = () => {
       {/* SELECT DIFFICULTY Modal */}
       {selectedSkill && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white dark:bg-[#222023] border border-[#E6DFD8] dark:border-[#494448] rounded-2xl w-full max-w-lg p-6 sm:p-8 space-y-6 relative shadow-2xl">
+          <div className="bg-white dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] rounded-2xl w-full max-w-lg p-6 sm:p-8 space-y-6 relative shadow-2xl">
             {/* Close button */}
             <button
               type="button"
               onClick={() => setSelectedSkill(null)}
-              className="absolute top-6 right-6 text-[#A49D9E] hover:text-[#29272A] dark:hover:text-white transition cursor-pointer"
+              className="absolute top-6 right-6 text-[#8CA6B7] hover:text-[#243746] dark:hover:text-white transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="space-y-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#B87355]">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#16B8A6]">
                 {selectedSkill}
               </span>
-              <h3 className="text-2xl font-black uppercase tracking-tight text-[#29272A] dark:text-white">
+              <h3 className="text-2xl font-black uppercase tracking-tight text-[#243746] dark:text-white">
                 SELECT DIFFICULTY
               </h3>
             </div>
 
-            <div className="divide-y divide-[#E6DFD8] dark:divide-[#494448] pt-2">
+            <div className="divide-y divide-[#DCE5EB] dark:divide-[#243746] pt-2">
               {/* Easy */}
               <div
                 onClick={() => !isEasyDone && handleStartQuiz(selectedSkill, 'Easy')}
                 className={`py-4 flex items-center justify-between ${
-                  isEasyDone ? 'opacity-60 cursor-default' : 'hover:bg-[#F5F1EA] dark:hover:bg-[#383439] cursor-pointer rounded-xl px-2'
+                  isEasyDone ? 'opacity-60 cursor-default' : 'hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B] cursor-pointer rounded-xl px-2'
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-[#29272A] dark:text-white">
+                    <span className="text-sm font-bold text-[#243746] dark:text-white">
                       EASY
                     </span>
                     {isEasyDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
                   </div>
-                  <p className="text-xs text-[#736B70] dark:text-[#A49D9E] mt-0.5">
+                  <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] mt-0.5">
                     Perfect for beginners starting their journey.
                   </p>
                 </div>
-                {!isEasyDone && <ArrowRight className="w-4 h-4 text-[#29272A] dark:text-white" />}
+                {!isEasyDone && <ArrowRight className="w-4 h-4 text-[#243746] dark:text-white" />}
               </div>
 
               {/* Medium */}
@@ -582,23 +582,23 @@ export const AssessmentsPage: React.FC = () => {
                     ? 'opacity-40 cursor-not-allowed px-2'
                     : isMediumDone
                     ? 'opacity-60 cursor-default px-2'
-                    : 'hover:bg-[#F5F1EA] dark:hover:bg-[#383439] cursor-pointer rounded-xl px-2'
+                    : 'hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B] cursor-pointer rounded-xl px-2'
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-[#29272A] dark:text-white">
+                    <span className="text-sm font-bold text-[#243746] dark:text-white">
                       MEDIUM
                     </span>
                     {isMediumDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
-                    {!isEasyDone && <Lock className="w-3.5 h-3.5 text-[#A49D9E]" />}
+                    {!isEasyDone && <Lock className="w-3.5 h-3.5 text-[#8CA6B7]" />}
                   </div>
-                  <p className="text-xs text-[#736B70] dark:text-[#A49D9E] mt-0.5">
+                  <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] mt-0.5">
                     Test your core knowledge and practical skills.
                   </p>
                 </div>
                 {isEasyDone && !isMediumDone && (
-                  <ArrowRight className="w-4 h-4 text-[#29272A] dark:text-white" />
+                  <ArrowRight className="w-4 h-4 text-[#243746] dark:text-white" />
                 )}
               </div>
 
@@ -612,23 +612,23 @@ export const AssessmentsPage: React.FC = () => {
                     ? 'opacity-40 cursor-not-allowed px-2'
                     : isHardDone
                     ? 'opacity-60 cursor-default px-2'
-                    : 'hover:bg-[#F5F1EA] dark:hover:bg-[#383439] cursor-pointer rounded-xl px-2'
+                    : 'hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B] cursor-pointer rounded-xl px-2'
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-[#29272A] dark:text-white">
+                    <span className="text-sm font-bold text-[#243746] dark:text-white">
                       HARD
                     </span>
                     {isHardDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
-                    {!isMediumDone && <Lock className="w-3.5 h-3.5 text-[#A49D9E]" />}
+                    {!isMediumDone && <Lock className="w-3.5 h-3.5 text-[#8CA6B7]" />}
                   </div>
-                  <p className="text-xs text-[#736B70] dark:text-[#A49D9E] mt-0.5">
+                  <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] mt-0.5">
                     Challenge yourself with advanced complex concepts.
                   </p>
                 </div>
                 {isMediumDone && !isHardDone && (
-                  <ArrowRight className="w-4 h-4 text-[#29272A] dark:text-white" />
+                  <ArrowRight className="w-4 h-4 text-[#243746] dark:text-white" />
                 )}
               </div>
 
@@ -642,23 +642,23 @@ export const AssessmentsPage: React.FC = () => {
                     ? 'opacity-40 cursor-not-allowed px-2'
                     : isMixedDone
                     ? 'opacity-60 cursor-default px-2'
-                    : 'hover:bg-[#F5F1EA] dark:hover:bg-[#383439] cursor-pointer rounded-xl px-2'
+                    : 'hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B] cursor-pointer rounded-xl px-2'
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-[#29272A] dark:text-white">
+                    <span className="text-sm font-bold text-[#243746] dark:text-white">
                       MIXED
                     </span>
                     {isMixedDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
-                    {!isHardDone && <Lock className="w-3.5 h-3.5 text-[#A49D9E]" />}
+                    {!isHardDone && <Lock className="w-3.5 h-3.5 text-[#8CA6B7]" />}
                   </div>
-                  <p className="text-xs text-[#736B70] dark:text-[#A49D9E] mt-0.5">
+                  <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] mt-0.5">
                     Comprehensive evaluation across all difficulty levels.
                   </p>
                 </div>
                 {isHardDone && !isMixedDone && (
-                  <ArrowRight className="w-4 h-4 text-[#29272A] dark:text-white" />
+                  <ArrowRight className="w-4 h-4 text-[#243746] dark:text-white" />
                 )}
               </div>
             </div>

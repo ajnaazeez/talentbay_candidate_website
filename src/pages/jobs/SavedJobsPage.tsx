@@ -76,13 +76,13 @@ export const SavedJobsPage: React.FC = () => {
           <div className="flex items-center gap-2 mb-1">
             <Link
               to={ROUTES.JOBS}
-              className="text-xs font-semibold text-gray-500 hover:text-[#B87355] inline-flex items-center gap-1"
+              className="text-xs font-semibold text-gray-500 hover:text-[#16B8A6] inline-flex items-center gap-1"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Back to Discover
             </Link>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2.5">
-            <Bookmark className="w-6 h-6 text-[#B87355] fill-[#B87355]/20" />
+            <Bookmark className="w-6 h-6 text-[#16B8A6] fill-[#16B8A6]/20" />
             Saved Opportunities ({savedJobs.length})
           </h1>
           <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">

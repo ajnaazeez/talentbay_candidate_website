@@ -90,17 +90,17 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Top Header Card */}
-      <div className="bg-white dark:bg-[#222023] rounded-2xl p-5 border border-[#E6DFD8] dark:border-[#494448] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#142B3B] rounded-2xl p-5 border border-[#DCE5EB] dark:border-[#243746] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl bg-[#B87355]/15 text-[#B87355] flex items-center justify-center font-bold text-lg">
+          <div className="w-11 h-11 rounded-xl bg-[#16B8A6]/15 text-[#16B8A6] flex items-center justify-center font-bold text-lg">
             {skill.slice(0, 2).toUpperCase()}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold text-[#29272A] dark:text-white">{skill}</h1>
+              <h1 className="text-lg font-bold text-[#243746] dark:text-white">{skill}</h1>
               <Badge variant="neutral" size="sm">{difficulty}</Badge>
             </div>
-            <p className="text-xs text-[#736B70] dark:text-[#A49D9E]">
+            <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7]">
               Question {currentIndex + 1} of {questions.length} • {answeredCount} answered
             </p>
           </div>
@@ -112,10 +112,10 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-mono font-bold text-sm border transition-colors ${
               isTimeCritical
                 ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900/60 animate-pulse'
-                : 'bg-[#F5F1EA] dark:bg-[#1F1D20] text-[#29272A] dark:text-[#F5F1EA] border-[#E6DFD8] dark:border-[#494448]'
+                : 'bg-[#E7EFF3] dark:bg-[#102230] text-[#243746] dark:text-[#E7EFF3] border-[#DCE5EB] dark:border-[#243746]'
             }`}
           >
-            <Clock className={`w-4 h-4 ${isTimeCritical ? 'text-rose-500' : 'text-[#A49D9E]'}`} />
+            <Clock className={`w-4 h-4 ${isTimeCritical ? 'text-rose-500' : 'text-[#8CA6B7]'}`} />
             <span>{timerDisplay}</span>
           </div>
 
@@ -124,7 +124,7 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
             size="sm"
             onClick={onCancel}
             disabled={isSubmitting}
-            className="text-[#736B70] dark:text-[#A49D9E] hover:text-rose-600 dark:hover:text-rose-400"
+            className="text-[#6B8699] dark:text-[#8CA6B7] hover:text-rose-600 dark:hover:text-rose-400"
           >
             Exit
           </Button>
@@ -132,21 +132,21 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
       </div>
 
       {/* Progress Bar */}
-      <div className="bg-[#E6DFD8] dark:bg-[#383439] h-2 rounded-full overflow-hidden">
+      <div className="bg-[#DCE5EB] dark:bg-[#1A374B] h-2 rounded-full overflow-hidden">
         <div
-          className="bg-[#B87355] h-full transition-all duration-300 ease-out"
+          className="bg-[#16B8A6] h-full transition-all duration-300 ease-out"
           style={{ width: `${progressPercentage}%` }}
         />
       </div>
 
       {/* Question Card */}
-      <div className="bg-white dark:bg-[#222023] rounded-2xl p-6 sm:p-8 border border-[#E6DFD8] dark:border-[#494448] shadow-xs space-y-6">
+      <div className="bg-white dark:bg-[#142B3B] rounded-2xl p-6 sm:p-8 border border-[#DCE5EB] dark:border-[#243746] shadow-xs space-y-6">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#B87355]">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#16B8A6]">
               Question {currentIndex + 1}
             </span>
-            <h2 className="text-base sm:text-lg font-semibold text-[#29272A] dark:text-white leading-relaxed">
+            <h2 className="text-base sm:text-lg font-semibold text-[#243746] dark:text-white leading-relaxed">
               {currentQuestion?.question}
             </h2>
           </div>
@@ -155,8 +155,8 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
             onClick={() => toggleFlag(currentIndex)}
             className={`p-2 rounded-lg border transition-colors cursor-pointer ${
               flagged[currentIndex]
-                ? 'bg-[#B87355]/15 border-[#B87355]/40 text-[#B87355]'
-                : 'border-[#E6DFD8] dark:border-[#494448] text-[#A49D9E] hover:text-[#29272A] dark:hover:text-white'
+                ? 'bg-[#16B8A6]/15 border-[#16B8A6]/40 text-[#16B8A6]'
+                : 'border-[#DCE5EB] dark:border-[#243746] text-[#8CA6B7] hover:text-[#243746] dark:hover:text-white'
             }`}
             title="Flag question for review"
           >
@@ -176,15 +176,15 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
                 onClick={() => handleSelectOption(idx)}
                 className={`w-full p-4 rounded-xl border text-left flex items-start gap-3.5 transition-all cursor-pointer group ${
                   isSelected
-                    ? 'border-[#B87355] bg-[#B87355]/10 text-[#29272A] dark:text-white ring-2 ring-[#B87355]/20 shadow-xs'
-                    : 'border-[#E6DFD8] dark:border-[#494448] hover:border-[#B87355]/60 bg-white dark:bg-[#222023] text-[#29272A] dark:text-[#D4CDC7]'
+                    ? 'border-[#16B8A6] bg-[#16B8A6]/10 text-[#243746] dark:text-white ring-2 ring-[#16B8A6]/20 shadow-xs'
+                    : 'border-[#DCE5EB] dark:border-[#243746] hover:border-[#16B8A6]/60 bg-white dark:bg-[#142B3B] text-[#243746] dark:text-[#BACDD8]'
                 }`}
               >
                 <span
                   className={`w-7 h-7 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 transition-colors ${
                     isSelected
-                      ? 'bg-[#B87355] text-white'
-                      : 'bg-[#F5F1EA] dark:bg-[#1F1D20] text-[#736B70] dark:text-[#A49D9E] group-hover:bg-[#E6DFD8] dark:group-hover:bg-[#383439]'
+                      ? 'bg-[#16B8A6] text-white'
+                      : 'bg-[#E7EFF3] dark:bg-[#102230] text-[#6B8699] dark:text-[#8CA6B7] group-hover:bg-[#DCE5EB] dark:group-hover:bg-[#1A374B]'
                   }`}
                 >
                   {optionLetters[idx] || idx + 1}
@@ -196,7 +196,7 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
         </div>
 
         {/* Navigation Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-[#E6DFD8] dark:border-[#494448]">
+        <div className="flex items-center justify-between pt-4 border-t border-[#DCE5EB] dark:border-[#243746]">
           <Button
             variant="secondary"
             size="md"
@@ -233,15 +233,15 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
       </div>
 
       {/* Question Quick Palette */}
-      <div className="bg-white dark:bg-[#222023] rounded-2xl p-5 border border-[#E6DFD8] dark:border-[#494448] shadow-xs">
-        <div className="flex items-center justify-between mb-3 text-xs text-[#736B70] dark:text-[#A49D9E]">
+      <div className="bg-white dark:bg-[#142B3B] rounded-2xl p-5 border border-[#DCE5EB] dark:border-[#243746] shadow-xs">
+        <div className="flex items-center justify-between mb-3 text-xs text-[#6B8699] dark:text-[#8CA6B7]">
           <span className="font-bold uppercase tracking-wider">Question Navigator</span>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#B87355]" /> Answered
+              <span className="w-2.5 h-2.5 rounded-full bg-[#16B8A6]" /> Answered
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#E6DFD8] dark:bg-[#383439]" /> Pending
+              <span className="w-2.5 h-2.5 rounded-full bg-[#DCE5EB] dark:bg-[#1A374B]" /> Pending
             </span>
           </div>
         </div>
@@ -259,17 +259,17 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
                 onClick={() => setCurrentIndex(idx)}
                 className={`w-9 h-9 rounded-xl font-mono text-xs font-bold transition-all relative cursor-pointer ${
                   isCurrent
-                    ? 'ring-2 ring-[#B87355] ring-offset-2 dark:ring-offset-[#222023]'
+                    ? 'ring-2 ring-[#16B8A6] ring-offset-2 dark:ring-offset-[#142B3B]'
                     : ''
                 } ${
                   isAnswered
-                    ? 'bg-[#B87355] text-white'
-                    : 'bg-[#F5F1EA] dark:bg-[#1F1D20] text-[#494448] dark:text-[#D4CDC7] hover:bg-[#E6DFD8] dark:hover:bg-[#383439]'
+                    ? 'bg-[#16B8A6] text-white'
+                    : 'bg-[#E7EFF3] dark:bg-[#102230] text-[#243746] dark:text-[#BACDD8] hover:bg-[#DCE5EB] dark:hover:bg-[#1A374B]'
                 }`}
               >
                 {idx + 1}
                 {isFlagged && (
-                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white dark:border-[#222023]" />
+                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white dark:border-[#142B3B]" />
                 )}
               </button>
             );
@@ -280,19 +280,19 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
       {/* Confirmation Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-[#222023] w-full max-w-md rounded-2xl shadow-xl border border-[#E6DFD8] dark:border-[#494448] p-6 space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#B87355]/15 text-[#B87355] flex items-center justify-center mx-auto">
+          <div className="bg-white dark:bg-[#142B3B] w-full max-w-md rounded-2xl shadow-xl border border-[#DCE5EB] dark:border-[#243746] p-6 space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-[#16B8A6]/15 text-[#16B8A6] flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-6 h-6" />
             </div>
             <div className="text-center">
-              <h3 className="text-lg font-bold text-[#29272A] dark:text-white">
+              <h3 className="text-lg font-bold text-[#243746] dark:text-white">
                 Ready to Submit?
               </h3>
-              <p className="text-xs sm:text-sm text-[#736B70] dark:text-[#A49D9E] mt-1">
+              <p className="text-xs sm:text-sm text-[#6B8699] dark:text-[#8CA6B7] mt-1">
                 You have answered <strong>{answeredCount}</strong> of{' '}
                 <strong>{questions.length}</strong> questions.
                 {answeredCount < questions.length && (
-                  <span className="block text-[#B87355] mt-1 font-medium">
+                  <span className="block text-[#16B8A6] mt-1 font-medium">
                     ⚠️ You still have {questions.length - answeredCount} unanswered questions!
                   </span>
                 )}

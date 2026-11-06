@@ -41,40 +41,40 @@ type PageDensity = 'compact' | 'normal' | 'spacious';
 
 const COLOR_MAP: Record<AccentColor, { hex: string; bgClass: string; textClass: string; borderClass: string }> = {
   copper: {
-    hex: '#B87355',
-    bgClass: 'bg-[#B87355]',
-    textClass: 'text-[#B87355]',
-    borderClass: 'border-[#B87355]',
+    hex: '#16B8A6',
+    bgClass: 'bg-[#16B8A6]',
+    textClass: 'text-[#16B8A6]',
+    borderClass: 'border-[#16B8A6]',
   },
   charcoal: {
-    hex: '#29272A',
-    bgClass: 'bg-[#29272A]',
-    textClass: 'text-[#29272A] dark:text-white',
-    borderClass: 'border-[#29272A] dark:border-white',
+    hex: '#142B3B',
+    bgClass: 'bg-[#142B3B]',
+    textClass: 'text-[#142B3B] dark:text-white',
+    borderClass: 'border-[#142B3B] dark:border-white',
   },
   bronze: {
-    hex: '#B87355',
-    bgClass: 'bg-[#B87355]',
-    textClass: 'text-[#B87355]',
-    borderClass: 'border-[#B87355]',
+    hex: '#0D9488',
+    bgClass: 'bg-[#0D9488]',
+    textClass: 'text-[#0D9488]',
+    borderClass: 'border-[#0D9488]',
   },
   slate: {
-    hex: '#494448',
-    bgClass: 'bg-[#494448]',
-    textClass: 'text-[#494448] dark:text-[#D4CDC7]',
-    borderClass: 'border-[#494448]',
+    hex: '#243746',
+    bgClass: 'bg-[#243746]',
+    textClass: 'text-[#243746] dark:text-[#BACDD8]',
+    borderClass: 'border-[#243746]',
   },
   navy: {
-    hex: '#222023',
-    bgClass: 'bg-[#222023]',
-    textClass: 'text-[#222023] dark:text-white',
-    borderClass: 'border-[#222023]',
+    hex: '#142B3B',
+    bgClass: 'bg-[#142B3B]',
+    textClass: 'text-[#142B3B] dark:text-white',
+    borderClass: 'border-[#142B3B]',
   },
   terracotta: {
-    hex: '#8D5239',
-    bgClass: 'bg-[#8D5239]',
-    textClass: 'text-[#8D5239] dark:text-[#E6DFD8]',
-    borderClass: 'border-[#8D5239]',
+    hex: '#0F766E',
+    bgClass: 'bg-[#0F766E]',
+    textClass: 'text-[#0F766E] dark:text-[#5EEAD4]',
+    borderClass: 'border-[#0F766E]',
   },
 };
 
@@ -240,7 +240,7 @@ export const ResumeBuilderPage: React.FC = () => {
   const activeColor = COLOR_MAP[accentColor] || COLOR_MAP.copper;
 
   return (
-    <div className="min-h-screen bg-[#F5F1EA] dark:bg-[#29272A] pb-24 transition-colors">
+    <div className="min-h-screen bg-[#F5F8FA] dark:bg-[#0F1D27] pb-24 transition-colors">
       {/* Print Specific CSS Overrides */}
       <style>{`
         @media print {
@@ -261,39 +261,39 @@ export const ResumeBuilderPage: React.FC = () => {
       `}</style>
 
       {/* Top Header Navigation */}
-      <div className="no-print bg-white/95 dark:bg-[#29272A]/95 border-b border-[#E6DFD8] dark:border-[#494448] px-4 sm:px-6 py-4 mb-8 sticky top-0 z-30 shadow-xs backdrop-blur-md">
+      <div className="no-print bg-white/95 dark:bg-[#142B3B]/95 border-b border-[#DCE5EB] dark:border-[#243746] px-4 sm:px-6 py-4 mb-8 sticky top-0 z-30 shadow-xs backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Link to={ROUTES.PROFILE}>
               <Button variant="ghost" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-1 text-[#B87355]" />
+                <ArrowLeft className="w-4 h-4 mr-1 text-[#16B8A6]" />
                 Back to Profile
               </Button>
             </Link>
-            <div className="h-4 w-px bg-[#E6DFD8] dark:bg-[#494448] hidden sm:block" />
+            <div className="h-4 w-px bg-[#DCE5EB] dark:bg-[#243746] hidden sm:block" />
             <div>
-              <h2 className="text-base font-bold text-[#29272A] dark:text-white flex items-center gap-2">
-                <FileCheck className="w-5 h-5 text-[#B87355]" />
+              <h2 className="text-base font-bold text-[#243746] dark:text-white flex items-center gap-2">
+                <FileCheck className="w-5 h-5 text-[#16B8A6]" />
                 ATS Resume &amp; AI CV Studio
               </h2>
-              <p className="text-xs text-[#736B70] dark:text-[#A49D9E]">
+              <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7]">
                 Generate ATS-optimized resumes with Cloud AI, live section editor, and vector PDF export.
               </p>
             </div>
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex items-center gap-2 bg-[#F5F1EA] dark:bg-[#1F1D20] p-1 rounded-xl border border-[#E6DFD8] dark:border-[#494448]">
+          <div className="flex items-center gap-2 bg-[#E7EFF3] dark:bg-[#102230] p-1 rounded-xl border border-[#DCE5EB] dark:border-[#243746]">
             <button
               type="button"
               onClick={() => setActiveTab('ai-builder')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'ai-builder'
-                  ? 'bg-white dark:bg-[#383439] text-[#29272A] dark:text-white shadow-xs'
-                  : 'text-[#494448] dark:text-[#D4CDC7] hover:text-[#29272A]'
+                  ? 'bg-white dark:bg-[#142B3B] text-[#243746] dark:text-white shadow-xs'
+                  : 'text-[#243746] dark:text-[#BACDD8] hover:text-[#142B3B]'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#B87355]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#16B8A6]" />
               AI ATS Builder
             </button>
 
@@ -302,8 +302,8 @@ export const ResumeBuilderPage: React.FC = () => {
               onClick={() => setActiveTab('saved-cvs')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'saved-cvs'
-                  ? 'bg-white dark:bg-[#383439] text-[#29272A] dark:text-white shadow-xs'
-                  : 'text-[#494448] dark:text-[#D4CDC7] hover:text-[#29272A]'
+                  ? 'bg-white dark:bg-[#142B3B] text-[#243746] dark:text-white shadow-xs'
+                  : 'text-[#243746] dark:text-[#BACDD8] hover:text-[#142B3B]'
               }`}
             >
               <History className="w-3.5 h-3.5" />
@@ -315,8 +315,8 @@ export const ResumeBuilderPage: React.FC = () => {
               onClick={() => setActiveTab('classic-print')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'classic-print'
-                  ? 'bg-white dark:bg-[#383439] text-[#29272A] dark:text-white shadow-xs'
-                  : 'text-[#494448] dark:text-[#D4CDC7] hover:text-[#29272A]'
+                  ? 'bg-white dark:bg-[#142B3B] text-[#243746] dark:text-white shadow-xs'
+                  : 'text-[#243746] dark:text-[#BACDD8] hover:text-[#142B3B]'
               }`}
             >
               <Printer className="w-3.5 h-3.5" />
@@ -344,16 +344,16 @@ export const ResumeBuilderPage: React.FC = () => {
 
             {/* Premium Subscription Guard matching Flutter AiCvSubscriptionGuard */}
             {!isPaidPremium && !currentCv ? (
-              <div className="bg-white dark:bg-[#222023] border border-[#E6DFD8] dark:border-[#494448] rounded-3xl p-8 sm:p-12 text-center max-w-2xl mx-auto space-y-6 shadow-sm">
-                <div className="w-16 h-16 rounded-2xl bg-[#B87355]/15 text-[#B87355] flex items-center justify-center mx-auto ring-1 ring-[#B87355]/30">
+              <div className="bg-white dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] rounded-3xl p-8 sm:p-12 text-center max-w-2xl mx-auto space-y-6 shadow-sm">
+                <div className="w-16 h-16 rounded-2xl bg-[#16B8A6]/15 text-[#16B8A6] flex items-center justify-center mx-auto ring-1 ring-[#16B8A6]/30">
                   <Crown className="w-8 h-8" />
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="text-xl sm:text-2xl font-black text-[#29272A] dark:text-white tracking-tight">
+                  <h3 className="text-xl sm:text-2xl font-black text-[#243746] dark:text-white tracking-tight">
                     AI CV Creation is an Exclusive Premium Feature
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#494448] dark:text-[#D4CDC7] max-w-lg mx-auto leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#243746] dark:text-[#BACDD8] max-w-lg mx-auto leading-relaxed">
                     An active Premium subscription is required to generate AI CVs. Free trial accounts do not include this feature.
                   </p>
                 </div>
@@ -378,15 +378,15 @@ export const ResumeBuilderPage: React.FC = () => {
               </div>
             ) : currentCv ? (
               <div className="space-y-6">
-                <div className="flex items-center justify-between pb-2 border-b border-[#E6DFD8] dark:border-[#494448]">
+                <div className="flex items-center justify-between pb-2 border-b border-[#DCE5EB] dark:border-[#243746]">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-[#736B70] dark:text-[#A49D9E]">
+                    <span className="text-xs font-medium text-[#6B8699] dark:text-[#8CA6B7]">
                       Currently viewing:{' '}
-                      <strong className="text-[#29272A] dark:text-white">
+                      <strong className="text-[#243746] dark:text-white">
                         {currentCv.targetJobRole}
                       </strong>
                     </span>
-                    <span className="text-[11px] text-[#A49D9E]">
+                    <span className="text-[11px] text-[#8CA6B7]">
                       (Saved {new Date(currentCv.updatedAt).toLocaleDateString()})
                     </span>
                   </div>
@@ -396,7 +396,7 @@ export const ResumeBuilderPage: React.FC = () => {
                     size="sm"
                     onClick={() => setCurrentCv(null)}
                   >
-                    <Sparkles className="w-3.5 h-3.5 mr-1 text-[#B87355]" />
+                    <Sparkles className="w-3.5 h-3.5 mr-1 text-[#16B8A6]" />
                     Configure New AI CV
                   </Button>
                 </div>
@@ -411,13 +411,13 @@ export const ResumeBuilderPage: React.FC = () => {
               </div>
             ) : candidate ? (
               <div className="space-y-6">
-                <div className="bg-[#29272A] text-white p-6 sm:p-8 rounded-2xl border border-[#494448] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="bg-[#142B3B] text-white p-6 sm:p-8 rounded-2xl border border-[#243746] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="space-y-1">
                     <h3 className="text-lg font-bold flex items-center gap-2 text-white">
-                      <Sparkles className="w-5 h-5 text-[#B87355]" />
+                      <Sparkles className="w-5 h-5 text-[#16B8A6]" />
                       Create an ATS-Friendly CV with AI
                     </h3>
-                    <p className="text-xs text-[#D4CDC7] max-w-2xl leading-relaxed">
+                    <p className="text-xs text-[#BACDD8] max-w-2xl leading-relaxed">
                       Our Cloud AI analyzes your verified TalentBay candidate profile, aligns it to your target job role and sector, and formats it strictly according to Applicant Tracking System (ATS) guidelines for maximum interview callbacks.
                     </p>
                   </div>
@@ -430,7 +430,7 @@ export const ResumeBuilderPage: React.FC = () => {
                 />
               </div>
             ) : (
-              <div className="text-center py-12 text-sm text-[#736B70]">
+              <div className="text-center py-12 text-sm text-[#6B8699]">
                 Please sign in to access the AI CV Studio.
               </div>
             )}
@@ -440,13 +440,13 @@ export const ResumeBuilderPage: React.FC = () => {
         {/* TAB 2: SAVED CVS HISTORY */}
         {activeTab === 'saved-cvs' && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-[#E6DFD8] dark:border-[#494448]">
+            <div className="flex items-center justify-between pb-4 border-b border-[#DCE5EB] dark:border-[#243746]">
               <div>
-                <h3 className="text-base font-bold text-[#29272A] dark:text-white flex items-center gap-2">
-                  <History className="w-5 h-5 text-[#B87355]" />
+                <h3 className="text-base font-bold text-[#243746] dark:text-white flex items-center gap-2">
+                  <History className="w-5 h-5 text-[#16B8A6]" />
                   Your Saved Resumes
                 </h3>
-                <p className="text-xs text-[#736B70] dark:text-[#A49D9E]">
+                <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7]">
                   Access, edit, or download any previously generated ATS resume version.
                 </p>
               </div>
@@ -465,20 +465,20 @@ export const ResumeBuilderPage: React.FC = () => {
             </div>
 
             {loadingSaved ? (
-              <div className="py-16 text-center text-[#736B70]">
-                <div className="w-8 h-8 border-2 border-[#B87355] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+              <div className="py-16 text-center text-[#6B8699]">
+                <div className="w-8 h-8 border-2 border-[#16B8A6] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
                 <p className="text-xs">Loading saved resumes...</p>
               </div>
             ) : savedCvs.length === 0 ? (
-              <div className="bg-white dark:bg-[#222023] border border-[#E6DFD8] dark:border-[#494448] rounded-2xl p-12 text-center space-y-4 shadow-xs">
-                <div className="w-12 h-12 rounded-2xl bg-[#B87355]/15 text-[#B87355] flex items-center justify-center mx-auto">
+              <div className="bg-white dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] rounded-2xl p-12 text-center space-y-4 shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-[#16B8A6]/15 text-[#16B8A6] flex items-center justify-center mx-auto">
                   <FileText className="w-6 h-6" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-[#29272A] dark:text-white">
+                  <h4 className="text-sm font-bold text-[#243746] dark:text-white">
                     No Saved Resumes Yet
                   </h4>
-                  <p className="text-xs text-[#736B70] dark:text-[#A49D9E] max-w-sm mx-auto">
+                  <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] max-w-sm mx-auto">
                     Generate an ATS-friendly CV tailored to your target position and save it here for instant access.
                   </p>
                 </div>
@@ -499,34 +499,34 @@ export const ResumeBuilderPage: React.FC = () => {
                 {savedCvs.map((cv) => (
                   <div
                     key={cv.id}
-                    className="bg-white dark:bg-[#222023] border border-[#E6DFD8] dark:border-[#494448] rounded-2xl p-5 shadow-xs hover:border-[#B87355]/60 transition-all flex flex-col justify-between space-y-4"
+                    className="bg-white dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] rounded-2xl p-5 shadow-xs hover:border-[#16B8A6]/60 transition-all flex flex-col justify-between space-y-4"
                   >
                     <div className="space-y-2">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h4 className="text-sm font-bold text-[#29272A] dark:text-white flex items-center gap-2">
-                            <Briefcase className="w-4 h-4 text-[#B87355]" />
+                          <h4 className="text-sm font-bold text-[#243746] dark:text-white flex items-center gap-2">
+                            <Briefcase className="w-4 h-4 text-[#16B8A6]" />
                             {cv.targetJobRole}
                           </h4>
                           {cv.targetIndustry && (
-                            <span className="text-[11px] text-[#736B70] dark:text-[#A49D9E]">
+                            <span className="text-[11px] text-[#6B8699] dark:text-[#8CA6B7]">
                               Industry: {cv.targetIndustry}
                             </span>
                           )}
                         </div>
-                        <span className="text-[11px] text-[#A49D9E] flex items-center gap-1">
+                        <span className="text-[11px] text-[#8CA6B7] flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           {new Date(cv.updatedAt).toLocaleDateString()}
                         </span>
                       </div>
 
                       {cv.summary && (
-                        <p className="text-xs text-[#494448] dark:text-[#D4CDC7] line-clamp-3 leading-relaxed">
+                        <p className="text-xs text-[#243746] dark:text-[#BACDD8] line-clamp-3 leading-relaxed">
                           {cv.summary}
                         </p>
                       )}
 
-                      <div className="flex flex-wrap gap-1 text-[11px] text-[#736B70] dark:text-[#A49D9E] pt-1">
+                      <div className="flex flex-wrap gap-1 text-[11px] text-[#6B8699] dark:text-[#8CA6B7] pt-1">
                         <span>{cv.workExperience?.length || 0} Experiences</span>
                         <span>•</span>
                         <span>{cv.projects?.length || 0} Projects</span>
@@ -535,11 +535,11 @@ export const ResumeBuilderPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-[#E6DFD8] dark:border-[#494448]">
+                    <div className="flex items-center justify-between pt-3 border-t border-[#DCE5EB] dark:border-[#243746]">
                       <button
                         type="button"
                         onClick={() => handleDeleteSavedCv(cv.id)}
-                        className="text-xs text-[#A49D9E] hover:text-rose-500 flex items-center gap-1 transition-colors cursor-pointer"
+                        className="text-xs text-[#8CA6B7] hover:text-rose-500 flex items-center gap-1 transition-colors cursor-pointer"
                         title="Delete resume"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -580,11 +580,11 @@ export const ResumeBuilderPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Left Customization Panel */}
             <div className="no-print lg:col-span-4 space-y-6">
-              <div className="bg-white dark:bg-[#222023] rounded-2xl border border-[#E6DFD8] dark:border-[#494448] p-6 shadow-xs space-y-6">
-                <div className="flex items-center justify-between pb-4 border-b border-[#E6DFD8] dark:border-[#494448]">
+              <div className="bg-white dark:bg-[#102230] rounded-2xl border border-[#DCE5EB] dark:border-[#243746] p-6 shadow-xs space-y-6">
+                <div className="flex items-center justify-between pb-4 border-b border-[#DCE5EB] dark:border-[#243746]">
                   <div className="flex items-center gap-2">
-                    <Settings2 className="w-5 h-5 text-[#B87355]" />
-                    <h3 className="text-sm font-bold text-[#29272A] dark:text-white">
+                    <Settings2 className="w-5 h-5 text-[#16B8A6]" />
+                    <h3 className="text-sm font-bold text-[#142B3B] dark:text-white">
                       Print Layout Settings
                     </h3>
                   </div>
@@ -596,7 +596,7 @@ export const ResumeBuilderPage: React.FC = () => {
 
                 {/* Template Selector */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E] flex items-center gap-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#627D98] dark:text-[#9FB3C8] flex items-center gap-1.5">
                     <Layout className="w-3.5 h-3.5" /> Template Layout
                   </label>
                   <div className="grid grid-cols-3 gap-2">
@@ -613,8 +613,8 @@ export const ResumeBuilderPage: React.FC = () => {
                         onClick={() => setTemplate(t.id)}
                         className={`p-2.5 rounded-xl border text-xs font-semibold text-center transition-all cursor-pointer ${
                           template === t.id
-                            ? 'border-[#B87355] bg-[#B87355]/15 text-[#B87355] ring-2 ring-[#B87355]/20 font-bold'
-                            : 'border-[#E6DFD8] dark:border-[#494448] text-[#494448] dark:text-[#D4CDC7] hover:bg-[#F5F1EA] dark:hover:bg-[#383439]'
+                            ? 'border-[#16B8A6] bg-[#16B8A6]/15 text-[#16B8A6] ring-2 ring-[#16B8A6]/20 font-bold'
+                            : 'border-[#DCE5EB] dark:border-[#243746] text-[#243746] dark:text-[#E7EFF3] hover:bg-[#F5F8FA] dark:hover:bg-[#1A374B]'
                         }`}
                       >
                         {t.name}
@@ -625,7 +625,7 @@ export const ResumeBuilderPage: React.FC = () => {
 
                 {/* Accent Color */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E] flex items-center gap-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#627D98] dark:text-[#9FB3C8] flex items-center gap-1.5">
                     <Palette className="w-3.5 h-3.5" /> Accent Color
                   </label>
                   <div className="flex items-center gap-3">
@@ -635,7 +635,7 @@ export const ResumeBuilderPage: React.FC = () => {
                         type="button"
                         onClick={() => setAccentColor(c)}
                         className={`w-7 h-7 rounded-full flex items-center justify-center transition-transform cursor-pointer ${
-                          accentColor === c ? 'scale-110 ring-2 ring-offset-2 ring-[#B87355]' : 'opacity-80 hover:opacity-100'
+                          accentColor === c ? 'scale-110 ring-2 ring-offset-2 ring-[#16B8A6]' : 'opacity-80 hover:opacity-100'
                         }`}
                         style={{ backgroundColor: COLOR_MAP[c].hex }}
                       >
@@ -647,7 +647,7 @@ export const ResumeBuilderPage: React.FC = () => {
 
                 {/* Density */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E]">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#627D98] dark:text-[#9FB3C8]">
                     Spacing &amp; Density
                   </label>
                   <div className="grid grid-cols-3 gap-2">
@@ -658,8 +658,8 @@ export const ResumeBuilderPage: React.FC = () => {
                         onClick={() => setDensity(d)}
                         className={`py-1.5 rounded-lg border text-xs capitalize font-medium transition-colors cursor-pointer ${
                           density === d
-                            ? 'border-[#B87355] bg-[#B87355]/15 text-[#B87355] font-semibold'
-                            : 'border-[#E6DFD8] dark:border-[#494448] text-[#736B70] dark:text-[#A49D9E]'
+                            ? 'border-[#16B8A6] bg-[#16B8A6]/15 text-[#16B8A6] font-semibold'
+                            : 'border-[#DCE5EB] dark:border-[#243746] text-[#627D98] dark:text-[#9FB3C8]'
                         }`}
                       >
                         {d}
@@ -669,8 +669,8 @@ export const ResumeBuilderPage: React.FC = () => {
                 </div>
 
                 {/* Section Visibility Toggles */}
-                <div className="space-y-2 pt-2 border-t border-[#E6DFD8] dark:border-[#494448]">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#736B70] dark:text-[#A49D9E]">
+                <div className="space-y-2 pt-2 border-t border-[#DCE5EB] dark:border-[#243746]">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#627D98] dark:text-[#9FB3C8]">
                     Include Sections
                   </label>
                   <div className="space-y-2">
@@ -685,14 +685,14 @@ export const ResumeBuilderPage: React.FC = () => {
                     ].map(({ key, label }) => (
                       <label
                         key={key}
-                        className="flex items-center justify-between text-xs text-[#494448] dark:text-[#D4CDC7] cursor-pointer p-1.5 hover:bg-[#F5F1EA] dark:hover:bg-[#383439] rounded-lg"
+                        className="flex items-center justify-between text-xs text-[#243746] dark:text-[#E7EFF3] cursor-pointer p-1.5 hover:bg-[#F5F8FA] dark:hover:bg-[#1A374B] rounded-lg"
                       >
                         <span>{label}</span>
                         <input
                           type="checkbox"
                           checked={visibleSections[key as keyof typeof visibleSections]}
                           onChange={() => toggleSection(key as keyof typeof visibleSections)}
-                          className="rounded text-[#B87355] focus:ring-[#B87355] w-4 h-4 cursor-pointer"
+                          className="rounded text-[#16B8A6] focus:ring-[#16B8A6] w-4 h-4 cursor-pointer"
                         />
                       </label>
                     ))}
@@ -705,21 +705,21 @@ export const ResumeBuilderPage: React.FC = () => {
             <div className="lg:col-span-8 flex justify-center">
               <div
                 id="printable-cv"
-                className={`resume-container w-full max-w-[800px] bg-white text-[#29272A] shadow-xl rounded-2xl border border-[#E6DFD8] p-8 sm:p-12 transition-all ${
+                className={`resume-container w-full max-w-[800px] bg-white text-[#243746] shadow-xl rounded-2xl border border-[#DCE5EB] p-8 sm:p-12 transition-all ${
                   density === 'compact' ? 'space-y-4 text-xs' : density === 'spacious' ? 'space-y-7 text-sm' : 'space-y-5 text-sm'
                 }`}
-                style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#29272A' }}
+                style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#243746' }}
               >
                 {/* 1. Header Details */}
                 {template === 'classic' ? (
-                  <div className="text-center pb-4 border-b-2 border-[#29272A]">
-                    <h1 className="text-2xl sm:text-3xl font-extrabold uppercase tracking-wide text-[#29272A] mb-1">
+                  <div className="text-center pb-4 border-b-2 border-[#142B3B]">
+                    <h1 className="text-2xl sm:text-3xl font-extrabold uppercase tracking-wide text-[#142B3B] mb-1">
                       {fullName}
                     </h1>
-                    <p className="text-sm font-semibold tracking-wider text-[#736B70] uppercase mb-2">
+                    <p className="text-sm font-semibold tracking-wider text-[#627D98] uppercase mb-2">
                       {headline}
                     </p>
-                    <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-[#736B70]">
+                    <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-[#627D98]">
                       {candidate?.email && <span>{candidate.email}</span>}
                       {candidate?.phoneNumber && <span>• {candidate.phoneNumber}</span>}
                       {candidate?.currentLocation && (
@@ -730,7 +730,7 @@ export const ResumeBuilderPage: React.FC = () => {
                       {candidate?.linkedinProfile && (
                         <span>
                           •{' '}
-                          <a href={candidate.linkedinProfile} className="text-[#29272A] underline">
+                          <a href={candidate.linkedinProfile} className="text-[#142B3B] underline">
                             LinkedIn
                           </a>
                         </span>
@@ -738,7 +738,7 @@ export const ResumeBuilderPage: React.FC = () => {
                       {candidate?.portfolioUrl && (
                         <span>
                           •{' '}
-                          <a href={candidate.portfolioUrl} className="text-[#29272A] underline">
+                          <a href={candidate.portfolioUrl} className="text-[#142B3B] underline">
                             Portfolio
                           </a>
                         </span>
@@ -746,12 +746,12 @@ export const ResumeBuilderPage: React.FC = () => {
                     </div>
                   </div>
                 ) : template === 'minimal' ? (
-                  <div className="pb-4 border-b border-[#E6DFD8]">
-                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#29272A]">
+                  <div className="pb-4 border-b border-[#DCE5EB]">
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#142B3B]">
                       {fullName}
                     </h1>
-                    <p className="text-sm font-medium text-[#736B70] mb-3">{headline}</p>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#736B70] font-mono">
+                    <p className="text-sm font-medium text-[#627D98] mb-3">{headline}</p>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#627D98] font-mono">
                       {candidate?.email && <span>email: {candidate.email}</span>}
                       {candidate?.phoneNumber && <span>tel: {candidate.phoneNumber}</span>}
                       {candidate?.currentLocation && (
@@ -763,9 +763,9 @@ export const ResumeBuilderPage: React.FC = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between pb-5 border-b border-[#E6DFD8] gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between pb-5 border-b border-[#DCE5EB] gap-4">
                     <div className="space-y-1">
-                      <h1 className="text-2xl sm:text-3xl font-extrabold text-[#29272A] tracking-tight">
+                      <h1 className="text-2xl sm:text-3xl font-extrabold text-[#142B3B] tracking-tight">
                         {fullName}
                       </h1>
                       <p className={`text-base font-semibold ${activeColor.textClass}`}>
@@ -773,22 +773,22 @@ export const ResumeBuilderPage: React.FC = () => {
                       </p>
                     </div>
 
-                    <div className="text-xs text-[#736B70] space-y-1 sm:text-right">
+                    <div className="text-xs text-[#627D98] space-y-1 sm:text-right">
                       {candidate?.email && (
                         <div className="flex items-center sm:justify-end gap-1.5">
-                          <Mail className="w-3.5 h-3.5 text-[#A49D9E]" />
+                          <Mail className="w-3.5 h-3.5 text-[#627D98]" />
                           <span>{candidate.email}</span>
                         </div>
                       )}
                       {candidate?.phoneNumber && (
                         <div className="flex items-center sm:justify-end gap-1.5">
-                          <Phone className="w-3.5 h-3.5 text-[#A49D9E]" />
+                          <Phone className="w-3.5 h-3.5 text-[#627D98]" />
                           <span>{candidate.phoneNumber}</span>
                         </div>
                       )}
                       {candidate?.currentLocation && (
                         <div className="flex items-center sm:justify-end gap-1.5">
-                          <MapPin className="w-3.5 h-3.5 text-[#A49D9E]" />
+                          <MapPin className="w-3.5 h-3.5 text-[#627D98]" />
                           <span>
                             {[candidate.currentLocation.city, candidate.currentLocation.country]
                               .filter(Boolean)
@@ -798,7 +798,7 @@ export const ResumeBuilderPage: React.FC = () => {
                       )}
                       {candidate?.linkedinProfile && (
                         <div className="flex items-center sm:justify-end gap-1.5">
-                          <Globe className="w-3.5 h-3.5 text-[#A49D9E]" />
+                          <Globe className="w-3.5 h-3.5 text-[#627D98]" />
                           <a href={candidate.linkedinProfile} className="hover:underline">
                             {candidate.linkedinProfile.replace(/^https?:\/\//, '')}
                           </a>
@@ -814,13 +814,13 @@ export const ResumeBuilderPage: React.FC = () => {
                     <h2
                       className={`text-xs font-bold uppercase tracking-wider pb-1 border-b ${
                         template === 'classic'
-                          ? 'border-[#29272A] text-[#29272A]'
+                          ? 'border-[#142B3B] text-[#142B3B]'
                           : `${activeColor.borderClass} ${activeColor.textClass}`
                       }`}
                     >
                       Professional Summary
                     </h2>
-                    <p className="text-xs sm:text-sm text-[#494448] leading-relaxed whitespace-pre-line">
+                    <p className="text-xs sm:text-sm text-[#243746] leading-relaxed whitespace-pre-line">
                       {candidate.aboutMe}
                     </p>
                   </section>
@@ -832,7 +832,7 @@ export const ResumeBuilderPage: React.FC = () => {
                     <h2
                       className={`text-xs font-bold uppercase tracking-wider pb-1 border-b ${
                         template === 'classic'
-                          ? 'border-[#29272A] text-[#29272A]'
+                          ? 'border-[#142B3B] text-[#142B3B]'
                           : `${activeColor.borderClass} ${activeColor.textClass}`
                       }`}
                     >
@@ -842,8 +842,8 @@ export const ResumeBuilderPage: React.FC = () => {
                     <div className="space-y-1.5 text-xs sm:text-sm">
                       {candidate.skills.some((s: Skill) => s.type === 'Primary') && (
                         <div>
-                          <span className="font-bold text-[#29272A]">Primary Skills: </span>
-                          <span className="text-[#494448]">
+                          <span className="font-bold text-[#142B3B]">Primary Skills: </span>
+                          <span className="text-[#243746]">
                             {candidate.skills
                               .filter((s: Skill) => s.type === 'Primary')
                               .map((s: Skill) => s.name)
@@ -854,8 +854,8 @@ export const ResumeBuilderPage: React.FC = () => {
 
                       {candidate.skills.some((s: Skill) => s.type !== 'Primary') && (
                         <div>
-                          <span className="font-bold text-[#29272A]">Technical Skills &amp; Tools: </span>
-                          <span className="text-[#494448]">
+                          <span className="font-bold text-[#142B3B]">Technical Skills &amp; Tools: </span>
+                          <span className="text-[#243746]">
                             {candidate.skills
                               .filter((s: Skill) => s.type !== 'Primary')
                               .map((s: Skill) => s.name)
@@ -873,7 +873,7 @@ export const ResumeBuilderPage: React.FC = () => {
                     <h2
                       className={`text-xs font-bold uppercase tracking-wider pb-1 border-b ${
                         template === 'classic'
-                          ? 'border-[#29272A] text-[#29272A]'
+                          ? 'border-[#142B3B] text-[#142B3B]'
                           : `${activeColor.borderClass} ${activeColor.textClass}`
                       }`}
                     >
@@ -884,16 +884,16 @@ export const ResumeBuilderPage: React.FC = () => {
                       {candidate.workExperience.map((exp: WorkExperience) => (
                         <div key={exp.id} className="space-y-1">
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-                            <span className="font-bold text-[#29272A]">
+                            <span className="font-bold text-[#142B3B]">
                               {exp.jobTitle}{' '}
-                              <span className="font-normal text-[#736B70]">at {exp.companyName}</span>
+                              <span className="font-normal text-[#627D98]">at {exp.companyName}</span>
                             </span>
-                            <span className="text-xs text-[#736B70] font-medium">
+                            <span className="text-xs text-[#627D98] font-medium">
                               {exp.startDate} - {exp.isCurrent ? 'Present' : exp.endDate || 'Present'}
                             </span>
                           </div>
                           {exp.description && (
-                            <p className="text-xs text-[#736B70] leading-relaxed whitespace-pre-line">
+                            <p className="text-xs text-[#627D98] leading-relaxed whitespace-pre-line">
                               {exp.description}
                             </p>
                           )}
@@ -909,7 +909,7 @@ export const ResumeBuilderPage: React.FC = () => {
                     <h2
                       className={`text-xs font-bold uppercase tracking-wider pb-1 border-b ${
                         template === 'classic'
-                          ? 'border-[#29272A] text-[#29272A]'
+                          ? 'border-[#142B3B] text-[#142B3B]'
                           : `${activeColor.borderClass} ${activeColor.textClass}`
                       }`}
                     >
@@ -920,10 +920,10 @@ export const ResumeBuilderPage: React.FC = () => {
                       {candidate.education.map((edu: Education) => (
                         <div key={edu.id} className="flex justify-between items-start text-xs sm:text-sm">
                           <div>
-                            <span className="font-bold text-[#29272A]">{edu.degree}</span> in {edu.fieldOfStudy}
-                            <div className="text-xs text-[#736B70]">{edu.institution}</div>
+                            <span className="font-bold text-[#142B3B]">{edu.degree}</span> in {edu.fieldOfStudy}
+                            <div className="text-xs text-[#627D98]">{edu.institution}</div>
                           </div>
-                          <span className="text-xs text-[#736B70] font-medium shrink-0">
+                          <span className="text-xs text-[#627D98] font-medium shrink-0">
                             {edu.startYear} - {edu.endYear}
                           </span>
                         </div>
@@ -938,7 +938,7 @@ export const ResumeBuilderPage: React.FC = () => {
                     <h2
                       className={`text-xs font-bold uppercase tracking-wider pb-1 border-b ${
                         template === 'classic'
-                          ? 'border-[#29272A] text-[#29272A]'
+                          ? 'border-[#142B3B] text-[#142B3B]'
                           : `${activeColor.borderClass} ${activeColor.textClass}`
                       }`}
                     >
@@ -949,19 +949,19 @@ export const ResumeBuilderPage: React.FC = () => {
                       {candidate.projects.map((proj: Project) => (
                         <div key={proj.id} className="space-y-0.5 text-xs sm:text-sm">
                           <div className="flex justify-between items-center">
-                            <span className="font-bold text-[#29272A]">{proj.title}</span>
+                            <span className="font-bold text-[#142B3B]">{proj.title}</span>
                             {proj.link && (
-                              <a href={proj.link} className="text-xs text-[#736B70] underline">
+                              <a href={proj.link} className="text-xs text-[#627D98] underline">
                                 View Project
                               </a>
                             )}
                           </div>
                           {proj.technologies && proj.technologies.length > 0 && (
-                            <div className="text-[11px] text-[#736B70]">
+                            <div className="text-[11px] text-[#627D98]">
                               Tech: {proj.technologies.join(', ')}
                             </div>
                           )}
-                          <p className="text-xs text-[#736B70] leading-relaxed">{proj.description}</p>
+                          <p className="text-xs text-[#627D98] leading-relaxed">{proj.description}</p>
                         </div>
                       ))}
                     </div>
@@ -974,7 +974,7 @@ export const ResumeBuilderPage: React.FC = () => {
                     <h2
                       className={`text-xs font-bold uppercase tracking-wider pb-1 border-b ${
                         template === 'classic'
-                          ? 'border-[#29272A] text-[#29272A]'
+                          ? 'border-[#142B3B] text-[#142B3B]'
                           : `${activeColor.borderClass} ${activeColor.textClass}`
                       }`}
                     >
@@ -984,10 +984,10 @@ export const ResumeBuilderPage: React.FC = () => {
                     <div className="space-y-1.5 text-xs sm:text-sm">
                       {candidate.certifications.map((c: Certification, idx: number) => (
                         <div key={idx} className="flex justify-between items-center">
-                          <span className="font-bold text-[#29272A]">
-                            {c.name} <span className="font-normal text-[#736B70]">({c.organization})</span>
+                          <span className="font-bold text-[#142B3B]">
+                            {c.name} <span className="font-normal text-[#627D98]">({c.organization})</span>
                           </span>
-                          <span className="text-xs text-[#736B70]">{c.issueDate}</span>
+                          <span className="text-xs text-[#627D98]">{c.issueDate}</span>
                         </div>
                       ))}
                     </div>

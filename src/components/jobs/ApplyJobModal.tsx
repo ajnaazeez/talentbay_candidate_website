@@ -182,7 +182,7 @@ export const ApplyJobModal: React.FC<ApplyJobModalProps> = ({
         {/* Body Content */}
         {isSuccess ? (
           <div className="p-8 text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-[#B87355]/15 text-[#B87355] mx-auto flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-[#16B8A6]/15 text-[#16B8A6] mx-auto flex items-center justify-center">
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <div className="space-y-1">
