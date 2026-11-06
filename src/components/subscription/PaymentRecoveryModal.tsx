@@ -52,11 +52,11 @@ export const PaymentRecoveryModal: React.FC<PaymentRecoveryModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-white dark:bg-[#131f37] rounded-3xl border border-slate-200 dark:border-[#1e2f52] shadow-modal overflow-hidden p-6 sm:p-8 space-y-5">
+      <div className="relative w-full max-w-md bg-white dark:bg-[#202A27] rounded-3xl border border-slate-200 dark:border-[#2e3b37] shadow-modal overflow-hidden p-6 sm:p-8 space-y-5">
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#1e2f52] transition-colors"
+          className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#2e3b37] transition-colors"
         >
           <X className="w-5 h-5" />
         </button>

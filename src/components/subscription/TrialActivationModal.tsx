@@ -57,7 +57,7 @@ export const TrialActivationModal: React.FC<TrialActivationModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-white dark:bg-[#131f37] rounded-3xl border border-slate-200 dark:border-[#1e2f52] shadow-modal overflow-hidden">
+      <div className="relative w-full max-w-lg bg-white dark:bg-[#202A27] rounded-3xl border border-slate-200 dark:border-[#2e3b37] shadow-modal overflow-hidden">
         {/* Header background with brand gradient */}
         <div className="relative p-6 sm:p-8 bg-gradient-to-br from-[#070b14] via-[#0b1329] to-[#0f1f3d] text-white border-b border-brand-500/20 overflow-hidden">
           <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />

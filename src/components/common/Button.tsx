@@ -15,17 +15,17 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-zinc-900 text-white hover:bg-zinc-800 active:bg-black dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 dark:active:bg-zinc-200 shadow-xs hover:shadow transition-all duration-150 disabled:opacity-40',
+    'bg-[#123C35] text-white hover:bg-[#0e2f29] active:bg-[#0a221e] dark:bg-[#C5A46D] dark:text-[#202A27] dark:hover:bg-[#d2ad77] dark:active:bg-[#aa8950] shadow-xs hover:shadow transition-all duration-150 disabled:opacity-40',
   secondary:
-    'bg-zinc-100 dark:bg-[#1c1f2b] text-zinc-800 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-[#272a38] active:bg-zinc-300 disabled:opacity-50 transition-all duration-150',
+    'bg-[#F7F4EC] dark:bg-[#26322f] text-[#252923] dark:text-[#F7F4EC] hover:bg-[#ede8dc] dark:hover:bg-[#2e3b37] active:bg-[#ded5bf] disabled:opacity-50 transition-all duration-150 border border-[#E8E5DC] dark:border-[#2e3b37]',
   outline:
-    'bg-white dark:bg-[#13151d] text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-[#20232e] hover:bg-zinc-50 dark:hover:bg-[#1c1f2b] hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs disabled:opacity-50 transition-all duration-150',
+    'bg-white dark:bg-[#202A27] text-[#252923] dark:text-[#F7F4EC] border border-[#E8E5DC] dark:border-[#2e3b37] hover:bg-[#F7F4EC] dark:hover:bg-[#26322f] hover:border-[#C5A46D]/50 dark:hover:border-[#C5A46D]/50 shadow-xs disabled:opacity-50 transition-all duration-150',
   ghost:
-    'bg-transparent text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100/80 dark:hover:bg-[#1c1f2b]/80 hover:text-zinc-900 dark:hover:text-white transition-all duration-150 disabled:opacity-40',
+    'bg-transparent text-[#777D78] dark:text-[#9ea5a1] hover:bg-[#F7F4EC] dark:hover:bg-[#26322f] hover:text-[#252923] dark:hover:text-white transition-all duration-150 disabled:opacity-40',
   danger:
     'bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-xs hover:shadow transition-all duration-150 disabled:bg-rose-300',
   success:
-    'bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800 shadow-xs hover:shadow transition-all duration-150 disabled:bg-emerald-300',
+    'bg-[#123C35] text-white hover:bg-[#0e2f29] active:bg-[#0a221e] shadow-xs hover:shadow transition-all duration-150 disabled:opacity-40',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {

@@ -59,9 +59,9 @@ export const AddEditEducationModal: React.FC<AddEditEducationModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="w-full max-w-xl bg-white dark:bg-[#131f37] rounded-3xl border border-slate-200 dark:border-[#1e2f52] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="w-full max-w-xl bg-white dark:bg-[#202A27] rounded-3xl border border-slate-200 dark:border-[#2e3b37] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-[#1e2f52]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-[#2e3b37]">
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <GraduationCap className="w-5 h-5 text-brand-600" />
             {education ? 'Edit Education' : 'Add Education'}
@@ -170,7 +170,7 @@ export const AddEditEducationModal: React.FC<AddEditEducationModalProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-[#1e2f52]">
+          <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-[#2e3b37]">
             {education && onDelete ? (
               <button
                 type="button"

@@ -157,8 +157,8 @@ export const CompanyDetailsPage: React.FC = () => {
                 {name}
               </h1>
               {isVerified && (
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 bg-blue-50 dark:bg-blue-950/40 px-2.5 py-1 rounded-full border border-blue-200 dark:border-blue-800">
-                  <ShieldCheck className="w-3.5 h-3.5" /> Verified Employer
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-[#8b6d3d] dark:text-[#dec49c] bg-[#C5A46D]/15 dark:bg-[#C5A46D]/20 px-2.5 py-1 rounded-full border border-[#C5A46D]/30">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#C5A46D]" /> Verified Employer
                 </span>
               )}
             </div>

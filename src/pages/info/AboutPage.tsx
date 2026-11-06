@@ -23,16 +23,12 @@ export const AboutPage: React.FC = () => {
       </div>
 
       {/* Hero Banner (Matching Flutter candidate_poster container) */}
-      <div className="border border-slate-200 dark:border-slate-800 bg-slate-900 text-white p-8 sm:p-12 text-center relative overflow-hidden">
-        <div className="w-16 h-16 border-2 border-white/20 bg-white/10 flex items-center justify-center mx-auto mb-4 font-black text-xl tracking-wider">
-          TB
-        </div>
-        <div className="text-xl sm:text-2xl font-black tracking-widest uppercase">
-          TALENTBAY CANDIDATE
-        </div>
-        <p className="text-xs text-slate-300 tracking-wider mt-1 font-medium">
-          BRIDGING EXCEPTIONAL TALENT WITH WORLD-CLASS OPPORTUNITIES
-        </p>
+      <div className="border border-slate-200 dark:border-slate-800 bg-slate-900 text-white rounded-2xl overflow-hidden relative">
+        <img
+          src="/candidate_poster.png"
+          alt="TalentBay Candidate"
+          className="w-full max-h-72 object-cover"
+        />
       </div>
 
       {/* Content Section (Matching Flutter exact copy) */}

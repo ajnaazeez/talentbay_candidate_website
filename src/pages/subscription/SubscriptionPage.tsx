@@ -142,7 +142,7 @@ export const SubscriptionPage: React.FC = () => {
       )}
 
       {/* Current Membership Status Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#131f37] border border-slate-200 dark:border-[#1e2f52] shadow-card">
+      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#202A27] border border-slate-200 dark:border-[#2e3b37] shadow-card">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2.5">
@@ -155,7 +155,7 @@ export const SubscriptionPage: React.FC = () => {
                   {isPaidActive ? 'PREMIUM ACTIVE' : '7-DAY TRIAL ACTIVE'}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-[#0e1628] px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-[#1e2f52]">
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-[#141a18] px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-[#2e3b37]">
                   BASIC ACCOUNT
                 </span>
               )}
@@ -197,20 +197,20 @@ export const SubscriptionPage: React.FC = () => {
 
       {/* Free Trial Callout Card (if eligible) */}
       {isEligibleForTrial && (
-        <div className="p-6 rounded-3xl bg-gradient-to-r from-[#070b14] via-[#0b1329] to-[#0f1f3d] text-white border border-brand-500/20 shadow-xl relative overflow-hidden">
+        <div className="p-6 rounded-3xl bg-gradient-to-r from-[#123C35] via-[#0e2f29] to-[#202A27] text-white border border-[#C5A46D]/30 shadow-xl relative overflow-hidden">
           <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2 max-w-xl">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-300/30">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#C5A46D]/20 text-[#C5A46D] border border-[#C5A46D]/40">
                   Zero Cost
                 </span>
-                <span className="text-xs text-brand-200">No payment info required</span>
+                <span className="text-xs text-[#E8E5DC]/80">No payment info required</span>
               </div>
               <h4 className="text-lg sm:text-xl font-bold tracking-tight">
                 {trialPlan.title} — 100% Free for 7 Days
               </h4>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#E8E5DC]/80 leading-relaxed">
                 {trialPlan.description}
               </p>
             </div>
@@ -219,7 +219,7 @@ export const SubscriptionPage: React.FC = () => {
               <Button
                 variant="primary"
                 onClick={() => setTrialModalOpen(true)}
-                className="bg-white text-brand-950 hover:bg-slate-100 font-extrabold shadow-md text-xs py-2.5 px-5"
+                className="bg-[#C5A46D] text-[#202A27] hover:bg-[#d2ad77] font-extrabold shadow-md text-xs py-2.5 px-5"
                 rightIcon={<ArrowRight className="w-4 h-4" />}
               >
                 Activate Free Trial (₹0)
@@ -250,8 +250,8 @@ export const SubscriptionPage: React.FC = () => {
                 key={plan.id}
                 className={`relative rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 ${
                   plan.isPopular
-                    ? 'bg-white dark:bg-[#131f37] border-2 border-brand-500 shadow-xl ring-4 ring-brand-500/10'
-                    : 'bg-white dark:bg-[#131f37] border border-slate-200 dark:border-[#1e2f52] shadow-card hover:border-slate-300 dark:hover:border-slate-700'
+                    ? 'bg-white dark:bg-[#202A27] border-2 border-brand-500 shadow-xl ring-4 ring-brand-500/10'
+                    : 'bg-white dark:bg-[#202A27] border border-slate-200 dark:border-[#2e3b37] shadow-card hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
                 {/* Plan Badge */}
@@ -274,7 +274,7 @@ export const SubscriptionPage: React.FC = () => {
                   </div>
 
                   {/* Price Header */}
-                  <div className="flex items-baseline gap-1.5 pb-4 border-b border-slate-100 dark:border-[#1e2f52]">
+                  <div className="flex items-baseline gap-1.5 pb-4 border-b border-slate-100 dark:border-[#2e3b37]">
                     <span className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
                       ₹{plan.displayAmount}
                     </span>
@@ -300,7 +300,7 @@ export const SubscriptionPage: React.FC = () => {
                 </div>
 
                 {/* Card CTA */}
-                <div className="mt-8 pt-5 border-t border-slate-100 dark:border-[#1e2f52]">
+                <div className="mt-8 pt-5 border-t border-slate-100 dark:border-[#2e3b37]">
                   <Button
                     variant={plan.isPopular ? 'primary' : 'outline'}
                     onClick={() => handleSubscribe(plan)}
@@ -323,10 +323,10 @@ export const SubscriptionPage: React.FC = () => {
       </div>
 
       {/* Trust & Guarantee Banner */}
-      <div className="p-6 rounded-3xl bg-slate-50 dark:bg-[#131f37] border border-slate-200/80 dark:border-[#1e2f52] shadow-2xs">
+      <div className="p-6 rounded-3xl bg-slate-50 dark:bg-[#202A27] border border-slate-200/80 dark:border-[#2e3b37] shadow-2xs">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#0e1628] border border-slate-200 dark:border-[#1e2f52] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#141a18] border border-slate-200 dark:border-[#2e3b37] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100">
@@ -338,7 +338,7 @@ export const SubscriptionPage: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#0e1628] border border-slate-200 dark:border-[#1e2f52] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#141a18] border border-slate-200 dark:border-[#2e3b37] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
               <Lock className="w-5 h-5" />
             </div>
             <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100">
@@ -350,7 +350,7 @@ export const SubscriptionPage: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#0e1628] border border-slate-200 dark:border-[#1e2f52] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#141a18] border border-slate-200 dark:border-[#2e3b37] text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-xs">
               <RotateCw className="w-5 h-5" />
             </div>
             <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100">

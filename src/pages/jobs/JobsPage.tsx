@@ -185,17 +185,17 @@ export const JobsPage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20 animate-in fade-in duration-300">
       {/* Header Row */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80 dark:border-[#1e2f52]">
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E8E5DC] dark:border-[#2e3b37]">
+        <h1 className="text-2xl font-extrabold tracking-tight text-[#252923] dark:text-white">
           All Jobs
         </h1>
 
         {/* Quick Search Shortcut */}
         <div
           onClick={() => navigate(ROUTES.SEARCH)}
-          className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-slate-200/80 dark:border-[#1e2f52] bg-white dark:bg-[#131f37] text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600 shadow-xs transition cursor-pointer text-xs font-medium"
+          className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-[#E8E5DC] dark:border-[#2e3b37] bg-white dark:bg-[#202A27] text-[#777D78] hover:text-[#252923] dark:hover:text-white hover:border-[#C5A46D]/50 dark:hover:border-[#C5A46D]/50 shadow-xs transition cursor-pointer text-xs font-medium"
         >
-          <Search className="w-4 h-4 text-slate-400" />
+          <Search className="w-4 h-4 text-[#777D78]" />
           <span>Search jobs, companies, skills...</span>
         </div>
       </div>
@@ -211,8 +211,8 @@ export const JobsPage: React.FC = () => {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-brand-600 text-white border-brand-600 shadow-xs'
-                  : 'bg-white dark:bg-[#131f37] text-slate-700 dark:text-slate-300 border-slate-200/80 dark:border-[#1e2f52] hover:border-slate-300 dark:hover:border-slate-600'
+                  ? 'bg-[#123C35] text-white border-[#123C35] shadow-xs'
+                  : 'bg-white dark:bg-[#202A27] text-[#252923] dark:text-[#E8E5DC] border-[#E8E5DC] dark:border-[#2e3b37] hover:border-[#C5A46D]/60 dark:hover:border-[#C5A46D]/50'
               }`}
             >
               {cat.toUpperCase()}
@@ -227,14 +227,14 @@ export const JobsPage: React.FC = () => {
           <LoadingSpinner size="lg" label="Loading opportunities..." />
         </div>
       ) : validJobs.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200/90 dark:border-[#1e2f52] bg-white dark:bg-[#131f37] shadow-card p-12 text-center space-y-3">
-          <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-[#0e1628] border border-slate-200 dark:border-[#1e2f52] flex items-center justify-center mx-auto text-slate-400">
+        <div className="rounded-2xl border border-[#E8E5DC] dark:border-[#2e3b37] bg-white dark:bg-[#202A27] shadow-card p-12 text-center space-y-3">
+          <div className="w-14 h-14 rounded-2xl bg-[#F7F4EC] dark:bg-[#141a18] border border-[#E8E5DC] dark:border-[#2e3b37] flex items-center justify-center mx-auto text-[#777D78]">
             <Briefcase className="w-7 h-7" />
           </div>
-          <div className="text-base font-bold text-slate-800 dark:text-slate-200">
+          <div className="text-base font-bold text-[#252923] dark:text-white">
             No jobs available
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-[#777D78]">
             Check back later or try clearing selected category filters.
           </p>
         </div>

@@ -238,9 +238,9 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
   return (
     <div className="space-y-6">
       {/* Action Toolbar */}
-      <div className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-4 shadow-soft sticky top-20 z-20 backdrop-blur-md flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-white dark:bg-[#202A27] border border-gray-100 dark:border-[#2e3b37] rounded-2xl p-4 shadow-soft sticky top-20 z-20 backdrop-blur-md flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 dark:text-amber-300 border border-amber-500/30">
             <Sparkles className="w-3.5 h-3.5" />
             ATS CV Ready
           </span>
@@ -273,7 +273,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
             size="sm"
             onClick={handleSave}
             disabled={isSaving}
-            className="shadow-sm shadow-brand-500/20"
+            className="shadow-sm shadow-amber-500/20"
           >
             {isSaving ? (
               <>
@@ -326,9 +326,9 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
       )}
 
       {/* 1. Header Information */}
-      <div className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-6 shadow-soft space-y-4">
+      <div className="bg-white dark:bg-[#202A27] border border-gray-100 dark:border-[#2e3b37] rounded-2xl p-6 shadow-soft space-y-4">
         <h3 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <FileCheck className="w-4 h-4 text-brand-600" />
+          <FileCheck className="w-4 h-4 text-amber-500" />
           ATS Contact Header
         </h3>
 
@@ -339,7 +339,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
               type="text"
               value={cv.fullName}
               onChange={(e) => onUpdateCv({ ...cv, fullName: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-hover text-gray-900 dark:text-white font-medium"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-[#2e3b37] bg-white dark:bg-[#2e3b37] text-gray-900 dark:text-white font-medium"
             />
           </div>
           <div>
@@ -348,7 +348,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
               type="text"
               value={cv.targetJobRole}
               onChange={(e) => onUpdateCv({ ...cv, targetJobRole: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-hover text-gray-900 dark:text-white font-medium"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-[#2e3b37] bg-white dark:bg-[#2e3b37] text-gray-900 dark:text-white font-medium"
             />
           </div>
           <div>
@@ -357,7 +357,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
               type="email"
               value={cv.email}
               onChange={(e) => onUpdateCv({ ...cv, email: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-hover text-gray-900 dark:text-white"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-[#2e3b37] bg-white dark:bg-[#2e3b37] text-gray-900 dark:text-white"
             />
           </div>
           <div>
@@ -366,14 +366,14 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
               type="text"
               value={cv.phone}
               onChange={(e) => onUpdateCv({ ...cv, phone: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-hover text-gray-900 dark:text-white"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-[#2e3b37] bg-white dark:bg-[#2e3b37] text-gray-900 dark:text-white"
             />
           </div>
         </div>
       </div>
 
       {/* 2. Professional Summary Section */}
-      <div className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-6 shadow-soft space-y-4">
+      <div className="bg-white dark:bg-[#202A27] border border-gray-100 dark:border-[#2e3b37] rounded-2xl p-6 shadow-soft space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-sm font-bold text-gray-900 dark:text-white">
@@ -397,7 +397,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
               </>
             ) : (
               <>
-                <Sparkles className="w-3.5 h-3.5 mr-1.5 text-brand-600" />
+                <Sparkles className="w-3.5 h-3.5 mr-1.5 text-amber-500" />
                 AI Rewrite Summary
               </>
             )}
@@ -408,12 +408,12 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
           rows={4}
           value={cv.summary}
           onChange={(e) => handleSummaryChange(e.target.value)}
-          className="w-full p-3.5 text-xs sm:text-sm rounded-xl border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-hover text-gray-900 dark:text-white leading-relaxed"
+          className="w-full p-3.5 text-xs sm:text-sm rounded-xl border border-gray-200 dark:border-[#2e3b37] bg-white dark:bg-[#2e3b37] text-gray-900 dark:text-white leading-relaxed"
         />
       </div>
 
       {/* 3. Technical Skills Categories */}
-      <div className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-6 shadow-soft space-y-4">
+      <div className="bg-white dark:bg-[#202A27] border border-gray-100 dark:border-[#2e3b37] rounded-2xl p-6 shadow-soft space-y-4">
         <h3 className="text-sm font-bold text-gray-900 dark:text-white">
           Technical Skills &amp; Competencies
         </h3>
@@ -422,7 +422,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
           {cv.skillCategories.map((cat, catIdx) => (
             <div
               key={catIdx}
-              className="p-3.5 rounded-xl border border-gray-100 dark:border-dark-border bg-gray-50/50 dark:bg-dark-hover/50 space-y-2"
+              className="p-3.5 rounded-xl border border-gray-100 dark:border-[#2e3b37] bg-gray-50/50 dark:bg-[#2e3b37]/50 space-y-2"
             >
               <div className="flex items-center justify-between">
                 <input
@@ -441,7 +441,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
                 {cat.skills.map((skill, sIdx) => (
                   <span
                     key={sIdx}
-                    className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border text-gray-800 dark:text-gray-200"
+                    className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs bg-white dark:bg-[#202A27] border border-gray-200 dark:border-[#2e3b37] text-gray-800 dark:text-gray-200"
                   >
                     {skill}
                     <button
@@ -466,7 +466,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
       </div>
 
       {/* 4. Work Experience with Section-Level AI Regeneration */}
-      <div className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-6 shadow-soft space-y-4">
+      <div className="bg-white dark:bg-[#202A27] border border-gray-100 dark:border-[#2e3b37] rounded-2xl p-6 shadow-soft space-y-4">
         <h3 className="text-sm font-bold text-gray-900 dark:text-white">
           Work Experience
         </h3>
@@ -475,9 +475,9 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
           {cv.workExperience.map((exp) => (
             <div
               key={exp.id}
-              className="p-4 rounded-xl border border-gray-200 dark:border-dark-border bg-gray-50/40 dark:bg-dark-hover/40 space-y-3"
+              className="p-4 rounded-xl border border-gray-200 dark:border-[#2e3b37] bg-gray-50/40 dark:bg-[#2e3b37]/40 space-y-3"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-gray-100 dark:border-dark-border">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-gray-100 dark:border-[#2e3b37]">
                 <div>
                   <h4 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white">
                     {exp.jobTitle} <span className="font-normal text-gray-500">at {exp.companyName}</span>
@@ -501,7 +501,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-3.5 h-3.5 mr-1.5 text-brand-600" />
+                      <Sparkles className="w-3.5 h-3.5 mr-1.5 text-amber-500" />
                       AI Polish Bullets
                     </>
                   )}
@@ -522,7 +522,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
                       onChange={(e) =>
                         handleUpdateExperienceBullet(exp.id, bIdx, e.target.value)
                       }
-                      className="flex-1 p-2 text-xs rounded-lg border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-card text-gray-800 dark:text-gray-200"
+                      className="flex-1 p-2 text-xs rounded-lg border border-gray-200 dark:border-[#2e3b37] bg-white dark:bg-[#202A27] text-gray-800 dark:text-gray-200"
                     />
                     <button
                       type="button"
@@ -538,7 +538,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
                 <button
                   type="button"
                   onClick={() => handleAddExperienceBullet(exp.id)}
-                  className="text-xs text-brand-600 hover:underline flex items-center gap-1 font-medium mt-1"
+                  className="text-xs text-amber-500 hover:underline flex items-center gap-1 font-medium mt-1"
                 >
                   <Plus className="w-3 h-3" /> Add Achievement Bullet
                 </button>
@@ -550,7 +550,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
 
       {/* 5. Projects with Section-Level AI Regeneration */}
       {cv.projects.length > 0 && (
-        <div className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-6 shadow-soft space-y-4">
+        <div className="bg-white dark:bg-[#202A27] border border-gray-100 dark:border-[#2e3b37] rounded-2xl p-6 shadow-soft space-y-4">
           <h3 className="text-sm font-bold text-gray-900 dark:text-white">
             Projects
           </h3>
@@ -559,9 +559,9 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
             {cv.projects.map((proj) => (
               <div
                 key={proj.id}
-                className="p-4 rounded-xl border border-gray-200 dark:border-dark-border bg-gray-50/40 dark:bg-dark-hover/40 space-y-3"
+                className="p-4 rounded-xl border border-gray-200 dark:border-[#2e3b37] bg-gray-50/40 dark:bg-[#2e3b37]/40 space-y-3"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-gray-100 dark:border-dark-border">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-gray-100 dark:border-[#2e3b37]">
                   <div>
                     <h4 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white">
                       {proj.title} <span className="font-normal text-gray-500">({proj.role})</span>
@@ -587,7 +587,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
                       </>
                     ) : (
                       <>
-                        <Sparkles className="w-3.5 h-3.5 mr-1.5 text-brand-600" />
+                        <Sparkles className="w-3.5 h-3.5 mr-1.5 text-amber-500" />
                         AI Polish Bullets
                       </>
                     )}
@@ -607,7 +607,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
                         onChange={(e) =>
                           handleUpdateProjectBullet(proj.id, bIdx, e.target.value)
                         }
-                        className="flex-1 p-2 text-xs rounded-lg border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-card text-gray-800 dark:text-gray-200"
+                        className="flex-1 p-2 text-xs rounded-lg border border-gray-200 dark:border-[#2e3b37] bg-white dark:bg-[#202A27] text-gray-800 dark:text-gray-200"
                       />
                       <button
                         type="button"
@@ -623,7 +623,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
                   <button
                     type="button"
                     onClick={() => handleAddProjectBullet(proj.id)}
-                    className="text-xs text-brand-600 hover:underline flex items-center gap-1 font-medium mt-1"
+                    className="text-xs text-amber-500 hover:underline flex items-center gap-1 font-medium mt-1"
                   >
                     <Plus className="w-3 h-3" /> Add Project Bullet
                   </button>
@@ -636,7 +636,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
 
       {/* 6. Education */}
       {cv.education.length > 0 && (
-        <div className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-6 shadow-soft space-y-4">
+        <div className="bg-white dark:bg-[#202A27] border border-gray-100 dark:border-[#2e3b37] rounded-2xl p-6 shadow-soft space-y-4">
           <h3 className="text-sm font-bold text-gray-900 dark:text-white">
             Education
           </h3>
@@ -644,7 +644,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
             {cv.education.map((edu) => (
               <div
                 key={edu.id}
-                className="p-3 rounded-xl border border-gray-100 dark:border-dark-border bg-gray-50/50 dark:bg-dark-hover/50 flex items-center justify-between text-xs"
+                className="p-3 rounded-xl border border-gray-100 dark:border-[#2e3b37] bg-gray-50/50 dark:bg-[#2e3b37]/50 flex items-center justify-between text-xs"
               >
                 <div>
                   <p className="font-bold text-gray-900 dark:text-white">
@@ -665,7 +665,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
 
       {/* 7. Certifications */}
       {cv.certifications.length > 0 && (
-        <div className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-6 shadow-soft space-y-4">
+        <div className="bg-white dark:bg-[#202A27] border border-gray-100 dark:border-[#2e3b37] rounded-2xl p-6 shadow-soft space-y-4">
           <h3 className="text-sm font-bold text-gray-900 dark:text-white">
             Certifications
           </h3>
@@ -673,7 +673,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
             {cv.certifications.map((cert, idx) => (
               <div
                 key={idx}
-                className="p-3 rounded-xl border border-gray-100 dark:border-dark-border bg-gray-50/50 dark:bg-dark-hover/50 space-y-0.5"
+                className="p-3 rounded-xl border border-gray-100 dark:border-[#2e3b37] bg-gray-50/50 dark:bg-[#2e3b37]/50 space-y-0.5"
               >
                 <p className="font-bold text-gray-900 dark:text-white">{cert.name}</p>
                 <p className="text-gray-500">
@@ -695,7 +695,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
       {/* Sync Profile Confirmation Dialog */}
       {syncConfirmOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
+          <div className="bg-white dark:bg-[#202A27] border border-gray-100 dark:border-[#2e3b37] rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
             <h4 className="text-base font-bold text-gray-900 dark:text-white">
               Sync ATS CV to Profile?
             </h4>

@@ -212,20 +212,20 @@ export const SearchPage: React.FC = () => {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-900 dark:hover:text-white shadow-xs transition cursor-pointer"
+          className="p-2.5 rounded-xl border border-[#E8E5DC] dark:border-[#2e3b37] bg-white dark:bg-[#202A27] text-[#777D78] hover:text-[#252923] dark:hover:text-white shadow-xs transition cursor-pointer"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
 
-        <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs px-4 py-1.5">
-          <Search className="w-5 h-5 text-slate-400 mr-2 flex-shrink-0" />
+        <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center rounded-2xl border border-[#E8E5DC] dark:border-[#2e3b37] bg-white dark:bg-[#202A27] shadow-xs px-4 py-1.5 focus-within:border-[#123C35] dark:focus-within:border-[#C5A46D] transition-colors">
+          <Search className="w-5 h-5 text-[#777D78] mr-2 flex-shrink-0" />
           <input
             type="text"
             autoFocus
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search title, skill, or company..."
-            className="w-full py-2.5 text-sm md:text-base font-medium bg-transparent border-0 focus:outline-none focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-400"
+            className="w-full py-2.5 text-sm md:text-base font-medium bg-transparent border-0 focus:outline-none focus:ring-0 text-[#252923] dark:text-white placeholder:text-[#777D78]"
           />
           {searchQuery && (
             <button
@@ -234,7 +234,7 @@ export const SearchPage: React.FC = () => {
                 setSearchQuery('');
                 setSearchParams({});
               }}
-              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+              className="p-1 rounded-lg text-[#777D78] hover:text-[#252923] dark:hover:text-white"
             >
               <X className="w-4 h-4" />
             </button>
@@ -253,8 +253,8 @@ export const SearchPage: React.FC = () => {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-brand-600 text-white border-brand-600 shadow-xs'
-                  : 'bg-white dark:bg-[#131f37] text-slate-700 dark:text-slate-300 border-slate-200/80 dark:border-[#1e2f52] hover:border-slate-300 dark:hover:border-slate-600'
+                  ? 'bg-[#123C35] text-white border-[#123C35] shadow-xs'
+                  : 'bg-white dark:bg-[#202A27] text-[#252923] dark:text-[#E8E5DC] border-[#E8E5DC] dark:border-[#2e3b37] hover:border-[#C5A46D]/60 dark:hover:border-[#C5A46D]/50'
               }`}
             >
               {cat.toUpperCase()}
@@ -304,8 +304,8 @@ export const SearchPage: React.FC = () => {
         /* Recent Searches View (Shown when no search query is active) */
         <div className="pt-2">
           {searchHistory.length > 0 ? (
-            <div className="rounded-2xl border border-slate-200/90 dark:border-[#1e2f52] bg-white dark:bg-[#131f37] shadow-card p-6 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#1e2f52]/80">
+            <div className="rounded-2xl border border-slate-200/90 dark:border-[#2e3b37] bg-white dark:bg-[#202A27] shadow-card p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#2e3b37]/80">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
                   RECENT SEARCHES
                 </span>
@@ -318,7 +318,7 @@ export const SearchPage: React.FC = () => {
                 </button>
               </div>
 
-              <div className="divide-y divide-slate-100 dark:divide-[#1e2f52]/60">
+              <div className="divide-y divide-slate-100 dark:divide-[#2e3b37]/60">
                 {searchHistory.map((item) => (
                   <div
                     key={item.query}

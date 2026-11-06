@@ -8,92 +8,154 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: '#fafafa',
-          100: '#f4f4f5',
-          200: '#e4e4e7',
-          300: '#d4d4d8',
-          400: '#a1a1aa',
-          500: '#52525b',
-          600: '#18181b', // Rich Onyx Primary CTA
-          700: '#27272a', // Hover state
-          800: '#09090b', // Active state
-          900: '#09090b',
-          950: '#000000',
+        // Deep Emerald Palette (#123C35)
+        emerald: {
+          50: '#eef6f4',
+          100: '#d8ebe6',
+          200: '#b3d7cd',
+          300: '#83bdb0',
+          400: '#4f9d8d',
+          500: '#297d6e',
+          600: '#1b5d52',
+          700: '#123C35', // Primary Deep Emerald
+          800: '#0e2f29',
+          900: '#0a221e',
+          950: '#051411',
+          DEFAULT: '#123C35',
         },
-        bronze: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#d97706',
-          600: '#b45309', // Warm Bronze Accent
-          700: '#92400e',
-          800: '#78350f',
-          900: '#451a03',
+        brand: {
+          50: '#eef6f4',
+          100: '#d8ebe6',
+          200: '#b3d7cd',
+          300: '#83bdb0',
+          400: '#4f9d8d',
+          500: '#297d6e',
+          600: '#123C35', // Deep Emerald Primary
+          700: '#0e2f29', // Hover state
+          800: '#0a221e', // Active state
+          900: '#061815',
+          950: '#030d0b',
+          DEFAULT: '#123C35',
+        },
+        // Champagne Gold Palette (#C5A46D)
+        gold: {
+          50: '#fbf8f3',
+          100: '#f5eee2',
+          200: '#eadbc2',
+          300: '#dec49c',
+          400: '#d2ad77',
+          500: '#C5A46D', // Secondary Champagne Gold
+          600: '#aa8950',
+          700: '#8b6d3d',
+          800: '#6f5634',
+          900: '#5a452c',
+          DEFAULT: '#C5A46D',
         },
         champagne: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#d97706',
-          600: '#b45309',
-          700: '#92400e',
+          50: '#fbf8f3',
+          100: '#f5eee2',
+          200: '#eadbc2',
+          300: '#dec49c',
+          400: '#d2ad77',
+          500: '#C5A46D', // Secondary Champagne Gold
+          600: '#aa8950',
+          700: '#8b6d3d',
+          800: '#6f5634',
+          900: '#5a452c',
+          DEFAULT: '#C5A46D',
+        },
+        bronze: {
+          50: '#fbf8f3',
+          100: '#f5eee2',
+          200: '#eadbc2',
+          300: '#dec49c',
+          400: '#d2ad77',
+          500: '#C5A46D',
+          600: '#aa8950',
+          700: '#8b6d3d',
+          800: '#6f5634',
+          900: '#5a452c',
+          DEFAULT: '#C5A46D',
+        },
+        amber: {
+          50: '#fbf8f3',
+          100: '#f5eee2',
+          200: '#eadbc2',
+          300: '#dec49c',
+          400: '#d2ad77',
+          500: '#C5A46D', // Harmonized to Champagne Gold
+          600: '#aa8950',
+          700: '#8b6d3d',
+          800: '#6f5634',
+          900: '#5a452c',
+          DEFAULT: '#C5A46D',
+        },
+        // Warm Ivory Palette (#F7F4EC)
+        ivory: {
+          50: '#ffffff',
+          100: '#fbfaf7',
+          200: '#F7F4EC', // Main Background Warm Ivory
+          300: '#ede8dc',
+          400: '#ded5bf',
+          500: '#c8bc9f',
+          DEFAULT: '#F7F4EC',
+        },
+        // Charcoal Palette (#202A27 & #252923)
+        charcoal: {
+          600: '#384843',
+          700: '#2e3b37',
+          800: '#252923', // Primary Text Deep Charcoal
+          900: '#202A27', // Dark Surface Charcoal
+          950: '#141a18', // Dark Canvas
+          DEFAULT: '#202A27',
+        },
+        // Muted Grey (#777D78)
+        muted: {
+          400: '#9ea5a1',
+          500: '#777D78', // Secondary Text Muted Grey
+          600: '#5c625d',
+          DEFAULT: '#777D78',
+        },
+        // Soft Warm Grey Border (#E8E5DC)
+        warmborder: {
+          DEFAULT: '#E8E5DC',
         },
         surface: {
-          canvas: '#fafafa',
-          card: '#ffffff',
-          'dark-canvas': '#090a0f',
-          'dark-card': '#13151d',
-          'dark-border': '#20232e',
-          'dark-hover': '#1c1f2b',
-        },
-        navy: {
-          700: '#20232e',
-          750: '#1c1f2b',
-          800: '#13151d',
-          850: '#0f1118',
-          900: '#090a0f',
-          950: '#050608',
-        },
-        platinum: {
-          50: '#ffffff',
-          100: '#fafafa',
-          200: '#f4f4f5',
-          300: '#e4e4e7',
-          400: '#d4d4d8',
-          500: '#a1a1aa',
+          canvas: '#F7F4EC',
+          card: '#FFFFFF',
+          border: '#E8E5DC',
+          'dark-canvas': '#141a18',
+          'dark-card': '#202A27',
+          'dark-border': '#2e3b37',
+          'dark-hover': '#26322f',
         },
         sidebar: {
-          bg: '#090a0f',
-          card: '#13151d',
-          hover: '#1c1f2b',
-          active: '#272a38',
-          accent: '#b45309',
-          text: '#94a3b8',
-          textActive: '#ffffff',
-          border: '#20232e',
+          bg: '#202A27',
+          card: '#26322f',
+          hover: '#2e3b37',
+          active: '#123C35',
+          accent: '#C5A46D',
+          text: '#9ea5a1',
+          textActive: '#FFFFFF',
+          border: '#2e3b37',
         },
-        'dark-bg': '#090a0f',
-        'dark-card': '#13151d',
-        'dark-border': '#20232e',
-        'dark-hover': '#1c1f2b',
+        'dark-bg': '#141a18',
+        'dark-card': '#202A27',
+        'dark-border': '#2e3b37',
+        'dark-hover': '#26322f',
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
       boxShadow: {
-        '2xs': '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
-        xs: '0 1px 2px 0 rgba(0, 0, 0, 0.04)',
-        soft: '0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.04)',
-        card: '0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.04)',
-        'card-hover': '0 12px 24px -6px rgba(15, 23, 42, 0.09), 0 4px 8px -2px rgba(15, 23, 42, 0.04)',
-        hover: '0 12px 24px -6px rgba(15, 23, 42, 0.09), 0 4px 8px -2px rgba(15, 23, 42, 0.04)',
-        dropdown: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
-        modal: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        '2xs': '0 1px 2px 0 rgba(32, 42, 39, 0.03)',
+        xs: '0 1px 2px 0 rgba(32, 42, 39, 0.04)',
+        soft: '0 1px 3px 0 rgba(32, 42, 39, 0.05), 0 1px 2px -1px rgba(32, 42, 39, 0.04)',
+        card: '0 1px 3px 0 rgba(32, 42, 39, 0.06), 0 1px 2px -1px rgba(32, 42, 39, 0.04)',
+        'card-hover': '0 12px 24px -6px rgba(18, 60, 53, 0.10), 0 4px 8px -2px rgba(18, 60, 53, 0.04)',
+        hover: '0 12px 24px -6px rgba(18, 60, 53, 0.10), 0 4px 8px -2px rgba(18, 60, 53, 0.04)',
+        dropdown: '0 10px 25px -5px rgba(18, 60, 53, 0.12), 0 8px 10px -6px rgba(18, 60, 53, 0.06)',
+        modal: '0 25px 50px -12px rgba(18, 60, 53, 0.25)',
       },
       borderRadius: {
         '2xl': '1rem',

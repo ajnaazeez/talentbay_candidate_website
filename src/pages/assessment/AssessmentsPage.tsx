@@ -8,6 +8,8 @@ import {
   Lock,
   X,
   AlertCircle,
+  Plus,
+  GraduationCap,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { candidateService } from '@/services/candidateService';
@@ -15,7 +17,9 @@ import { assessmentService } from '@/services/assessmentService';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { AssessmentQuiz } from '@/components/assessment/AssessmentQuiz';
 import { AssessmentResultSummary } from '@/components/assessment/AssessmentResultSummary';
+import { SkillSelectorModal } from '@/components/assessment/SkillSelectorModal';
 import { ROUTES } from '@/utils/constants';
+import { hasAssessmentAccess } from '@/utils/subscriptionUtils';
 import type {
   AssessmentDifficulty,
   AssessmentQuestion,
@@ -26,17 +30,20 @@ import type { CandidateModel } from '@/types/candidate';
 type ViewMode = 'list' | 'generating' | 'quiz' | 'result';
 
 export const AssessmentsPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, candidate: authCandidate, initialLoading } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [candidate, setCandidate] = useState<CandidateModel | null>(null);
+  const [candidate, setCandidate] = useState<CandidateModel | null>(authCandidate || null);
   const [assessmentResults, setAssessmentResults] = useState<AssessmentResult[]>([]);
   const [relatedSkills, setRelatedSkills] = useState<string[]>([]);
   const [loadingRelated, setLoadingRelated] = useState(false);
+
+  // Skill Selector Modal (Search & Explore Any Skill)
+  const [isSkillSelectorOpen, setIsSkillSelectorOpen] = useState(false);
 
   // Difficulty Selection Modal State
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
@@ -48,9 +55,15 @@ export const AssessmentsPage: React.FC = () => {
   const [questions, setQuestions] = useState<AssessmentQuestion[]>([]);
   const [latestResult, setLatestResult] = useState<AssessmentResult | null>(null);
 
-  // Load candidate and assessments
+  // Load candidate profile & assessments
   const loadData = useCallback(async () => {
-    if (!user?.uid) return;
+    if (!user?.uid) {
+      if (!initialLoading) {
+        setLoading(false);
+      }
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -60,7 +73,7 @@ export const AssessmentsPage: React.FC = () => {
         assessmentService.getCandidateAssessments(user.uid),
       ]);
 
-      setCandidate(candData);
+      setCandidate(candData || authCandidate || null);
       setAssessmentResults(resultsData);
 
       // Load related skills
@@ -79,13 +92,13 @@ export const AssessmentsPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [user?.uid]);
+  }, [user?.uid, initialLoading, authCandidate]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  // Handle URL skill param if any
+  // Handle URL skill param if any (e.g. from Career Readiness or Job Details)
   useEffect(() => {
     const urlSkill = searchParams.get('skill');
     if (urlSkill && viewMode === 'list') {
@@ -103,14 +116,13 @@ export const AssessmentsPage: React.FC = () => {
     assessmentMap[key].push(a);
   });
 
-  // Best assessment helper for a skill
+  // Calculate statistics
+  const completedCount = assessmentResults.length;
   const getResultPercentage = (a: AssessmentResult): number => {
     if (typeof a.percentage === 'number') return Math.round(a.percentage);
     return Math.round((a.score / Math.max(a.totalQuestions, 1)) * 100);
   };
 
-  // Calculate statistics
-  const completedCount = assessmentResults.length;
   const averageScore =
     completedCount === 0
       ? 0
@@ -151,18 +163,19 @@ export const AssessmentsPage: React.FC = () => {
     return 'text-rose-500';
   };
 
-  // Open difficulty selection for a skill
+  // Open difficulty selection for a skill with subscription entitlement check
   const handleOpenDifficulty = (skill: string) => {
-    if (candidate && !candidate.isPremium) {
+    if (!hasAssessmentAccess(candidate)) {
       navigate(ROUTES.SUBSCRIPTION);
       return;
     }
     setSelectedSkill(skill);
   };
 
-  // Start assessment quiz
+  // Start assessment quiz with real Cloud Function AI question generation
   const handleStartQuiz = async (skill: string, difficulty: AssessmentDifficulty) => {
     setSelectedSkill(null);
+    setIsSkillSelectorOpen(false);
     setActiveSkill(skill);
     setActiveDifficulty(difficulty);
     setViewMode('generating');
@@ -179,7 +192,7 @@ export const AssessmentsPage: React.FC = () => {
     }
   };
 
-  // Submit assessment quiz
+  // Submit assessment quiz and save result to real backend
   const handleSubmitQuiz = async (answers: number[]) => {
     if (!user?.uid) return;
     try {
@@ -210,7 +223,7 @@ export const AssessmentsPage: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (initialLoading || (loading && !candidate && !assessmentResults.length)) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <LoadingSpinner size="lg" label="Loading Assessments..." />
@@ -223,11 +236,11 @@ export const AssessmentsPage: React.FC = () => {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center space-y-4">
         <LoadingSpinner size="lg" />
-        <h3 className="text-base font-bold uppercase tracking-wider text-slate-900 dark:text-white">
+        <h3 className="text-base font-bold uppercase tracking-wider text-zinc-900 dark:text-white">
           Generating your assessment questions...
         </h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
-          Curating custom multiple-choice questions for {activeSkill} ({activeDifficulty})
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm">
+          Curating genuine multiple-choice technical questions for {activeSkill} ({activeDifficulty}) via Cloud AI
         </p>
       </div>
     );
@@ -267,7 +280,7 @@ export const AssessmentsPage: React.FC = () => {
 
   const isLevelCompleted = (diff: string): boolean => {
     return selectedSkillAssessments.some(
-      (a) => a.difficulty.toLowerCase() === diff.toLowerCase()
+      (a) => a.difficulty.toLowerCase().trim() === diff.toLowerCase().trim()
     );
   };
 
@@ -276,23 +289,37 @@ export const AssessmentsPage: React.FC = () => {
   const isHardDone = isLevelCompleted('Hard');
   const isMixedDone = isLevelCompleted('Mixed');
 
+  const assessedScoresMap = assessmentService.extractLatestSkillScores(assessmentResults);
+
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-20 animate-in fade-in duration-300">
-      {/* Header */}
-      <div className="pt-2">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Assessments
-        </h1>
-        <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1">
-          Validate your skills with AI-powered multiple-choice quizzes to stand out to employers.
-        </p>
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight flex items-center gap-3">
+            <GraduationCap className="w-8 h-8 text-amber-500" />
+            Skill Assessments
+          </h1>
+          <p className="text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-400 mt-1">
+            Validate your technical proficiency with AI-powered skill evaluations and earn verified badges.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsSkillSelectorOpen(true)}
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 text-xs font-bold uppercase tracking-wider hover:bg-zinc-800 dark:hover:bg-zinc-100 transition shadow-xs cursor-pointer self-start sm:self-auto"
+        >
+          <Plus className="w-4 h-4" />
+          <span>Assess Any Skill</span>
+        </button>
       </div>
 
       {/* Error Alert */}
       {error && (
         <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
           <button
@@ -304,14 +331,14 @@ export const AssessmentsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Assessment Stats Box (Matching Flutter exactly with Recruiter Web design) */}
-      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-8 shadow-xs space-y-6">
-        <div className="grid grid-cols-3 text-center divide-x divide-slate-100 dark:divide-slate-800">
+      {/* Assessment Stats Box */}
+      <div className="rounded-2xl border border-zinc-200/90 dark:border-[#2e3b37] bg-white dark:bg-[#202A27] p-6 sm:p-8 shadow-xs space-y-6">
+        <div className="grid grid-cols-3 text-center divide-x divide-zinc-100 dark:divide-[#2e3b37]">
           <div>
-            <div className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            <div className="text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
               {completedCount}
             </div>
-            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-zinc-400 mt-1">
               COMPLETED
             </div>
           </div>
@@ -320,25 +347,25 @@ export const AssessmentsPage: React.FC = () => {
             <div className={`text-3xl md:text-4xl font-extrabold tracking-tight ${getScoreColorClass(averageScore)}`}>
               {averageScore}%
             </div>
-            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-zinc-400 mt-1">
               AVG SCORE
             </div>
           </div>
 
           <div>
-            <div className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            <div className="text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
               {skillsCount}
             </div>
-            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-zinc-400 mt-1">
               SKILLS
             </div>
           </div>
         </div>
 
         {/* AI-POWERED ASSESSMENTS ACTIVE Banner */}
-        <div className="rounded-xl border border-brand-200 dark:border-brand-900/60 bg-brand-50/50 dark:bg-brand-950/20 p-2.5 flex items-center justify-center gap-2 text-center">
-          <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400" />
-          <span className="text-xs font-bold text-brand-700 dark:text-brand-300">
+        <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-2.5 flex items-center justify-center gap-2 text-center">
+          <Sparkles className="w-4 h-4 text-amber-500" />
+          <span className="text-xs font-bold text-amber-700 dark:text-amber-400">
             AI-POWERED ASSESSMENTS ACTIVE
           </span>
         </div>
@@ -348,9 +375,9 @@ export const AssessmentsPage: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate(ROUTES.CAREER_READINESS)}
-            className="w-full py-3 px-4 rounded-xl border border-brand-600/40 hover:border-brand-600 text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider cursor-pointer shadow-xs"
+            className="w-full py-3 px-4 rounded-xl border border-zinc-300 dark:border-[#2e3b37] hover:border-zinc-900 dark:hover:border-zinc-400 text-zinc-900 dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider cursor-pointer shadow-xs"
           >
-            <BarChart2 className="w-4 h-4" />
+            <BarChart2 className="w-4 h-4 text-amber-500" />
             <span>HOW AM I PERFORMING?</span>
           </button>
         </div>
@@ -359,10 +386,10 @@ export const AssessmentsPage: React.FC = () => {
       {/* YOUR SKILLS Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between pb-1">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+          <h2 className="text-lg font-bold text-zinc-900 dark:text-white tracking-tight">
             Your Skills
           </h2>
-          <span className="text-xs font-medium text-slate-400">
+          <span className="text-xs font-medium text-zinc-400">
             {candidateSkills.length} {candidateSkills.length === 1 ? 'skill' : 'skills'} added
           </span>
         </div>
@@ -378,39 +405,39 @@ export const AssessmentsPage: React.FC = () => {
                 <div
                   key={skillName}
                   onClick={() => handleOpenDifficulty(skillName)}
-                  className="rounded-2xl bg-white dark:bg-[#131f37] border border-slate-200/90 dark:border-[#1e2f52] p-5 hover:border-brand-400 dark:hover:border-brand-600 hover:shadow-card-hover transition-all duration-200 cursor-pointer flex items-center justify-between group shadow-card"
+                  className="rounded-2xl bg-white dark:bg-[#202A27] border border-zinc-200/90 dark:border-[#2e3b37] p-5 hover:border-amber-400 dark:hover:border-amber-500/60 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-between group"
                 >
                   <div className="space-y-1.5 min-w-0">
                     <div className="flex items-center gap-2.5">
-                      <span className="text-base font-bold text-slate-900 dark:text-white truncate">
+                      <span className="text-base font-bold text-zinc-900 dark:text-white truncate">
                         {skillName}
                       </span>
-                      <span className="bg-brand-50 text-brand-700 border border-brand-200 dark:bg-brand-950/50 dark:text-brand-300 dark:border-brand-800 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full">
+                      <span className="bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border border-zinc-200 dark:border-zinc-700">
                         Added
                       </span>
                     </div>
 
                     {hasAssessment && bestAssessment ? (
                       <div className="flex items-center gap-2 text-xs font-semibold">
-                        <span className="text-slate-600 dark:text-slate-300">
+                        <span className="text-zinc-600 dark:text-zinc-300">
                           {bestAssessment.proficiencyLevel}
                         </span>
-                        <span className="text-slate-300 dark:text-slate-700">•</span>
+                        <span className="text-zinc-300 dark:text-zinc-700">•</span>
                         <span className={getScoreColorClass(getResultPercentage(bestAssessment))}>
                           {getResultPercentage(bestAssessment)}% score
                         </span>
-                        <span className="border border-slate-200 dark:border-[#1e2f52] uppercase px-1.5 py-0.5 text-[9px] font-bold text-slate-600 dark:text-slate-400 rounded-md">
+                        <span className="border border-zinc-200 dark:border-[#2e3b37] uppercase px-1.5 py-0.5 text-[9px] font-bold text-zinc-600 dark:text-zinc-400 rounded-md">
                           {bestAssessment.difficulty}
                         </span>
                       </div>
                     ) : (
-                      <div className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                      <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                         15 questions • ~10 min
                       </div>
                     )}
                   </div>
 
-                  <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-[#0e1628] flex items-center justify-center text-slate-400 group-hover:text-brand-600 dark:group-hover:text-brand-400 group-hover:translate-x-0.5 transition-all shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-zinc-50 dark:bg-[#141a18] flex items-center justify-center text-zinc-400 group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all shrink-0">
                     <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>
@@ -418,8 +445,18 @@ export const AssessmentsPage: React.FC = () => {
             })}
           </div>
         ) : (
-          <div className="p-8 rounded-2xl border border-dashed border-slate-200 dark:border-[#1e2f52] text-center text-xs text-slate-500">
-            No profile skills added yet. Add skills to your profile to take assessments.
+          <div className="p-8 rounded-2xl border border-dashed border-zinc-200 dark:border-[#2e3b37] bg-white dark:bg-[#202A27] text-center space-y-3">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              No skills added to your profile yet. You can assess any skill right now:
+            </p>
+            <button
+              type="button"
+              onClick={() => setIsSkillSelectorOpen(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 text-xs font-bold uppercase"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Choose a Skill to Assess</span>
+            </button>
           </div>
         )}
       </div>
@@ -428,10 +465,10 @@ export const AssessmentsPage: React.FC = () => {
       {(relatedSkills.length > 0 || loadingRelated) && (
         <div className="space-y-4 pt-2">
           <div className="flex items-center justify-between pb-1">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-lg font-bold text-zinc-900 dark:text-white tracking-tight">
               Recommended for You
             </h2>
-            <span className="text-xs font-medium text-slate-400">
+            <span className="text-xs font-medium text-zinc-400">
               Related to your technical profile
             </span>
           </div>
@@ -450,34 +487,34 @@ export const AssessmentsPage: React.FC = () => {
                   <div
                     key={relSkill}
                     onClick={() => handleOpenDifficulty(relSkill)}
-                    className="rounded-2xl bg-white dark:bg-[#131f37] border border-slate-200/90 dark:border-[#1e2f52] p-5 hover:border-brand-400 dark:hover:border-brand-600 hover:shadow-card-hover transition-all duration-200 cursor-pointer flex items-center justify-between group shadow-card"
+                    className="rounded-2xl bg-white dark:bg-[#202A27] border border-zinc-200/90 dark:border-[#2e3b37] p-5 hover:border-amber-400 dark:hover:border-amber-500/60 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-between group"
                   >
                     <div className="space-y-1.5 min-w-0">
-                      <span className="text-base font-bold text-slate-900 dark:text-white truncate block">
+                      <span className="text-base font-bold text-zinc-900 dark:text-white truncate block">
                         {relSkill}
                       </span>
 
                       {hasAssessment && bestAssessment ? (
                         <div className="flex items-center gap-2 text-xs font-semibold">
-                          <span className="text-slate-600 dark:text-slate-300">
+                          <span className="text-zinc-600 dark:text-zinc-300">
                             {bestAssessment.proficiencyLevel}
                           </span>
-                          <span className="text-slate-300 dark:text-slate-700">•</span>
+                          <span className="text-zinc-300 dark:text-zinc-700">•</span>
                           <span className={getScoreColorClass(getResultPercentage(bestAssessment))}>
                             {getResultPercentage(bestAssessment)}% score
                           </span>
-                          <span className="border border-slate-200 dark:border-[#1e2f52] uppercase px-1.5 py-0.5 text-[9px] font-bold text-slate-600 dark:text-slate-400 rounded-md">
+                          <span className="border border-zinc-200 dark:border-[#2e3b37] uppercase px-1.5 py-0.5 text-[9px] font-bold text-zinc-600 dark:text-zinc-400 rounded-md">
                             {bestAssessment.difficulty}
                           </span>
                         </div>
                       ) : (
-                        <div className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                        <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                           15 questions • ~10 min
                         </div>
                       )}
                     </div>
 
-                    <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-[#0e1628] flex items-center justify-center text-slate-400 group-hover:text-brand-600 dark:group-hover:text-brand-400 group-hover:translate-x-0.5 transition-all shrink-0">
+                    <div className="w-8 h-8 rounded-xl bg-zinc-50 dark:bg-[#141a18] flex items-center justify-center text-zinc-400 group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all shrink-0">
                       <ArrowRight className="w-4 h-4" />
                     </div>
                   </div>
@@ -491,45 +528,45 @@ export const AssessmentsPage: React.FC = () => {
       {/* SELECT DIFFICULTY Modal */}
       {selectedSkill && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white dark:bg-[#131f37] border border-slate-200 dark:border-[#1e2f52] rounded-2xl w-full max-w-lg p-6 sm:p-8 space-y-6 relative shadow-2xl">
+          <div className="bg-white dark:bg-[#202A27] border border-zinc-200 dark:border-[#2e3b37] rounded-2xl w-full max-w-lg p-6 sm:p-8 space-y-6 relative shadow-2xl">
             {/* Close button */}
             <button
               type="button"
               onClick={() => setSelectedSkill(null)}
-              className="absolute top-6 right-6 text-slate-400 hover:text-slate-900 dark:hover:text-white transition cursor-pointer"
+              className="absolute top-6 right-6 text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="space-y-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
                 {selectedSkill}
               </span>
-              <h3 className="text-2xl font-black uppercase tracking-tight text-slate-900 dark:text-white">
+              <h3 className="text-2xl font-black uppercase tracking-tight text-zinc-900 dark:text-white">
                 SELECT DIFFICULTY
               </h3>
             </div>
 
-            <div className="divide-y divide-slate-100 dark:divide-slate-800 pt-2">
+            <div className="divide-y divide-zinc-100 dark:divide-[#2e3b37] pt-2">
               {/* Easy */}
               <div
                 onClick={() => !isEasyDone && handleStartQuiz(selectedSkill, 'Easy')}
                 className={`py-4 flex items-center justify-between ${
-                  isEasyDone ? 'opacity-60 cursor-default' : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer rounded-xl px-2'
+                  isEasyDone ? 'opacity-60 cursor-default' : 'hover:bg-zinc-50 dark:hover:bg-white/5 cursor-pointer rounded-xl px-2'
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-slate-900 dark:text-white">
+                    <span className="text-sm font-bold text-zinc-900 dark:text-white">
                       EASY
                     </span>
                     {isEasyDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                     Perfect for beginners starting their journey.
                   </p>
                 </div>
-                {!isEasyDone && <ArrowRight className="w-4 h-4 text-slate-900 dark:text-white" />}
+                {!isEasyDone && <ArrowRight className="w-4 h-4 text-zinc-900 dark:text-white" />}
               </div>
 
               {/* Medium */}
@@ -542,23 +579,23 @@ export const AssessmentsPage: React.FC = () => {
                     ? 'opacity-40 cursor-not-allowed px-2'
                     : isMediumDone
                     ? 'opacity-60 cursor-default px-2'
-                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer rounded-xl px-2'
+                    : 'hover:bg-zinc-50 dark:hover:bg-white/5 cursor-pointer rounded-xl px-2'
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-slate-900 dark:text-white">
+                    <span className="text-sm font-bold text-zinc-900 dark:text-white">
                       MEDIUM
                     </span>
                     {isMediumDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
-                    {!isEasyDone && <Lock className="w-3.5 h-3.5 text-slate-400" />}
+                    {!isEasyDone && <Lock className="w-3.5 h-3.5 text-zinc-400" />}
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                     Test your core knowledge and practical skills.
                   </p>
                 </div>
                 {isEasyDone && !isMediumDone && (
-                  <ArrowRight className="w-4 h-4 text-slate-900 dark:text-white" />
+                  <ArrowRight className="w-4 h-4 text-zinc-900 dark:text-white" />
                 )}
               </div>
 
@@ -572,23 +609,23 @@ export const AssessmentsPage: React.FC = () => {
                     ? 'opacity-40 cursor-not-allowed px-2'
                     : isHardDone
                     ? 'opacity-60 cursor-default px-2'
-                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer rounded-xl px-2'
+                    : 'hover:bg-zinc-50 dark:hover:bg-white/5 cursor-pointer rounded-xl px-2'
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-slate-900 dark:text-white">
+                    <span className="text-sm font-bold text-zinc-900 dark:text-white">
                       HARD
                     </span>
                     {isHardDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
-                    {!isMediumDone && <Lock className="w-3.5 h-3.5 text-slate-400" />}
+                    {!isMediumDone && <Lock className="w-3.5 h-3.5 text-zinc-400" />}
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                     Challenge yourself with advanced complex concepts.
                   </p>
                 </div>
                 {isMediumDone && !isHardDone && (
-                  <ArrowRight className="w-4 h-4 text-slate-900 dark:text-white" />
+                  <ArrowRight className="w-4 h-4 text-zinc-900 dark:text-white" />
                 )}
               </div>
 
@@ -602,29 +639,38 @@ export const AssessmentsPage: React.FC = () => {
                     ? 'opacity-40 cursor-not-allowed px-2'
                     : isMixedDone
                     ? 'opacity-60 cursor-default px-2'
-                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer rounded-xl px-2'
+                    : 'hover:bg-zinc-50 dark:hover:bg-white/5 cursor-pointer rounded-xl px-2'
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-slate-900 dark:text-white">
+                    <span className="text-sm font-bold text-zinc-900 dark:text-white">
                       MIXED
                     </span>
                     {isMixedDone && <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />}
-                    {!isHardDone && <Lock className="w-3.5 h-3.5 text-slate-400" />}
+                    {!isHardDone && <Lock className="w-3.5 h-3.5 text-zinc-400" />}
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                     Comprehensive evaluation across all difficulty levels.
                   </p>
                 </div>
                 {isHardDone && !isMixedDone && (
-                  <ArrowRight className="w-4 h-4 text-slate-900 dark:text-white" />
+                  <ArrowRight className="w-4 h-4 text-zinc-900 dark:text-white" />
                 )}
               </div>
             </div>
           </div>
         </div>
       )}
+
+      {/* Skill Selector Modal (Explore & Assess Any Skill) */}
+      <SkillSelectorModal
+        isOpen={isSkillSelectorOpen}
+        onClose={() => setIsSkillSelectorOpen(false)}
+        onStartAssessment={handleStartQuiz}
+        candidate={candidate}
+        assessedScores={assessedScoresMap}
+      />
     </div>
   );
 };

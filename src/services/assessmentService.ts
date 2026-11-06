@@ -39,6 +39,7 @@ export const POPULAR_ASSESSMENT_SKILLS = [
   'SQL',
   'HTML/CSS',
   'Flutter',
+  'Dart',
   'Java',
   'AWS',
   'Docker',
@@ -56,16 +57,20 @@ export const POPULAR_ASSESSMENT_SKILLS = [
 export const assessmentService = {
   /**
    * Generates MCQ questions for a skill using existing Firebase Cloud Function `generateAssessmentQuestions`.
+   * Parity with Flutter: 15 questions, difficulty: Easy | Medium | Hard | Mixed.
    */
   async generateQuestions(
     skill: string,
     difficulty: AssessmentDifficulty = 'Medium',
-    count: number = 10
+    count: number = 15
   ): Promise<AssessmentQuestion[]> {
     const trimmedSkill = skill.trim();
     if (!trimmedSkill) {
       throw new Error('Skill name is required to generate questions.');
     }
+
+    // Backend Cloud Function accepts "Easy" | "Medium" | "Hard"
+    const backendDifficulty = difficulty === 'Mixed' ? 'Medium' : difficulty;
 
     try {
       const callable = httpsCallable<
@@ -75,7 +80,7 @@ export const assessmentService = {
 
       const response = await callable({
         skill: trimmedSkill,
-        difficulty,
+        difficulty: backendDifficulty,
         count: Math.min(Math.max(count, 5), 15),
       });
 
@@ -84,10 +89,10 @@ export const assessmentService = {
         return questions.map((q, idx) => ({
           id: q.id || `${trimmedSkill.toLowerCase()}_q_${idx}_${Date.now()}`,
           question: q.question,
-          options: q.options || [],
+          options: Array.isArray(q.options) ? q.options : [],
           correctAnswerIndex: typeof q.correctAnswerIndex === 'number' ? q.correctAnswerIndex : 0,
           skill: trimmedSkill,
-          difficulty: q.difficulty || difficulty,
+          difficulty: difficulty,
         }));
       }
 
@@ -104,7 +109,7 @@ export const assessmentService = {
       if (msg.includes('high demand') || msg.includes('unavailable')) {
         throw new Error('AI assessment engine is currently experiencing high demand. Please try again in a few moments.');
       }
-      throw new Error('Failed to generate assessment questions. Please try again.');
+      throw new Error(err?.message || 'Failed to generate assessment questions. Please try again.');
     }
   },
 
@@ -140,6 +145,7 @@ export const assessmentService = {
 
   /**
    * Saves an assessment result to the `assessmentResults` collection and syncs to candidate profile.
+   * Matches Flutter: deletes previous result for this candidate + skill + difficulty, then batch sets new result.
    */
   async saveAssessmentResult(params: {
     candidateId: string;
@@ -159,7 +165,7 @@ export const assessmentService = {
     const proficiencyLevel = calculateProficiencyLevel(percentage);
     const completedAt = new Date().toISOString();
 
-    // Check if an assessment for this skill AND difficulty already exists, and clean it up
+    // Check if an assessment for this skill AND difficulty already exists, and clean it up (matching Flutter)
     try {
       const existingQuery = query(
         collection(db, COLLECTIONS.ASSESSMENT_RESULTS),
@@ -215,7 +221,7 @@ export const assessmentService = {
           currentSkills.push({
             name: skill.trim(),
             level: proficiencyLevel,
-            type: 'Technical',
+            type: 'Primary',
           });
         }
 
@@ -245,6 +251,15 @@ export const assessmentService = {
 
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
+        let completedAt = new Date().toISOString();
+        if (data.completedAt) {
+          if (typeof data.completedAt === 'string') {
+            completedAt = data.completedAt;
+          } else if (data.completedAt.toDate && typeof data.completedAt.toDate === 'function') {
+            completedAt = data.completedAt.toDate().toISOString();
+          }
+        }
+
         list.push({
           id: docSnap.id,
           candidateId: data.candidateId,
@@ -253,7 +268,7 @@ export const assessmentService = {
           userAnswers: Array.isArray(data.userAnswers) ? data.userAnswers : [],
           score: typeof data.score === 'number' ? data.score : 0,
           totalQuestions: typeof data.totalQuestions === 'number' ? data.totalQuestions : (data.questions?.length || 1),
-          completedAt: typeof data.completedAt === 'string' ? data.completedAt : new Date().toISOString(),
+          completedAt,
           proficiencyLevel: data.proficiencyLevel || calculateProficiencyLevel(
             Math.round(((data.score || 0) / Math.max(data.totalQuestions || data.questions?.length || 1, 1)) * 100)
           ),
@@ -272,7 +287,8 @@ export const assessmentService = {
   },
 
   /**
-   * Extracts the latest score percentage for each assessed skill.
+   * Helper: Extracts latest score percentage per skill from a list of AssessmentResults.
+   * Matches Flutter: AssessmentRepository.extractLatestSkillScores
    */
   extractLatestSkillScores(results: AssessmentResult[]): Record<string, number> {
     const scores: Record<string, number> = {};
@@ -289,6 +305,49 @@ export const assessmentService = {
     }
 
     return scores;
+  },
+
+  /**
+   * Helper: Calculate overall cumulative skill readiness percentage.
+   * Matches Flutter: AssessmentRepository.calculateOverallPerformance
+   */
+  calculateOverallPerformance(skillScores: Record<string, number>): number {
+    const values = Object.values(skillScores);
+    if (values.length === 0) return 0;
+    const total = values.reduce((sum, val) => sum + val, 0);
+    return Math.round(total / values.length);
+  },
+
+  /**
+   * Helper: Calculate Job Skill Match Percentage against required job skills.
+   * Matches Flutter: AssessmentRepository.calculateJobSkillMatch
+   * Formula: Sum of matched scores / total count of required skills.
+   * Unassessed required skill counts as 0% for match calculation.
+   */
+  calculateJobSkillMatch(params: {
+    candidateSkillScores: Record<string, number>;
+    requiredSkills: string[];
+  }): number {
+    const { candidateSkillScores, requiredSkills } = params;
+    if (!requiredSkills || requiredSkills.length === 0) return 0;
+
+    const normalizedCandidate: Record<string, number> = {};
+    Object.entries(candidateSkillScores).forEach(([key, val]) => {
+      normalizedCandidate[key.trim().toLowerCase()] = val;
+    });
+
+    let totalMatchedScore = 0;
+    for (const reqSkill of requiredSkills) {
+      const key = reqSkill.trim().toLowerCase();
+      if (key in normalizedCandidate) {
+        totalMatchedScore += normalizedCandidate[key];
+      } else {
+        // Unassessed counts as 0%
+        totalMatchedScore += 0;
+      }
+    }
+
+    return Math.round(totalMatchedScore / requiredSkills.length);
   },
 
   /**
@@ -340,7 +399,6 @@ export const assessmentService = {
       };
     });
 
-    // Sort strongest (highest score) and needing improvement (< 70)
     const strongestSkills = allMetrics
       .filter((m) => m.score >= 70)
       .sort((a, b) => b.score - a.score);
@@ -349,10 +407,7 @@ export const assessmentService = {
       .filter((m) => m.score < 70)
       .sort((a, b) => a.score - b.score);
 
-    const totalScores = Object.values(skillScores);
-    const averageScore = totalScores.length > 0
-      ? Math.round(totalScores.reduce((acc, curr) => acc + curr, 0) / totalScores.length)
-      : 0;
+    const averageScore = this.calculateOverallPerformance(skillScores);
 
     return {
       primarySkills,
@@ -368,6 +423,8 @@ export const assessmentService = {
 
   /**
    * Fetches AI Career Readiness Guidance via `getCareerReadinessGuidance` Cloud Function.
+   * Matches Flutter implementation: calculates JobSkillMatch when targetJobSkills are present,
+   * extracts genuine strengths and gaps, and uses graceful fallback plan if AI service is temporarily offline.
    */
   async getCareerReadiness(params: {
     skillScores: Record<string, number>;
@@ -376,6 +433,43 @@ export const assessmentService = {
     forceRefresh?: boolean;
   }): Promise<CareerReadinessGuidance> {
     const { skillScores, targetJobTitle, targetJobSkills = [], forceRefresh = false } = params;
+
+    // Calculate score using Flutter's exact formulas
+    const hasJobSkills = targetJobSkills && targetJobSkills.length > 0;
+    const overallScore = hasJobSkills
+      ? this.calculateJobSkillMatch({ candidateSkillScores: skillScores, requiredSkills: targetJobSkills })
+      : this.calculateOverallPerformance(skillScores);
+
+    // Extract genuine strengths: candidate skills with score >= 70%
+    const strengths = Object.entries(skillScores)
+      .filter(([_, score]) => score >= 70)
+      .map(([skill]) => skill);
+
+    // Compute genuine skill gaps against target job requirements or weak assessed skills
+    const skillGaps = hasJobSkills
+      ? targetJobSkills.map((reqSkill) => {
+          const normReq = reqSkill.toLowerCase().trim();
+          const foundKey = Object.keys(skillScores).find(
+            (k) => k.toLowerCase().trim() === normReq || k.toLowerCase().includes(normReq)
+          );
+          const current = foundKey ? skillScores[foundKey] : 0;
+          const required = 75;
+          const priority: 'High' | 'Medium' | 'Low' = current < 50 ? 'High' : current < 75 ? 'Medium' : 'Low';
+          return {
+            skill: reqSkill,
+            currentScore: current,
+            requiredScore: required,
+            priority,
+          };
+        })
+      : Object.entries(skillScores)
+          .filter(([_, score]) => score < 75)
+          .map(([skill, score]) => ({
+            skill,
+            currentScore: score,
+            requiredScore: 75,
+            priority: (score < 50 ? 'High' : 'Medium') as 'High' | 'Medium' | 'Low',
+          }));
 
     try {
       const callable = httpsCallable<
@@ -396,176 +490,151 @@ export const assessmentService = {
       });
 
       const data = response.data;
-      if (!data) {
-        throw new Error('Empty response from AI Career Readiness guidance service.');
-      }
-
-      // Compute readiness overall score based on assessed skills & target job
-      const scores = Object.values(skillScores);
-      const avgScore = scores.length > 0
-        ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
-        : 0;
-
-      // Extract strengths: skills with >= 75%
-      const strengths = Object.entries(skillScores)
-        .filter(([_, score]) => score >= 70)
-        .map(([skill]) => skill);
-
-      if (strengths.length === 0 && scores.length > 0) {
-        strengths.push(...Object.keys(skillScores).slice(0, 2));
-      }
-
-      // Compute skill gaps against target job skills
-      const skillGaps = targetJobSkills.map((reqSkill) => {
-        const normReq = reqSkill.toLowerCase().trim();
-        const foundKey = Object.keys(skillScores).find(
-          (k) => k.toLowerCase().trim() === normReq || k.toLowerCase().includes(normReq)
-        );
-        const current = foundKey ? skillScores[foundKey] : 0;
-        const required = 75;
-        const priority: 'High' | 'Medium' | 'Low' = current < 50 ? 'High' : current < 75 ? 'Medium' : 'Low';
-        return {
-          skill: reqSkill,
-          currentScore: current,
-          requiredScore: required,
-          priority,
-        };
-      });
-
-      // Recommended steps from AI roadmap
-      const recommendedSteps: string[] = [];
-      data.skillsToStrengthen?.forEach((s) => {
-        s.roadmapSteps?.forEach((step) => {
-          if (step.actionItems && step.actionItems.length > 0) {
-            recommendedSteps.push(`${s.skill}: ${step.actionItems[0]}`);
-          }
+      if (data) {
+        const recommendedSteps: string[] = [];
+        data.skillsToStrengthen?.forEach((s) => {
+          s.roadmapSteps?.forEach((step) => {
+            if (step.actionItems && step.actionItems.length > 0) {
+              recommendedSteps.push(`${s.skill}: ${step.actionItems[0]}`);
+            }
+          });
         });
-      });
 
-      const interviewPrep = [
-        {
-          phase: 'Phase 1: Core Fundamentals',
-          description: `Deepen your foundational mastery in ${strengths.slice(0, 2).join(' and ') || 'primary technical skills'}.`,
-          timeline: 'Week 1 - 2',
-          actionItems: [
-            'Review syntax, runtime lifecycle, and standard design patterns.',
-            'Solve 15-20 live coding challenges on data structures and algorithms.',
-          ],
-        },
-        {
-          phase: 'Phase 2: Architectural & System Design',
-          description: 'Focus on high-level architecture, state handling, and scalability scenarios.',
-          timeline: 'Week 3 - 4',
-          actionItems: [
-            'Design scalable microservices or modular frontend architectures.',
-            'Practice explaining trade-offs between latency, caching, and database consistency.',
-          ],
-        },
-        {
-          phase: 'Phase 3: Behavioral & Mock Interviews',
-          description: 'Align past experiences with the STAR methodology and simulate technical rounds.',
-          timeline: 'Week 5',
-          actionItems: [
-            'Prepare 4-5 impact stories covering technical leadership, conflict resolution, and deadline delivery.',
-            'Conduct timed mock interviews with peers or mentors.',
-          ],
-        },
-      ];
-
-      return {
-        overallScore: avgScore,
-        targetJobTitle,
-        overallSummary: data.overallSummary || 'Solid foundation with key opportunities for career advancement.',
-        jobMatchAdvice: data.jobMatchAdvice || '',
-        skillsToStrengthen: Array.isArray(data.skillsToStrengthen) ? data.skillsToStrengthen : [],
-        strengths,
-        skillGaps,
-        recommendedSteps: recommendedSteps.slice(0, 6),
-        interviewPreparationPlan: interviewPrep,
-      };
-    } catch (err: any) {
-      console.warn('[assessmentService] getCareerReadiness notice:', err);
-
-      // Graceful fallback calculation if AI function fails or times out
-      const scores = Object.values(skillScores);
-      const avgScore = scores.length > 0
-        ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
-        : 0;
-
-      const strengths = Object.entries(skillScores)
-        .filter(([_, score]) => score >= 70)
-        .map(([skill]) => skill);
-
-      const skillGaps = targetJobSkills.map((reqSkill) => {
-        const normReq = reqSkill.toLowerCase().trim();
-        const foundKey = Object.keys(skillScores).find(
-          (k) => k.toLowerCase().trim() === normReq || k.toLowerCase().includes(normReq)
-        );
-        const current = foundKey ? skillScores[foundKey] : 0;
-        return {
-          skill: reqSkill,
-          currentScore: current,
-          requiredScore: 75,
-          priority: (current < 50 ? 'High' : current < 75 ? 'Medium' : 'Low') as 'High' | 'Medium' | 'Low',
-        };
-      });
-
-      return {
-        overallScore: avgScore,
-        targetJobTitle,
-        overallSummary:
-          scores.length > 0
-            ? `You have assessed ${scores.length} skills with an average score of ${avgScore}%. Focused preparation on weaker areas will significantly boost your interview outcomes.`
-            : 'Complete your first skill assessment to unlock personalized career readiness guidance and learning roadmaps.',
-        jobMatchAdvice:
-          targetJobTitle
-            ? `To qualify for ${targetJobTitle}, ensure all core required competencies meet at least Intermediate (60%+) or Advanced (75%+) proficiency.`
-            : 'Explore active jobs and add target roles to receive customized match guidance.',
-        skillsToStrengthen: Object.entries(skillScores)
-          .filter(([_, score]) => score < 75)
-          .map(([skill, score]) => ({
-            skill,
-            score,
-            guidance: `Focus on mastering key paradigms and hands-on coding patterns in ${skill}.`,
-            roadmapSteps: [
-              {
-                stepNumber: 1,
-                title: 'Review Core Concepts',
-                description: `Solidify basic principles and commonly tested syntax in ${skill}.`,
-                actionHeader: 'LEARN',
-                actionItems: [`Study documentation and core mechanics of ${skill}`],
-              },
-              {
-                stepNumber: 2,
-                title: 'Practical Hands-on Projects',
-                description: 'Build real-world components or endpoints using best practices.',
-                actionHeader: 'DO',
-                actionItems: [`Create a portfolio project incorporating ${skill}`],
-              },
+        const interviewPrep = [
+          {
+            phase: 'Phase 1: Core Fundamentals',
+            description: `Deepen your foundational mastery in ${strengths.slice(0, 2).join(' and ') || 'core technical competencies'}.`,
+            timeline: 'Week 1 - 2',
+            actionItems: [
+              'Review syntax, runtime lifecycle, and standard design patterns.',
+              'Solve practical coding challenges focused on core algorithms.',
             ],
-          })),
-        strengths,
-        skillGaps,
-        recommendedSteps: [
-          'Take skill assessments for unassessed required competencies',
-          'Build end-to-end projects demonstrating your technical stack',
-          'Prepare for technical questions using real-world architectural scenarios',
-        ],
-        interviewPreparationPlan: [
-          {
-            phase: 'Phase 1: Fundamentals Refinement',
-            description: 'Refine core principles and technical vocabulary.',
-            timeline: 'Week 1',
-            actionItems: ['Practice coding challenges and review API documentation.'],
           },
           {
-            phase: 'Phase 2: Project Architecture',
-            description: 'Learn to articulate high-level design choices and trade-offs.',
-            timeline: 'Week 2',
-            actionItems: ['Document architectural decisions for your top projects.'],
+            phase: 'Phase 2: Architectural & System Design',
+            description: 'Focus on high-level architecture, state handling, and scalability scenarios.',
+            timeline: 'Week 3 - 4',
+            actionItems: [
+              'Design modular components and test edge-case failure modes.',
+              'Practice articulating architecture trade-offs with peers.',
+            ],
           },
-        ],
-      };
+          {
+            phase: 'Phase 3: Behavioral & Mock Interviews',
+            description: 'Align past experiences with the STAR methodology and simulate technical rounds.',
+            timeline: 'Week 5',
+            actionItems: [
+              'Prepare 4-5 impact stories covering technical delivery and teamwork.',
+              'Participate in simulated timed mock assessments.',
+            ],
+          },
+        ];
+
+        return {
+          overallScore,
+          targetJobTitle,
+          overallSummary: data.overallSummary || 'Solid foundation with key opportunities for career advancement.',
+          jobMatchAdvice: data.jobMatchAdvice || '',
+          skillsToStrengthen: Array.isArray(data.skillsToStrengthen) ? data.skillsToStrengthen : [],
+          strengths,
+          skillGaps,
+          recommendedSteps: recommendedSteps.slice(0, 6),
+          interviewPreparationPlan: interviewPrep,
+        };
+      }
+    } catch (err: any) {
+      console.warn('[assessmentService] getCareerReadiness using resilient fallback plan:', err?.message);
     }
+
+    // Resilient local fallback guidance matching Flutter's `_generateLocalGuidance`
+    const skillsListToStrengthen = Object.entries(skillScores).map(([skill, score]) => ({
+      skill,
+      score,
+      guidance:
+        score >= 75
+          ? 'Strong foundation. Focus on advanced patterns, optimization, and system design.'
+          : score >= 60
+          ? 'Solid foundation. Practice practical scenarios and hands-on projects to boost your confidence.'
+          : 'Great start. Strengthen core fundamentals and review key practical concepts.',
+      roadmapSteps: [
+        {
+          stepNumber: 1,
+          title: 'Build the basics',
+          description: 'Master core principles and fundamental concepts',
+          actionHeader: 'LEARN',
+          actionItems: [
+            `Review core syntax and essential fundamentals of ${skill}`,
+            'Understand key terminology, best practices, and data structures',
+            `Explore documentation and standard design patterns in ${skill}`,
+          ],
+        },
+        {
+          stepNumber: 2,
+          title: 'Practice hands-on',
+          description: 'Build practical projects and realistic mini-applications',
+          actionHeader: 'DO',
+          actionItems: [
+            `Build 2-3 focused mini-projects implementing ${skill} features`,
+            'Solve real-world challenges and debug common edge cases',
+            'Refactor existing code to adhere to clean code standards',
+          ],
+        },
+        {
+          stepNumber: 3,
+          title: 'Go deeper',
+          description: 'Tackle performance, optimization, and edge cases',
+          actionHeader: 'FOCUS ON',
+          actionItems: [
+            `Learn performance optimization techniques in ${skill}`,
+            'Study architectural patterns, modularity, and security standards',
+            'Implement automated unit testing and error handling',
+          ],
+        },
+        {
+          stepNumber: 4,
+          title: 'Check your progress',
+          description: 'Validate your improvement with practical assessments',
+          actionHeader: 'CHECK YOUR PROGRESS',
+          actionItems: [
+            `Retake the ${skill} assessment to verify score improvement`,
+            'Showcase your projects in your candidate profile portfolio',
+          ],
+        },
+      ],
+    }));
+
+    return {
+      overallScore,
+      targetJobTitle,
+      overallSummary:
+        Object.keys(skillScores).length > 0
+          ? `You have assessed ${Object.keys(skillScores).length} skills with an overall match score of ${overallScore}%. Targeted hands-on practice will help you reach full career readiness.`
+          : 'Complete skill assessments to receive tailored learning paths for your career journey.',
+      jobMatchAdvice: targetJobTitle
+        ? `To excel as a ${targetJobTitle}, focus on mastering the key required technologies and building end-to-end projects that highlight both your technical proficiency and problem-solving ability.`
+        : 'Maintain consistent daily practice across your assessed skills and validate your progress by retaking assessments as you build projects.',
+      skillsToStrengthen: skillsListToStrengthen,
+      strengths,
+      skillGaps,
+      recommendedSteps: [
+        'Take skill assessments for unassessed required competencies',
+        'Build end-to-end projects demonstrating your technical stack',
+        'Prepare for technical questions using real-world architectural scenarios',
+      ],
+      interviewPreparationPlan: [
+        {
+          phase: 'Phase 1: Fundamentals Refinement',
+          description: 'Refine core principles and technical vocabulary.',
+          timeline: 'Week 1',
+          actionItems: ['Practice coding challenges and review API documentation.'],
+        },
+        {
+          phase: 'Phase 2: Project Architecture',
+          description: 'Learn to articulate high-level design choices and trade-offs.',
+          timeline: 'Week 2',
+          actionItems: ['Document architectural decisions for your top projects.'],
+        },
+      ],
+    };
   },
 };

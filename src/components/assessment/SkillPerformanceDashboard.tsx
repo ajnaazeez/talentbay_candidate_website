@@ -41,7 +41,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Top Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-[#131f37] p-5 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm">
+        <div className="bg-white dark:bg-[#202A27] p-5 rounded-2xl border border-slate-200 dark:border-[#2e3b37] shadow-sm">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider">Average Score</span>
             <TrendingUp className="w-4 h-4 text-brand-500" />
@@ -54,7 +54,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
           </p>
         </div>
 
-        <div className="bg-white dark:bg-[#131f37] p-5 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm">
+        <div className="bg-white dark:bg-[#202A27] p-5 rounded-2xl border border-slate-200 dark:border-[#2e3b37] shadow-sm">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider">Total Tests</span>
             <Layers className="w-4 h-4 text-brand-500" />
@@ -65,7 +65,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
           <p className="text-xs text-slate-400 mt-1">Completed assessments</p>
         </div>
 
-        <div className="bg-white dark:bg-[#131f37] p-5 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm">
+        <div className="bg-white dark:bg-[#202A27] p-5 rounded-2xl border border-slate-200 dark:border-[#2e3b37] shadow-sm">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider">Strongest Skills</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
@@ -76,7 +76,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
           <p className="text-xs text-slate-400 mt-1">Scored 70% or higher</p>
         </div>
 
-        <div className="bg-white dark:bg-[#131f37] p-5 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm">
+        <div className="bg-white dark:bg-[#202A27] p-5 rounded-2xl border border-slate-200 dark:border-[#2e3b37] shadow-sm">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider">Needs Work</span>
             <AlertCircle className="w-4 h-4 text-amber-500" />
@@ -92,7 +92,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
       {hasAssessments && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Strongest Skills Card */}
-          <div className="bg-white dark:bg-[#131f37] p-6 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm space-y-4">
+          <div className="bg-white dark:bg-[#202A27] p-6 rounded-2xl border border-slate-200 dark:border-[#2e3b37] shadow-sm space-y-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4" />
@@ -110,7 +110,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
                 {summary.strongestSkills.map((item) => (
                   <div
                     key={item.skill}
-                    className="p-3.5 rounded-xl border border-slate-100 dark:border-[#1e2f52] bg-slate-50/50 dark:bg-[#0a0f1d]/40 flex items-center justify-between"
+                    className="p-3.5 rounded-xl border border-slate-100 dark:border-[#2e3b37] bg-slate-50/50 dark:bg-[#141a18]/40 flex items-center justify-between"
                   >
                     <div>
                       <div className="font-semibold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-2">
@@ -141,7 +141,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
           </div>
 
           {/* Skills Requiring Improvement Card */}
-          <div className="bg-white dark:bg-[#131f37] p-6 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm space-y-4">
+          <div className="bg-white dark:bg-[#202A27] p-6 rounded-2xl border border-slate-200 dark:border-[#2e3b37] shadow-sm space-y-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
                 <AlertCircle className="w-4 h-4" />
@@ -159,7 +159,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
                 {summary.skillsRequiringImprovement.map((item) => (
                   <div
                     key={item.skill}
-                    className="p-3.5 rounded-xl border border-slate-100 dark:border-[#1e2f52] bg-slate-50/50 dark:bg-[#0a0f1d]/40 flex items-center justify-between"
+                    className="p-3.5 rounded-xl border border-slate-100 dark:border-[#2e3b37] bg-slate-50/50 dark:bg-[#141a18]/40 flex items-center justify-between"
                   >
                     <div>
                       <div className="font-semibold text-sm text-slate-900 dark:text-slate-100">
@@ -188,7 +188,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
       )}
 
       {/* Primary & Secondary Profile Skills Breakdown */}
-      <div className="bg-white dark:bg-[#131f37] p-6 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm space-y-6">
+      <div className="bg-white dark:bg-[#202A27] p-6 rounded-2xl border border-slate-200 dark:border-[#2e3b37] shadow-sm space-y-6">
         <div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
             Assessed Skills & Proficiency Levels
@@ -224,7 +224,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
                       </span>
                     </div>
                   </div>
-                  <div className="bg-slate-100 dark:bg-[#1e2f52] h-2.5 rounded-full overflow-hidden">
+                  <div className="bg-slate-100 dark:bg-[#2e3b37] h-2.5 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
                         score >= 90
@@ -244,7 +244,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
           </div>
         ) : (
           <div className="text-center py-8 space-y-3">
-            <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-[#1e2f52] flex items-center justify-center text-slate-400 mx-auto">
+            <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-[#2e3b37] flex items-center justify-center text-slate-400 mx-auto">
               <Layers className="w-6 h-6" />
             </div>
             <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -256,7 +256,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
 
       {/* Historical Performance Timeline */}
       {hasAssessments && (
-        <div className="bg-white dark:bg-[#131f37] p-6 rounded-2xl border border-slate-200 dark:border-[#1e2f52] shadow-sm space-y-4">
+        <div className="bg-white dark:bg-[#202A27] p-6 rounded-2xl border border-slate-200 dark:border-[#2e3b37] shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
@@ -268,7 +268,7 @@ export const SkillPerformanceDashboard: React.FC<SkillPerformanceDashboardProps>
             </div>
           </div>
 
-          <div className="divide-y divide-slate-100 dark:divide-[#1e2f52]">
+          <div className="divide-y divide-slate-100 dark:divide-[#2e3b37]">
             {results.map((item) => {
               const pct = Math.round((item.score / Math.max(item.totalQuestions, 1)) * 100);
               const formattedDate = new Date(item.completedAt).toLocaleDateString('en-US', {

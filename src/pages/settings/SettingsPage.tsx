@@ -537,7 +537,7 @@ export const SettingsPage: React.FC = () => {
             className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group cursor-pointer"
           >
             <div className="flex items-center gap-3.5">
-              <Mail className="w-5 h-5 text-blue-500 shrink-0" />
+              <Mail className="w-5 h-5 text-[#123C35] dark:text-[#C5A46D] shrink-0" />
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   Contact Support

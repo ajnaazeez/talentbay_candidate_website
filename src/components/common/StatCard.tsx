@@ -24,8 +24,8 @@ export const StatCard: React.FC<StatCardProps> = ({
   icon: Icon,
   trend,
   subtitle,
-  iconBgColor = 'bg-brand-50 dark:bg-brand-950/50',
-  iconColor = 'text-brand-600 dark:text-brand-400',
+  iconBgColor = 'bg-[#123C35]/10 dark:bg-[#123C35]/30',
+  iconColor = 'text-[#123C35] dark:text-[#C5A46D]',
   className,
   onClick,
 }) => {
@@ -33,13 +33,13 @@ export const StatCard: React.FC<StatCardProps> = ({
     <div
       onClick={onClick}
       className={cn(
-        'p-5 rounded-2xl bg-white dark:bg-[#131f37] border border-slate-200/80 dark:border-[#1e2f52] shadow-card transition-all duration-200 flex flex-col justify-between',
-        onClick && 'cursor-pointer hover:border-brand-200 dark:hover:border-brand-800 hover:shadow-card-hover group',
+        'p-5 rounded-2xl bg-white dark:bg-[#202A27] border border-[#E8E5DC] dark:border-[#2e3b37] shadow-card transition-all duration-200 flex flex-col justify-between',
+        onClick && 'cursor-pointer hover:border-[#C5A46D]/60 dark:hover:border-[#C5A46D]/50 hover:shadow-card-hover group',
         className
       )}
     >
       <div className="flex items-center justify-between gap-3 mb-3">
-        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+        <span className="text-xs font-semibold text-[#777D78] dark:text-[#9ea5a1] uppercase tracking-wider">
           {title}
         </span>
         <div
@@ -54,7 +54,7 @@ export const StatCard: React.FC<StatCardProps> = ({
       </div>
 
       <div className="flex items-baseline justify-between gap-2 mt-1">
-        <span className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+        <span className="text-2xl sm:text-3xl font-bold text-[#252923] dark:text-[#F7F4EC] tracking-tight">
           {value}
         </span>
 
@@ -63,7 +63,7 @@ export const StatCard: React.FC<StatCardProps> = ({
             className={cn(
               'flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full',
               trend.isPositive !== false
-                ? 'text-emerald-700 bg-emerald-50 border border-emerald-200/60 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800/60'
+                ? 'text-[#123C35] bg-[#123C35]/10 border border-[#123C35]/20 dark:bg-[#123C35]/30 dark:text-[#83bdb0] dark:border-[#123C35]/40'
                 : 'text-rose-700 bg-rose-50 border border-rose-200/60 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800/60'
             )}
           >
@@ -78,7 +78,7 @@ export const StatCard: React.FC<StatCardProps> = ({
       </div>
 
       {(subtitle || trend?.label) && (
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
+        <p className="text-xs text-[#777D78] dark:text-[#9ea5a1] mt-2 font-medium">
           {subtitle || trend?.label}
         </p>
       )}

@@ -26,15 +26,15 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center p-10 text-center bg-white dark:bg-[#131f37] rounded-2xl border border-dashed border-slate-200 dark:border-[#1e2f52] shadow-sm my-4',
+        'flex flex-col items-center justify-center p-10 text-center bg-white dark:bg-[#202A27] rounded-2xl border border-dashed border-[#E8E5DC] dark:border-[#2e3b37] shadow-sm my-4',
         className
       )}
     >
-      <div className="w-14 h-14 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-slate-400 mb-4 shadow-sm">
-        {icon || <Inbox className="h-7 w-7 text-slate-400" />}
+      <div className="w-14 h-14 rounded-2xl bg-[#F7F4EC] dark:bg-[#141a18] border border-[#E8E5DC] dark:border-[#2e3b37] flex items-center justify-center text-[#777D78] mb-4 shadow-sm">
+        {icon || <Inbox className="h-7 w-7 text-[#777D78]" />}
       </div>
-      <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-1">{title}</h3>
-      <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mb-6">{description}</p>
+      <h3 className="text-base font-semibold text-[#252923] dark:text-[#F7F4EC] mb-1">{title}</h3>
+      <p className="text-sm text-[#777D78] dark:text-[#9ea5a1] max-w-sm mb-6">{description}</p>
       {action || actions ? (
         action || actions
       ) : actionLabel && onAction ? (

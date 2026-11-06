@@ -25,33 +25,33 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  default: 'bg-zinc-100 text-zinc-900 border-zinc-200 dark:bg-[#1c1f2b] dark:text-zinc-100 dark:border-[#20232e]',
-  brand: 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 border-transparent shadow-xs',
-  bronze: 'bg-amber-50 text-amber-900 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60',
-  indigo: 'bg-zinc-100 text-zinc-900 border-zinc-200 dark:bg-[#1c1f2b] dark:text-zinc-100 dark:border-[#20232e]',
-  champagne: 'bg-amber-50/80 text-amber-900 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60',
-  success: 'bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60',
+  default: 'bg-[#F7F4EC] text-[#252923] border-[#E8E5DC] dark:bg-[#202A27] dark:text-[#F7F4EC] dark:border-[#2e3b37]',
+  brand: 'bg-[#123C35] text-white dark:bg-[#C5A46D] dark:text-[#202A27] border-transparent shadow-xs',
+  bronze: 'bg-[#C5A46D]/15 text-[#8b6d3d] border-[#C5A46D]/30 dark:bg-[#C5A46D]/20 dark:text-[#dec49c] dark:border-[#C5A46D]/40',
+  indigo: 'bg-[#F7F4EC] text-[#252923] border-[#E8E5DC] dark:bg-[#202A27] dark:text-[#F7F4EC] dark:border-[#2e3b37]',
+  champagne: 'bg-[#C5A46D]/15 text-[#8b6d3d] border-[#C5A46D]/30 dark:bg-[#C5A46D]/20 dark:text-[#dec49c] dark:border-[#C5A46D]/40',
+  success: 'bg-[#123C35]/10 text-[#123C35] border-[#123C35]/25 dark:bg-[#123C35]/30 dark:text-[#83bdb0] dark:border-[#123C35]/50',
   warning: 'bg-amber-50 text-amber-800 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60',
   danger: 'bg-rose-50 text-rose-800 border-rose-200/80 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60',
-  info: 'bg-sky-50 text-sky-800 border-sky-200/80 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/60',
-  purple: 'bg-zinc-100 text-zinc-900 border-zinc-200 dark:bg-[#1c1f2b] dark:text-zinc-100 dark:border-[#20232e]',
-  neutral: 'bg-zinc-100 text-zinc-700 border-zinc-200 dark:bg-[#1c1f2b] dark:text-zinc-300 dark:border-[#20232e]',
-  outline: 'bg-transparent text-zinc-700 border-zinc-300 dark:text-zinc-300 dark:border-[#20232e]',
+  info: 'bg-[#123C35]/10 text-[#123C35] border-[#123C35]/20 dark:bg-[#123C35]/30 dark:text-[#b3d7cd] dark:border-[#123C35]/40',
+  purple: 'bg-[#F7F4EC] text-[#252923] border-[#E8E5DC] dark:bg-[#202A27] dark:text-[#F7F4EC] dark:border-[#2e3b37]',
+  neutral: 'bg-[#F7F4EC] text-[#777D78] border-[#E8E5DC] dark:bg-[#202A27] dark:text-[#9ea5a1] dark:border-[#2e3b37]',
+  outline: 'bg-transparent text-[#777D78] border-[#E8E5DC] dark:text-[#9ea5a1] dark:border-[#2e3b37]',
 };
 
 const dotColors: Record<BadgeVariant, string> = {
-  default: 'bg-zinc-500',
-  brand: 'bg-white dark:bg-zinc-900',
-  bronze: 'bg-amber-600',
-  indigo: 'bg-zinc-500',
-  champagne: 'bg-amber-500',
-  success: 'bg-emerald-500',
+  default: 'bg-[#777D78]',
+  brand: 'bg-[#C5A46D]',
+  bronze: 'bg-[#C5A46D]',
+  indigo: 'bg-[#123C35]',
+  champagne: 'bg-[#C5A46D]',
+  success: 'bg-[#123C35]',
   warning: 'bg-amber-500',
   danger: 'bg-rose-500',
-  info: 'bg-sky-500',
-  purple: 'bg-zinc-500',
-  neutral: 'bg-zinc-400',
-  outline: 'bg-zinc-400',
+  info: 'bg-[#123C35]',
+  purple: 'bg-[#123C35]',
+  neutral: 'bg-[#777D78]',
+  outline: 'bg-[#777D78]',
 };
 
 export const Badge: React.FC<BadgeProps> = ({

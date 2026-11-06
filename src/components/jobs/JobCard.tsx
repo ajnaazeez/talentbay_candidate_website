@@ -73,11 +73,11 @@ export const JobCard: React.FC<JobCardProps> = ({
   const salaryDisplay = formatSalary(job.salary.min, job.salary.max, job.salary.currency, job.salary.type);
 
   return (
-    <div className="group relative rounded-2xl bg-white dark:bg-[#13151d] border border-zinc-200/90 dark:border-[#20232e] p-5 sm:p-6 shadow-card hover:shadow-card-hover hover:border-zinc-400 dark:hover:border-zinc-600 hover:-translate-y-0.5 transition-all duration-200">
+    <div className="group relative rounded-2xl bg-white dark:bg-[#202A27] border border-[#E8E5DC] dark:border-[#2e3b37] p-5 sm:p-6 shadow-card hover:shadow-card-hover hover:border-[#C5A46D]/60 dark:hover:border-[#C5A46D]/50 hover:-translate-y-0.5 transition-all duration-200">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         {/* Company Logo & Basic Meta */}
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border border-zinc-100 dark:border-[#20232e] bg-zinc-50 dark:bg-[#0d0f15] overflow-hidden flex-shrink-0 flex items-center justify-center p-2 shadow-2xs group-hover:scale-105 transition-transform">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border border-[#E8E5DC] dark:border-[#2e3b37] bg-[#F7F4EC] dark:bg-[#141a18] overflow-hidden flex-shrink-0 flex items-center justify-center p-2 shadow-2xs group-hover:scale-105 transition-transform">
             {job.companyLogoUrl ? (
               <img
                 src={job.companyLogoUrl}
@@ -88,7 +88,7 @@ export const JobCard: React.FC<JobCardProps> = ({
                 }}
               />
             ) : (
-              <Building2 className="w-6 h-6 text-slate-400 dark:text-slate-500" />
+              <Building2 className="w-6 h-6 text-[#777D78] dark:text-[#9ea5a1]" />
             )}
           </div>
 
@@ -96,17 +96,17 @@ export const JobCard: React.FC<JobCardProps> = ({
             <div className="flex items-center gap-2">
               <Link
                 to={`/jobs/${job.jobId}`}
-                className="text-base sm:text-lg font-bold text-zinc-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors line-clamp-1 tracking-tight"
+                className="text-base sm:text-lg font-bold text-[#252923] dark:text-white group-hover:text-[#123C35] dark:group-hover:text-[#C5A46D] transition-colors line-clamp-1 tracking-tight"
               >
                 {job.roleName}
               </Link>
             </div>
 
-            <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-300">
+            <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#777D78] dark:text-[#E8E5DC]">
               {job.companyId ? (
                 <Link
                   to={`/companies/${job.companyId}`}
-                  className="hover:underline hover:text-zinc-900 dark:hover:text-white transition-colors"
+                  className="hover:underline hover:text-[#252923] dark:hover:text-white transition-colors"
                 >
                   {job.companyName}
                 </Link>
@@ -114,21 +114,21 @@ export const JobCard: React.FC<JobCardProps> = ({
                 <span>{job.companyName}</span>
               )}
               {job.isVerifiedCompany && (
-                <span className="inline-flex items-center text-[10px] text-zinc-900 dark:text-zinc-100 font-semibold px-1.5 py-0.2 rounded bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
+                <span className="inline-flex items-center text-[10px] text-[#8b6d3d] dark:text-[#dec49c] font-semibold px-1.5 py-0.2 rounded bg-[#C5A46D]/15 dark:bg-[#C5A46D]/20 border border-[#C5A46D]/30">
                   ✓ Verified
                 </span>
               )}
             </div>
 
             {/* Tags line */}
-            <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-slate-500 dark:text-slate-400">
+            <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-[#777D78] dark:text-[#9ea5a1]">
               <span className="inline-flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                <MapPin className="w-3.5 h-3.5 text-[#777D78]" />
                 {locationString}
               </span>
               <span>•</span>
               <span className="inline-flex items-center gap-1">
-                <Briefcase className="w-3.5 h-3.5 text-slate-400" />
+                <Briefcase className="w-3.5 h-3.5 text-[#777D78]" />
                 {job.workMode}
               </span>
               <span>•</span>
@@ -153,14 +153,14 @@ export const JobCard: React.FC<JobCardProps> = ({
             <div
               className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-all ${
                 matchResult.matchPercentage >= 80
-                  ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/60 shadow-2xs'
+                  ? 'bg-[#123C35]/10 dark:bg-[#123C35]/30 text-[#123C35] dark:text-[#83bdb0] border-[#123C35]/20 dark:border-[#123C35]/40 shadow-2xs'
                   : matchResult.matchPercentage >= 50
-                  ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/60 shadow-2xs'
-                  : 'bg-zinc-100 dark:bg-[#1c1f2b] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-[#20232e]'
+                  ? 'bg-[#C5A46D]/15 dark:bg-[#C5A46D]/20 text-[#8b6d3d] dark:text-[#dec49c] border-[#C5A46D]/30 dark:border-[#C5A46D]/40 shadow-2xs'
+                  : 'bg-[#F7F4EC] dark:bg-[#141a18] text-[#777D78] dark:text-[#9ea5a1] border-[#E8E5DC] dark:border-[#2e3b37]'
               }`}
               title={`${matchResult.matchingSkills.length} of ${matchResult.totalRequired} required skills match your profile`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <Sparkles className="w-3.5 h-3.5 text-[#C5A46D]" />
               <span>{matchResult.matchPercentage}% Match</span>
             </div>
           )}
@@ -174,7 +174,7 @@ export const JobCard: React.FC<JobCardProps> = ({
               className={`p-2 rounded-xl border transition-all duration-150 active:scale-95 cursor-pointer ${
                 isSaved
                   ? 'bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-950/40 dark:border-rose-900/60 dark:text-rose-400 shadow-2xs'
-                  : 'bg-white dark:bg-[#0d0f15] border-zinc-200 dark:border-[#20232e] text-zinc-400 hover:text-rose-600 hover:border-rose-200 dark:hover:border-rose-900/60'
+                  : 'bg-white dark:bg-[#141a18] border-[#E8E5DC] dark:border-[#2e3b37] text-[#777D78] hover:text-rose-600 hover:border-rose-200 dark:hover:border-rose-900/60'
               }`}
               title={isSaved ? 'Remove from Saved Jobs' : 'Save Job'}
             >
@@ -185,7 +185,7 @@ export const JobCard: React.FC<JobCardProps> = ({
       </div>
 
       {/* Salary & Required Skills */}
-      <div className="mt-4 pt-4 border-t border-zinc-100 dark:border-[#20232e] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="mt-4 pt-4 border-t border-[#E8E5DC] dark:border-[#2e3b37] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         {/* Skills Chips */}
         <div className="flex flex-wrap items-center gap-1.5">
           {job.skillsRequired.slice(0, 4).map((skill) => {
@@ -195,8 +195,8 @@ export const JobCard: React.FC<JobCardProps> = ({
                 key={skill}
                 className={`px-2.5 py-0.5 rounded-lg text-xs font-medium border transition-colors ${
                   isMatched
-                    ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/40'
-                    : 'bg-zinc-50 dark:bg-[#0d0f15] text-zinc-700 dark:text-zinc-300 border-zinc-200/80 dark:border-[#20232e]'
+                    ? 'bg-[#123C35]/10 dark:bg-[#123C35]/30 text-[#123C35] dark:text-[#83bdb0] border-[#123C35]/20 dark:border-[#123C35]/40'
+                    : 'bg-[#F7F4EC] dark:bg-[#141a18] text-[#252923] dark:text-[#E8E5DC] border-[#E8E5DC] dark:border-[#2e3b37]'
                 }`}
               >
                 {skill}
@@ -204,7 +204,7 @@ export const JobCard: React.FC<JobCardProps> = ({
             );
           })}
           {job.skillsRequired.length > 4 && (
-            <span className="text-xs text-slate-400 font-medium pl-1">
+            <span className="text-xs text-[#777D78] font-medium pl-1">
               +{job.skillsRequired.length - 4} more
             </span>
           )}
@@ -213,8 +213,8 @@ export const JobCard: React.FC<JobCardProps> = ({
         {/* Salary & Application Action */}
         <div className="flex items-center justify-between sm:justify-end gap-3 flex-shrink-0">
           <div className="text-right">
-            <span className="text-xs text-slate-400 block font-normal">Salary (Estimated)</span>
-            <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+            <span className="text-xs text-[#777D78] block font-normal">Salary (Estimated)</span>
+            <span className="text-xs sm:text-sm font-bold text-[#252923] dark:text-white">
               {salaryDisplay}
             </span>
           </div>
@@ -222,14 +222,14 @@ export const JobCard: React.FC<JobCardProps> = ({
           <div className="flex items-center gap-2">
             {isApplied ? (
               <Badge variant="success" size="md">
-                <CheckCircle2 className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                <CheckCircle2 className="w-3.5 h-3.5 mr-1 text-[#123C35]" />
                 Applied
               </Badge>
             ) : (
               <Button
                 variant="primary"
                 size="sm"
-                rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+                rightIcon={<ArrowRight className="w-3.5 h-3.5 text-[#C5A46D]" />}
                 onClick={() => (onApplyClick ? onApplyClick(job) : navigate(`/jobs/${job.jobId}`))}
                 className="shrink-0"
               >
