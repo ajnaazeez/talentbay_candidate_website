@@ -40,7 +40,6 @@ export const AssessmentsPage: React.FC = () => {
   const [candidate, setCandidate] = useState<CandidateModel | null>(authCandidate || null);
   const [assessmentResults, setAssessmentResults] = useState<AssessmentResult[]>([]);
   const [relatedSkills, setRelatedSkills] = useState<string[]>([]);
-  const [loadingRelated, setLoadingRelated] = useState(false);
 
   // Skill Selector Modal (Search & Explore Any Skill)
   const [isSkillSelectorOpen, setIsSkillSelectorOpen] = useState(false);
@@ -76,15 +75,13 @@ export const AssessmentsPage: React.FC = () => {
       setCandidate(candData || authCandidate || null);
       setAssessmentResults(resultsData);
 
-      // Load related skills
+      // Load related skills (matches Flutter: loads in background and presents when ready)
       const candSkillNames = (candData?.skills || []).map((s) => s.name);
       if (candSkillNames.length > 0) {
-        setLoadingRelated(true);
         assessmentService
           .getRelatedSkills(candSkillNames)
           .then((rel) => setRelatedSkills(rel))
-          .catch((e) => console.warn('Failed to load related skills:', e))
-          .finally(() => setLoadingRelated(false));
+          .catch((e) => console.warn('Failed to load related skills:', e));
       }
     } catch (err: any) {
       console.error('Error loading assessments:', err);
@@ -464,9 +461,9 @@ export const AssessmentsPage: React.FC = () => {
         )}
       </div>
 
-      {/* RECOMMENDED FOR YOU (Related Skills) Section */}
-      {(relatedSkills.length > 0 || loadingRelated) && (
-        <div className="space-y-4 pt-2">
+      {/* RECOMMENDED FOR YOU (Related Skills) Section - Matches Flutter: renders seamlessly when skills are available */}
+      {relatedSkills.length > 0 && (
+        <div className="space-y-4 pt-2 transition-opacity duration-300">
           <div className="flex items-center justify-between pb-1">
             <h2 className="text-lg font-bold text-[#1F2D3D] dark:text-white tracking-tight">
               Recommended for You
@@ -476,13 +473,8 @@ export const AssessmentsPage: React.FC = () => {
             </span>
           </div>
 
-          {loadingRelated ? (
-            <div className="py-6 flex justify-center">
-              <LoadingSpinner size="sm" label="Loading related skills..." />
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {relatedSkills.map((relSkill) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {relatedSkills.map((relSkill) => {
                 const bestAssessment = getBestAssessment(relSkill);
                 const hasAssessment = Boolean(bestAssessment);
 
@@ -524,7 +516,6 @@ export const AssessmentsPage: React.FC = () => {
                 );
               })}
             </div>
-          )}
         </div>
       )}
 
