@@ -207,7 +207,7 @@ export const SearchPage: React.FC = () => {
   const isFiltering = hasSearchInput || selectedCategory !== 'All';
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 pb-20 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto w-full min-w-0 space-y-6 pb-20 animate-in fade-in duration-300">
       {/* Top Search Input Bar */}
       <div className="flex items-center gap-3">
         <button

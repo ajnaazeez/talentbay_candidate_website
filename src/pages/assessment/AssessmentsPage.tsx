@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Sparkles,
@@ -10,6 +10,8 @@ import {
   AlertCircle,
   Plus,
   GraduationCap,
+  RotateCcw,
+  Search,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { candidateService } from '@/services/candidateService';
@@ -18,6 +20,7 @@ import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { AssessmentQuiz } from '@/components/assessment/AssessmentQuiz';
 import { AssessmentResultSummary } from '@/components/assessment/AssessmentResultSummary';
 import { SkillSelectorModal } from '@/components/assessment/SkillSelectorModal';
+import { ModalPortal } from '@/components/common/Modal';
 import { ROUTES } from '@/utils/constants';
 import { hasAssessmentAccess } from '@/utils/subscriptionUtils';
 import type {
@@ -40,6 +43,16 @@ export const AssessmentsPage: React.FC = () => {
   const [candidate, setCandidate] = useState<CandidateModel | null>(authCandidate || null);
   const [assessmentResults, setAssessmentResults] = useState<AssessmentResult[]>([]);
   const [relatedSkills, setRelatedSkills] = useState<string[]>([]);
+  const [loadingRelated, setLoadingRelated] = useState(false);
+  const [relatedError, setRelatedError] = useState<string | null>(null);
+
+  const isMountedRef = useRef(true);
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   // Skill Selector Modal (Search & Explore Any Skill)
   const [isSkillSelectorOpen, setIsSkillSelectorOpen] = useState(false);
@@ -53,6 +66,55 @@ export const AssessmentsPage: React.FC = () => {
   const [activeDifficulty, setActiveDifficulty] = useState<AssessmentDifficulty>('Medium');
   const [questions, setQuestions] = useState<AssessmentQuestion[]>([]);
   const [latestResult, setLatestResult] = useState<AssessmentResult | null>(null);
+
+  // Dedicated Related Skills Loader with Strict Lifecycle & Error Handling
+  const loadRelatedSkills = useCallback(async (skillsList: any[]) => {
+    const cleanSkills = (skillsList || [])
+      .map((s: any) => (typeof s === 'string' ? s.trim() : typeof s?.name === 'string' ? s.name.trim() : ''))
+      .filter((s: string) => s.length > 0);
+
+    if (cleanSkills.length === 0) {
+      if (isMountedRef.current) {
+        setRelatedSkills([]);
+        setRelatedError(null);
+        setLoadingRelated(false);
+      }
+      return;
+    }
+
+    if (isMountedRef.current) {
+      setLoadingRelated(true);
+      setRelatedError(null);
+    }
+
+    try {
+      const rel = await assessmentService.getRelatedSkills(cleanSkills);
+      if (isMountedRef.current) {
+        setRelatedSkills(rel);
+        setRelatedError(null);
+      }
+    } catch (e: any) {
+      console.warn('[AssessmentsPage] Failed to load related skills:', e);
+      if (isMountedRef.current) {
+        setRelatedError('Unable to load AI-curated related skills at this moment.');
+        setRelatedSkills([]);
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setLoadingRelated(false);
+      }
+    }
+  }, []);
+
+  const authCandidateRef = useRef(authCandidate);
+  useEffect(() => {
+    authCandidateRef.current = authCandidate;
+  }, [authCandidate]);
+
+  const handleRetryRelatedSkills = useCallback(() => {
+    const activeSkills = candidate?.skills || authCandidateRef.current?.skills || [];
+    loadRelatedSkills(activeSkills);
+  }, [candidate?.skills, loadRelatedSkills]);
 
   // Load candidate profile & assessments
   const loadData = useCallback(async () => {
@@ -72,24 +134,19 @@ export const AssessmentsPage: React.FC = () => {
         assessmentService.getCandidateAssessments(user.uid),
       ]);
 
-      setCandidate(candData || authCandidate || null);
+      setCandidate(candData || authCandidateRef.current || null);
       setAssessmentResults(resultsData);
 
-      // Load related skills (matches Flutter: loads in background and presents when ready)
-      const candSkillNames = (candData?.skills || []).map((s) => s.name);
-      if (candSkillNames.length > 0) {
-        assessmentService
-          .getRelatedSkills(candSkillNames)
-          .then((rel) => setRelatedSkills(rel))
-          .catch((e) => console.warn('Failed to load related skills:', e));
-      }
+      // Load related skills using actual authenticated profile skills
+      const profileSkills = candData?.skills || authCandidateRef.current?.skills || [];
+      loadRelatedSkills(profileSkills);
     } catch (err: any) {
       console.error('Error loading assessments:', err);
       setError('Unable to load assessments data. Please refresh.');
     } finally {
       setLoading(false);
     }
-  }, [user?.uid, initialLoading, authCandidate]);
+  }, [user?.uid, initialLoading, loadRelatedSkills]);
 
   useEffect(() => {
     loadData();
@@ -292,7 +349,7 @@ export const AssessmentsPage: React.FC = () => {
   const assessedScoresMap = assessmentService.extractLatestSkillScores(assessmentResults);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-20 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto w-full min-w-0 space-y-8 pb-20 animate-in fade-in duration-300">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
         <div>
@@ -461,73 +518,153 @@ export const AssessmentsPage: React.FC = () => {
         )}
       </div>
 
-      {/* RECOMMENDED FOR YOU (Related Skills) Section - Matches Flutter: renders seamlessly when skills are available */}
-      {relatedSkills.length > 0 && (
-        <div className="space-y-4 pt-2 transition-opacity duration-300">
-          <div className="flex items-center justify-between pb-1">
-            <h2 className="text-lg font-bold text-[#1F2D3D] dark:text-white tracking-tight">
-              Recommended for You
-            </h2>
-            <span className="text-xs font-medium text-[#6B8699] dark:text-[#8CA6B7]">
-              Related to your technical profile
-            </span>
-          </div>
+      {/* RECOMMENDED FOR YOU (Related Skills) Section */}
+      <div className="space-y-4 pt-2">
+        <div className="flex items-center justify-between pb-1">
+          <h2 className="text-lg font-bold text-[#1F2D3D] dark:text-white tracking-tight">
+            Recommended for You
+          </h2>
+          <span className="text-xs font-medium text-[#6B8699] dark:text-[#8CA6B7]">
+            Related to your technical profile
+          </span>
+        </div>
 
+        {/* 1. Loading State */}
+        {loadingRelated ? (
+          <div className="py-12 flex flex-col items-center justify-center space-y-3 rounded-2xl bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] p-8 shadow-xs">
+            <LoadingSpinner size="md" label="Loading related skills..." />
+          </div>
+        ) : relatedError ? (
+          /* 2. Error State with Retry */
+          <div className="rounded-2xl bg-white dark:bg-[#0E2233] border border-rose-200 dark:border-rose-900/50 p-6 sm:p-8 text-center space-y-3 shadow-xs">
+            <div className="w-10 h-10 mx-auto rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+              <AlertCircle className="w-5 h-5" />
+            </div>
+            <h3 className="text-sm font-bold text-[#1F2D3D] dark:text-white">
+              Unable to load skill recommendations
+            </h3>
+            <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] max-w-md mx-auto">
+              {relatedError}
+            </p>
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={handleRetryRelatedSkills}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] transition shadow-xs cursor-pointer inline-flex items-center gap-2"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-[#00BFA6]" />
+                <span>Retry</span>
+              </button>
+            </div>
+          </div>
+        ) : candidateSkills.length === 0 ? (
+          /* 3. Empty State: No candidate skills on profile */
+          <div className="rounded-2xl border border-dashed border-[#D8E4EA] dark:border-[#1F2D3D] bg-white/60 dark:bg-[#0E2233]/60 p-8 text-center space-y-3">
+            <div className="w-10 h-10 mx-auto rounded-xl bg-[#E8F1F5] dark:bg-[#132B3E] flex items-center justify-center text-[#6B8699]">
+              <GraduationCap className="w-5 h-5" />
+            </div>
+            <h3 className="text-sm font-bold text-[#1F2D3D] dark:text-white">
+              No technical skills found on your profile
+            </h3>
+            <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] max-w-md mx-auto leading-relaxed">
+              Add your core technologies and skills in your profile to unlock tailored AI skill recommendations.
+            </p>
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={() => navigate(ROUTES.PROFILE)}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] transition shadow-xs cursor-pointer"
+              >
+                Add Skills to Profile
+              </button>
+            </div>
+          </div>
+        ) : relatedSkills.length === 0 ? (
+          /* 4. Empty State: Backend returned no related skills */
+          <div className="rounded-2xl border border-dashed border-[#D8E4EA] dark:border-[#1F2D3D] bg-white/60 dark:bg-[#0E2233]/60 p-8 text-center space-y-3">
+            <div className="w-10 h-10 mx-auto rounded-xl bg-[#E8F1F5] dark:bg-[#132B3E] flex items-center justify-center text-[#6B8699]">
+              <Sparkles className="w-5 h-5 text-[#00BFA6]" />
+            </div>
+            <h3 className="text-sm font-bold text-[#1F2D3D] dark:text-white">
+              No additional skill recommendations right now
+            </h3>
+            <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] max-w-md mx-auto leading-relaxed">
+              You can explore and assess any technical skill anytime using the skill search.
+            </p>
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={() => setIsSkillSelectorOpen(true)}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] transition shadow-xs cursor-pointer inline-flex items-center gap-1.5"
+              >
+                <Search className="w-3.5 h-3.5 text-[#00BFA6]" />
+                <span>Explore All Skills</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* 5. Success State: List of Related Skill Cards */
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {relatedSkills.map((relSkill) => {
-                const bestAssessment = getBestAssessment(relSkill);
-                const hasAssessment = Boolean(bestAssessment);
+              const bestAssessment = getBestAssessment(relSkill);
+              const hasAssessment = Boolean(bestAssessment);
 
-                return (
-                  <div
-                    key={relSkill}
-                    onClick={() => handleOpenDifficulty(relSkill)}
-                    className="rounded-2xl bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] p-5 hover:border-[#00BFA6]/60 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-between group"
-                  >
-                    <div className="space-y-1.5 min-w-0">
-                      <span className="text-base font-bold text-[#1F2D3D] dark:text-white truncate block">
-                        {relSkill}
-                      </span>
+              return (
+                <div
+                  key={relSkill}
+                  onClick={() => handleOpenDifficulty(relSkill)}
+                  className="rounded-2xl bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] p-5 hover:border-[#00BFA6]/60 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-between group"
+                >
+                  <div className="space-y-1.5 min-w-0">
+                    <span className="text-base font-bold text-[#1F2D3D] dark:text-white truncate block">
+                      {relSkill}
+                    </span>
 
-                      {hasAssessment && bestAssessment ? (
-                        <div className="flex items-center gap-2 text-xs font-semibold">
-                          <span className="text-[#1F2D3D] dark:text-[#BACDD8]">
-                            {bestAssessment.proficiencyLevel}
-                          </span>
-                          <span className="text-[#8CA6B7]">•</span>
-                          <span className={getScoreColorClass(getResultPercentage(bestAssessment))}>
-                            {getResultPercentage(bestAssessment)}% score
-                          </span>
-                          <span className="border border-[#D8E4EA] dark:border-[#1F2D3D] uppercase px-1.5 py-0.5 text-[9px] font-bold text-[#6B8699] dark:text-[#8CA6B7] rounded-md">
-                            {bestAssessment.difficulty}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="text-xs font-medium text-[#6B8699] dark:text-[#8CA6B7]">
-                          15 questions • ~10 min
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="w-8 h-8 rounded-xl bg-[#E8F1F5] dark:bg-[#0A1A27] flex items-center justify-center text-[#8CA6B7] group-hover:text-[#00BFA6] group-hover:translate-x-0.5 transition-all shrink-0">
-                      <ArrowRight className="w-4 h-4" />
-                    </div>
+                    {hasAssessment && bestAssessment ? (
+                      <div className="flex items-center gap-2 text-xs font-semibold">
+                        <span className="text-[#1F2D3D] dark:text-[#BACDD8]">
+                          {bestAssessment.proficiencyLevel}
+                        </span>
+                        <span className="text-[#8CA6B7]">•</span>
+                        <span className={getScoreColorClass(getResultPercentage(bestAssessment))}>
+                          {getResultPercentage(bestAssessment)}% score
+                        </span>
+                        <span className="border border-[#D8E4EA] dark:border-[#1F2D3D] uppercase px-1.5 py-0.5 text-[9px] font-bold text-[#6B8699] dark:text-[#8CA6B7] rounded-md">
+                          {bestAssessment.difficulty}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="text-xs font-medium text-[#6B8699] dark:text-[#8CA6B7]">
+                        15 questions • ~10 min
+                      </div>
+                    )}
                   </div>
-                );
-              })}
-            </div>
-        </div>
-      )}
+
+                  <div className="w-8 h-8 rounded-xl bg-[#E8F1F5] dark:bg-[#0A1A27] flex items-center justify-center text-[#8CA6B7] group-hover:text-[#00BFA6] group-hover:translate-x-0.5 transition-all shrink-0">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {/* SELECT DIFFICULTY Modal */}
       {selectedSkill && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-2xl w-full max-w-lg p-6 sm:p-8 space-y-6 relative shadow-2xl">
+        <ModalPortal
+          isOpen={Boolean(selectedSkill)}
+          onClose={() => setSelectedSkill(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-3xl w-full max-w-lg p-6 sm:p-8 space-y-6 relative shadow-2xl my-auto animate-in fade-in zoom-in-95 duration-150"
+          >
             {/* Close button */}
             <button
               type="button"
               onClick={() => setSelectedSkill(null)}
-              className="absolute top-6 right-6 text-[#8CA6B7] hover:text-[#1F2D3D] dark:hover:text-white transition cursor-pointer"
+              className="absolute top-6 right-6 text-[#8CA6B7] hover:text-[#1F2D3D] dark:hover:text-white transition cursor-pointer p-1 rounded-xl hover:bg-[#E8F1F5] dark:hover:bg-[#132B3E]"
             >
               <X className="w-5 h-5" />
             </button>
@@ -654,7 +791,7 @@ export const AssessmentsPage: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Skill Selector Modal (Explore & Assess Any Skill) */}

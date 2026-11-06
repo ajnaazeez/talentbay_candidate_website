@@ -176,7 +176,7 @@ export const JobsPage: React.FC = () => {
   }, [validJobs, candidate?.designation, candidate?.skills, recentSearches]);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 pb-20 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto w-full min-w-0 space-y-6 pb-20 animate-in fade-in duration-300">
       {/* Header Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#D8E4EA] dark:border-[#1F2D3D]">
         <h1 className="text-2xl font-extrabold tracking-tight text-[#1F2D3D] dark:text-white">

@@ -67,7 +67,7 @@ export const NotificationsPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-20 animate-in fade-in duration-300">
+    <div className="max-w-4xl mx-auto w-full min-w-0 space-y-6 pb-20 animate-in fade-in duration-300">
       {/* Header */}
       <div className="flex items-center justify-between py-2 border-b border-slate-200 dark:border-slate-800">
         <h1 className="text-xl md:text-2xl font-black uppercase tracking-wider text-slate-900 dark:text-white font-futura">
@@ -126,7 +126,7 @@ export const NotificationsPage: React.FC = () => {
           </p>
         </div>
       ) : (
-        <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs overflow-hidden divide-y divide-slate-100 dark:divide-slate-800/80">
+        <div className="rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-white dark:bg-[#0E2233] shadow-xs overflow-hidden divide-y divide-[#D8E4EA] dark:divide-[#1F2D3D]">
           {filteredNotifications.map((notif) => {
             const isUnread = !notif.isRead;
             return (

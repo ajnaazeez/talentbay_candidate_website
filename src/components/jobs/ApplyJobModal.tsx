@@ -5,6 +5,7 @@ import { uploadResume } from '@/services/candidateService';
 import { aiService } from '@/services/aiService';
 import { calculateJobSkillMatch } from '@/utils/skillMatcher';
 import { Button } from '@/components/common/Button';
+import { ModalPortal } from '@/components/common/Modal';
 import {
   X,
   FileText,
@@ -144,8 +145,11 @@ export const ApplyJobModal: React.FC<ApplyJobModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-xl bg-white dark:bg-dark-card rounded-3xl shadow-2xl border border-gray-100 dark:border-dark-border overflow-hidden my-8 animate-in fade-in zoom-in-95">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-xl bg-white dark:bg-[#0E2233] rounded-3xl shadow-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-150"
+      >
         {/* Hidden File Input */}
         <input
           ref={fileInputRef}
@@ -324,6 +328,6 @@ export const ApplyJobModal: React.FC<ApplyJobModalProps> = ({
           </form>
         )}
       </div>
-    </div>
+    </ModalPortal>
   );
 };

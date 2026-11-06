@@ -209,7 +209,7 @@ export const CareerReadinessPage: React.FC = () => {
   const latestScores = assessmentService.extractLatestSkillScores(assessmentResults);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-20 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto w-full min-w-0 space-y-8 pb-20 animate-in fade-in duration-300">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
         <div>

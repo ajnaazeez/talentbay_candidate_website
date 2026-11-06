@@ -13,6 +13,7 @@ import {
   Copy,
 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
+import { ModalPortal } from '@/components/common/Modal';
 import type { AiCvModel, AiCvExperience, AiCvProject } from '@/types/aiCv';
 import { aiCvService } from '@/services/aiCvService';
 import { downloadAtsPdf } from '@/utils/atsPdfGenerator';
@@ -694,8 +695,14 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
 
       {/* Sync Profile Confirmation Dialog */}
       {syncConfirmOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
+        <ModalPortal
+          isOpen={syncConfirmOpen}
+          onClose={() => setSyncConfirmOpen(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 my-auto animate-in fade-in zoom-in-95 duration-150"
+          >
             <h4 className="text-base font-bold text-gray-900 dark:text-white">
               Sync ATS CV to Profile?
             </h4>
@@ -721,7 +728,7 @@ export const AiCvSectionEditor: React.FC<AiCvSectionEditorProps> = ({
               </Button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
     </div>
   );

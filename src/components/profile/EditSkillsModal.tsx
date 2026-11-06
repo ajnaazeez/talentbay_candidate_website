@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Sparkles, Plus, Trash2, Award } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
+import { ModalPortal } from '@/components/common/Modal';
 import { aiService } from '@/services/aiService';
 import type { Skill } from '@/types';
 
@@ -94,8 +95,11 @@ export const EditSkillsModal: React.FC<EditSkillsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="w-full max-w-2xl bg-white dark:bg-[#0E2233] rounded-3xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-2xl bg-white dark:bg-[#0E2233] rounded-3xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto animate-in fade-in zoom-in-95 duration-150"
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#D8E4EA] dark:border-[#1F2D3D]">
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
@@ -265,6 +269,6 @@ export const EditSkillsModal: React.FC<EditSkillsModalProps> = ({
           </Button>
         </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 };

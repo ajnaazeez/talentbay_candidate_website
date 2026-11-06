@@ -240,7 +240,7 @@ export const ResumeBuilderPage: React.FC = () => {
   const activeColor = COLOR_MAP[accentColor] || COLOR_MAP.copper;
 
   return (
-    <div className="min-h-screen bg-[#F6FAFC] dark:bg-[#08141F] pb-24 transition-colors">
+    <div className="w-full pb-20 space-y-6 transition-colors">
       {/* Print Specific CSS Overrides */}
       <style>{`
         @media print {
@@ -260,9 +260,9 @@ export const ResumeBuilderPage: React.FC = () => {
         }
       `}</style>
 
-      {/* Top Header Navigation */}
-      <div className="no-print bg-white/95 dark:bg-[#0E2233]/95 border-b border-[#D8E4EA] dark:border-[#1F2D3D] px-4 sm:px-6 py-4 mb-8 sticky top-0 z-30 shadow-xs backdrop-blur-md">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Top Header Navigation Card */}
+      <div className="no-print rounded-2xl bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] p-4 sm:p-5 shadow-xs">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Link to={ROUTES.PROFILE}>
               <Button variant="ghost" size="sm">
@@ -326,7 +326,7 @@ export const ResumeBuilderPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="w-full">
         {/* TAB 1: AI ATS CV BUILDER & LIVE SECTION EDITOR */}
         {activeTab === 'ai-builder' && (
           <div className="space-y-6">

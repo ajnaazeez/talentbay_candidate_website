@@ -87,6 +87,7 @@ export const AppRoutes: React.FC = () => {
           {/* Companies */}
           <Route path={ROUTES.COMPANIES} element={<CompaniesPage />} />
           <Route path={ROUTES.COMPANY_DETAILS} element={<CompanyDetailsPage />} />
+          <Route path="/companies/:id" element={<CompanyDetailsPage />} />
 
           {/* Profile & Resume */}
           <Route path={ROUTES.PROFILE} element={<ProfilePage />} />

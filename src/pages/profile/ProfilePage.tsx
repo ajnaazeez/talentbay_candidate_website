@@ -36,6 +36,7 @@ import { aiCvService } from '@/services/aiCvService';
 import { generateAtsPdf, downloadAtsPdf } from '@/utils/atsPdfGenerator';
 import { calculateProfileCompletion } from '@/utils/profileCompletion';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
+import { ModalPortal } from '@/components/common/Modal';
 import { ROUTES } from '@/utils/constants';
 import type {
   CandidateModel,
@@ -324,7 +325,7 @@ export const ProfilePage: React.FC = () => {
   const locationText = [candidate.currentLocation?.city, candidate.currentLocation?.country].filter(Boolean).join(', ');
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-24 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto space-y-8 pb-24">
       {/* Title */}
       <div className="pt-2">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1F2D3D] dark:text-white tracking-tight">
@@ -459,14 +460,14 @@ export const ProfilePage: React.FC = () => {
           </div>
 
           {/* Contact Row */}
-          <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-slate-500 dark:text-slate-400 pt-2 font-medium">
-            {locationText && <span>{locationText}</span>}
+          <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-[#6B8699] dark:text-[#8CA6B7] pt-2 font-medium max-w-full">
+            {locationText && <span className="break-words">{locationText}</span>}
             {locationText && <span>•</span>}
-            <span>{candidate.email}</span>
+            <span className="break-all">{candidate.email}</span>
             {candidate.phoneNumber && (
               <>
                 <span>•</span>
-                <span>{candidate.phoneNumber}</span>
+                <span className="break-all">{candidate.phoneNumber}</span>
               </>
             )}
           </div>
@@ -477,7 +478,7 @@ export const ProfilePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, basicInfo: true }))}
-            className="w-full py-2.5 px-6 rounded-xl border border-brand-600 text-brand-600 dark:border-brand-400 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/20 text-xs font-bold tracking-wider uppercase transition shadow-xs cursor-pointer"
+            className="w-full py-2.5 px-6 rounded-xl border border-[#00BFA6] text-[#008C79] dark:text-[#5EEAD9] hover:bg-[#00BFA6]/10 text-xs font-bold tracking-wider uppercase transition shadow-xs cursor-pointer"
           >
             EDIT INTRODUCTION
           </button>
@@ -485,32 +486,32 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Section B: Profile Statistics (Matching Flutter _buildStatsCards) */}
-      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 bg-white dark:bg-slate-900 shadow-xs">
-        <div className="grid grid-cols-3 text-center divide-x divide-slate-100 dark:divide-slate-800">
-          <div>
-            <div className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+      <div className="rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] p-5 sm:p-8 bg-white dark:bg-[#0E2233] shadow-xs">
+        <div className="grid grid-cols-3 text-center divide-x divide-[#D8E4EA] dark:divide-[#1F2D3D]">
+          <div className="px-1 sm:px-4">
+            <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#1F2D3D] dark:text-white tracking-tight">
               {applicationsCount}
             </div>
-            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
+            <div className="text-[9px] sm:text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-[#8CA6B7] mt-1 break-words">
               APPLICATIONS
             </div>
           </div>
 
-          <div>
-            <div className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <div className="px-1 sm:px-4">
+            <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#1F2D3D] dark:text-white tracking-tight">
               {candidate.skills?.length || 0}
             </div>
-            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
+            <div className="text-[9px] sm:text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-[#8CA6B7] mt-1 break-words">
               SKILLS
             </div>
           </div>
 
-          <div>
-            <div className={`text-3xl md:text-4xl font-extrabold tracking-tight ${getCompletionColorClass(completionData.percentage)}`}>
+          <div className="px-1 sm:px-4">
+            <div className={`text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight ${getCompletionColorClass(completionData.percentage)}`}>
               {completionData.percentage}%
             </div>
-            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-400 mt-1">
-              PROFILE COMPLETION
+            <div className="text-[9px] sm:text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-[#8CA6B7] mt-1 break-words">
+              COMPLETION
             </div>
           </div>
         </div>
@@ -1186,16 +1187,22 @@ export const ProfilePage: React.FC = () => {
 
       {/* Modal: Photo Options Bottom Sheet */}
       {modalOpen.photoOptions && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-sm p-6 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+        <ModalPortal
+          isOpen={modalOpen.photoOptions}
+          onClose={() => setModalOpen((prev) => ({ ...prev, photoOptions: false }))}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-3xl w-full max-w-sm p-6 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150"
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-[#D8E4EA] dark:border-[#1F2D3D]">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7]">
                 PROFILE PICTURE
               </span>
               <button
                 type="button"
                 onClick={() => setModalOpen((prev) => ({ ...prev, photoOptions: false }))}
-                className="text-slate-400 hover:text-slate-900 dark:hover:text-white p-1 rounded-lg"
+                className="text-[#8CA6B7] hover:text-[#1F2D3D] dark:hover:text-white p-1 rounded-xl hover:bg-[#E8F1F5] dark:hover:bg-[#132B3E] transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1206,9 +1213,9 @@ export const ProfilePage: React.FC = () => {
                 type="button"
                 disabled={uploadingPhoto}
                 onClick={() => photoInputRef.current?.click()}
-                className="w-full py-3 px-4 text-left text-xs font-bold uppercase text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60 rounded-xl flex items-center gap-3 cursor-pointer transition"
+                className="w-full py-3 px-4 text-left text-xs font-bold uppercase text-[#1F2D3D] dark:text-white hover:bg-[#E8F1F5] dark:hover:bg-[#132B3E] rounded-xl flex items-center gap-3 cursor-pointer transition shadow-xs"
               >
-                <Upload className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                <Upload className="w-4 h-4 text-[#00BFA6]" />
                 <span>{uploadingPhoto ? 'Uploading...' : 'Choose from Gallery / Files'}</span>
               </button>
 
@@ -1217,7 +1224,7 @@ export const ProfilePage: React.FC = () => {
                   type="button"
                   disabled={uploadingPhoto}
                   onClick={handleRemovePhoto}
-                  className="w-full py-3 px-4 text-left text-xs font-bold uppercase text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl flex items-center gap-3 cursor-pointer transition"
+                  className="w-full py-3 px-4 text-left text-xs font-bold uppercase text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl flex items-center gap-3 cursor-pointer transition shadow-xs"
                 >
                   <Trash2 className="w-4 h-4" />
                   <span>Remove Photo</span>
@@ -1225,7 +1232,7 @@ export const ProfilePage: React.FC = () => {
               )}
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Subform Modal 1: Edit Basic Info */}

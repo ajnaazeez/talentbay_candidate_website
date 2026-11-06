@@ -32,7 +32,7 @@ export const CandidateLayout: React.FC = () => {
   }, [candidate?.uid]);
 
   return (
-    <div className="min-h-screen bg-[#F6FAFC] dark:bg-[#08141F] text-[#1F2D3D] dark:text-[#F6FAFC] flex flex-col transition-colors">
+    <div className="min-h-screen w-full bg-[#F6FAFC] dark:bg-[#08141F] text-[#1F2D3D] dark:text-[#F6FAFC] flex flex-col overflow-x-hidden transition-colors">
       {/* Sidebar Navigation */}
       <CandidateSidebar
         isOpen={sidebarOpen}
@@ -47,7 +47,7 @@ export const CandidateLayout: React.FC = () => {
       {/* Main Content Area */}
       <div
         className={cn(
-          'flex-1 flex flex-col transition-all duration-300 ease-in-out',
+          'flex-1 flex flex-col min-w-0 w-full transition-all duration-300 ease-in-out',
           isCollapsed ? 'lg:pl-[72px]' : 'lg:pl-64'
         )}
       >
@@ -57,7 +57,7 @@ export const CandidateLayout: React.FC = () => {
           unreadChatsCount={unreadChatsCount}
         />
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto animate-in fade-in duration-200">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto min-w-0">
           <Outlet />
         </main>
       </div>

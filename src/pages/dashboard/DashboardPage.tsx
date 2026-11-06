@@ -10,6 +10,8 @@ import {
   Mail,
   ChevronRight,
   Sparkles,
+  AlertCircle,
+  RotateCcw,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -44,6 +46,7 @@ export const DashboardPage: React.FC = () => {
   const [topCompanies, setTopCompanies] = useState<Company[]>([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
   const [loadingCompanies, setLoadingCompanies] = useState(true);
+  const [jobsError, setJobsError] = useState<string | null>(null);
 
   // Application Modal state
   const [applyingJob, setApplyingJob] = useState<Job | null>(null);
@@ -83,11 +86,13 @@ export const DashboardPage: React.FC = () => {
   // 2. Fetch Jobs from Firestore
   const fetchJobs = useCallback(async () => {
     setLoadingJobs(true);
+    setJobsError(null);
     try {
       const allJobs = await jobService.getJobs();
       setJobs(allJobs);
-    } catch (err) {
+    } catch (err: any) {
       console.error('[Dashboard] Error fetching jobs:', err);
+      setJobsError('Unable to load recommended roles right now.');
     } finally {
       setLoadingJobs(false);
     }
@@ -246,13 +251,13 @@ export const DashboardPage: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search jobs, tech stacks, locations or companies..."
-                className="w-full pl-11 pr-28 py-2.5 bg-transparent text-sm font-medium text-white placeholder:text-[#8CA6B7] focus:outline-none"
+                className="w-full flex-1 min-w-0 pl-11 pr-3 py-2.5 bg-transparent text-xs sm:text-sm font-medium text-white placeholder:text-[#8CA6B7] focus:outline-none"
               />
               <button
                 type="submit"
-                className="px-5 py-2.5 bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer shrink-0"
+                className="px-3.5 sm:px-5 py-2 sm:py-2.5 bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer shrink-0"
               >
-                Search Jobs
+                Search<span className="hidden sm:inline"> Jobs</span>
               </button>
             </div>
           </form>
@@ -378,6 +383,28 @@ export const DashboardPage: React.FC = () => {
         {loadingJobs ? (
           <div className="py-12 flex justify-center">
             <LoadingSpinner size="md" label="Loading recommended roles..." />
+          </div>
+        ) : jobsError ? (
+          <div className="rounded-2xl bg-white dark:bg-[#0E2233] border border-rose-200 dark:border-rose-900/50 p-6 sm:p-8 text-center space-y-3 shadow-xs">
+            <div className="w-10 h-10 mx-auto rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+              <AlertCircle className="w-5 h-5" />
+            </div>
+            <h3 className="text-sm font-bold text-[#1F2D3D] dark:text-white">
+              Unable to load recommended roles
+            </h3>
+            <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] max-w-md mx-auto">
+              {jobsError}
+            </p>
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={fetchJobs}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] transition shadow-xs cursor-pointer inline-flex items-center gap-2"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-[#00BFA6]" />
+                <span>Retry</span>
+              </button>
+            </div>
           </div>
         ) : recommendedJobs.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-[#D8E4EA] dark:border-[#1F2D3D] bg-white/60 dark:bg-[#0E2233]/60 p-10 text-center space-y-3">

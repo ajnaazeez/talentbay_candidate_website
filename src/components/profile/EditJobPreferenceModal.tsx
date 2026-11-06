@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Briefcase, Plus } from 'lucide-react';
 import { Button } from '@/components/common/Button';
+import { ModalPortal } from '@/components/common/Modal';
 import type { JobPreference } from '@/types';
 
 interface EditJobPreferenceModalProps {
@@ -77,8 +78,11 @@ export const EditJobPreferenceModal: React.FC<EditJobPreferenceModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="w-full max-w-2xl bg-white dark:bg-[#0E2233] rounded-3xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-2xl bg-white dark:bg-[#0E2233] rounded-3xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto animate-in fade-in zoom-in-95 duration-150"
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#D8E4EA] dark:border-[#1F2D3D]">
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
@@ -277,6 +281,6 @@ export const EditJobPreferenceModal: React.FC<EditJobPreferenceModalProps> = ({
           </div>
         </form>
       </div>
-    </div>
+    </ModalPortal>
   );
 };

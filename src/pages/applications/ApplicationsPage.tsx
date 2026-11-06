@@ -214,7 +214,7 @@ export const ApplicationsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-20 animate-in fade-in duration-300">
+    <div className="space-y-6 max-w-5xl mx-auto w-full min-w-0 pb-20 animate-in fade-in duration-300">
       {/* 1. Header: Title & Direct Messages Icon (matching Flutter activity_tab.dart) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
         <div>
@@ -352,8 +352,8 @@ export const ApplicationsPage: React.FC = () => {
                     className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] hover:border-[#00BFA6]/60 hover:shadow-card-hover transition-all duration-200 space-y-4 shadow-card"
                   >
                     {/* Top Row: Company Logo & Details */}
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-4">
+                    <div className="flex items-start justify-between gap-4 min-w-0">
+                      <div className="flex items-start gap-4 min-w-0 flex-1">
                         {/* Logo (56x56) */}
                         <div className="w-14 h-14 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-slate-50 dark:bg-[#0A1A27] overflow-hidden shrink-0 flex items-center justify-center p-2 shadow-2xs">
                           {job?.companyLogoUrl ? (

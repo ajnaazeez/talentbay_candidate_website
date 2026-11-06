@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
+import { ModalPortal } from '@/components/common/Modal';
 import type { AssessmentQuestion } from '@/services/assessmentService';
 
 interface AssessmentQuizProps {
@@ -279,8 +280,14 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
 
       {/* Confirmation Modal */}
       {showConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-[#0E2233] w-full max-w-md rounded-2xl shadow-xl border border-[#D8E4EA] dark:border-[#1F2D3D] p-6 space-y-4">
+        <ModalPortal
+          isOpen={showConfirmModal}
+          onClose={() => setShowConfirmModal(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-[#0E2233] w-full max-w-md rounded-3xl shadow-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] p-6 space-y-4 my-auto animate-in fade-in zoom-in-95 duration-150"
+          >
             <div className="w-12 h-12 rounded-2xl bg-[#00BFA6]/15 text-[#00BFA6] flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-6 h-6" />
             </div>
@@ -318,7 +325,7 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
               </Button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
     </div>
   );

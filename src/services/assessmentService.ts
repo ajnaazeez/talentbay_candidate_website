@@ -68,27 +68,6 @@ export const POPULAR_ASSESSMENT_SKILLS = [
 // In-memory cache for related skills to avoid redundant Cloud Function invocations
 const relatedSkillsCache = new Map<string, string[]>();
 
-const RELATED_SKILL_GRAPH: Record<string, string[]> = {
-  react: ['TypeScript', 'Next.js', 'Tailwind CSS', 'Redux', 'Node.js', 'GraphQL'],
-  typescript: ['React', 'Node.js', 'Next.js', 'GraphQL', 'Tailwind CSS'],
-  javascript: ['TypeScript', 'React', 'Node.js', 'HTML/CSS', 'Next.js'],
-  'node.js': ['Express.js', 'TypeScript', 'PostgreSQL', 'MongoDB', 'Docker', 'REST APIs'],
-  nodejs: ['Express.js', 'TypeScript', 'PostgreSQL', 'MongoDB', 'Docker', 'REST APIs'],
-  python: ['Django', 'FastAPI', 'PostgreSQL', 'Docker', 'SQL', 'Data Structures & Algorithms'],
-  java: ['Spring Boot', 'Microservices', 'PostgreSQL', 'Docker', 'Hibernate', 'REST APIs'],
-  flutter: ['Dart', 'Firebase', 'REST APIs', 'State Management', 'Mobile UI Design'],
-  dart: ['Flutter', 'Firebase', 'REST APIs', 'Mobile Architecture'],
-  aws: ['Docker', 'Kubernetes', 'CI/CD', 'Terraform', 'Linux'],
-  docker: ['Kubernetes', 'AWS', 'CI/CD', 'Linux', 'Microservices'],
-  sql: ['PostgreSQL', 'Database Design', 'Node.js', 'Python', 'Query Optimization'],
-  postgresql: ['SQL', 'Database Design', 'Node.js', 'Docker', 'Redis'],
-  mongodb: ['Node.js', 'Express.js', 'TypeScript', 'Docker', 'REST APIs'],
-  figma: ['UI/UX Design', 'Wireframing', 'Prototyping', 'Design Systems', 'User Research'],
-  'ui/ux': ['Figma', 'Wireframing', 'Prototyping', 'Design Systems', 'User Research'],
-  git: ['CI/CD', 'Docker', 'GitHub Actions', 'Linux'],
-  graphql: ['TypeScript', 'Node.js', 'React', 'REST APIs', 'Apollo'],
-};
-
 export const assessmentService = {
   /**
    * Generates MCQ questions for a skill using existing Firebase Cloud Function `generateAssessmentQuestions`.
@@ -150,40 +129,21 @@ export const assessmentService = {
 
   /**
    * Suggests related skills based on current candidate skills via `getRelatedSkills` Cloud Function,
-   * with in-memory caching, responsive timeout, and smart fallback matching Flutter parity.
+   * with in-memory caching and responsive timeout, matching Candidate Flutter App business rules.
    */
   async getRelatedSkills(currentSkills: string[]): Promise<string[]> {
     if (!currentSkills || currentSkills.length === 0) return [];
 
-    const lowerCurrent = new Set(currentSkills.map((s) => s.toLowerCase().trim()));
+    const lowerCurrent = new Set(
+      currentSkills.map((s) => (typeof s === 'string' ? s.toLowerCase().trim() : '')).filter(Boolean)
+    );
+    if (lowerCurrent.size === 0) return [];
+
     const cacheKey = Array.from(lowerCurrent).sort().join('|');
 
     if (relatedSkillsCache.has(cacheKey)) {
       return relatedSkillsCache.get(cacheKey)!;
     }
-
-    // Helper to derive fallback related skills from knowledge graph
-    const deriveFallback = (): string[] => {
-      const candidates: string[] = [];
-      currentSkills.forEach((s) => {
-        const key = s.toLowerCase().trim();
-        const matches = RELATED_SKILL_GRAPH[key] || [];
-        matches.forEach((m) => {
-          if (!lowerCurrent.has(m.toLowerCase()) && !candidates.includes(m)) {
-            candidates.push(m);
-          }
-        });
-      });
-
-      // Fill remaining from popular skills if needed
-      POPULAR_ASSESSMENT_SKILLS.forEach((p) => {
-        if (!lowerCurrent.has(p.toLowerCase()) && !candidates.includes(p)) {
-          candidates.push(p);
-        }
-      });
-
-      return candidates.slice(0, 5);
-    };
 
     try {
       const callable = httpsCallable<
@@ -191,9 +151,9 @@ export const assessmentService = {
         { relatedSkills?: string[] }
       >(functions, 'getRelatedSkills');
 
-      // 6-second timeout race to prevent indefinite spinning
+      // 12-second timeout race to prevent indefinite spinning if network or function hangs
       const timeoutPromise = new Promise<{ data: { relatedSkills?: string[] } }>((_, reject) =>
-        setTimeout(() => reject(new Error('Cloud Function getRelatedSkills timeout')), 6000)
+        setTimeout(() => reject(new Error('Cloud Function getRelatedSkills timeout')), 12000)
       );
 
       const response = await Promise.race([callable({ currentSkills }), timeoutPromise]);
@@ -204,22 +164,17 @@ export const assessmentService = {
           .map((s) => String(s).trim())
           .filter((s) => s.length > 0 && !lowerCurrent.has(s.toLowerCase()));
 
-        if (related.length > 0) {
-          const result = related.slice(0, 5);
-          relatedSkillsCache.set(cacheKey, result);
-          return result;
-        }
+        const result = related.slice(0, 5);
+        relatedSkillsCache.set(cacheKey, result);
+        return result;
       }
 
-      // If response had no items, use domain fallback
-      const fallback = deriveFallback();
-      relatedSkillsCache.set(cacheKey, fallback);
-      return fallback;
-    } catch (e) {
-      console.warn('[assessmentService] getRelatedSkills Cloud Function error or timeout, using domain fallback:', e);
-      const fallback = deriveFallback();
-      relatedSkillsCache.set(cacheKey, fallback);
-      return fallback;
+      // If backend returns empty array or no related skills
+      relatedSkillsCache.set(cacheKey, []);
+      return [];
+    } catch (err: any) {
+      console.warn('[assessmentService] getRelatedSkills Cloud Function error or timeout:', err);
+      throw err;
     }
   },
 

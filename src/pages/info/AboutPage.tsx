@@ -7,7 +7,7 @@ export const AboutPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 pb-24 animate-in fade-in duration-300">
+    <div className="max-w-3xl mx-auto w-full min-w-0 space-y-6 pb-24 animate-in fade-in duration-300">
       {/* Top Header with Back Button */}
       <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
         <button

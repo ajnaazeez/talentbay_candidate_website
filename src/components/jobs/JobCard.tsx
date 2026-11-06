@@ -76,8 +76,8 @@ export const JobCard: React.FC<JobCardProps> = ({
     <div className="group relative rounded-2xl bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] p-5 sm:p-6 shadow-card hover:shadow-card-hover hover:border-[#00BFA6]/60 hover:-translate-y-0.5 transition-all duration-200">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         {/* Company Logo & Basic Meta */}
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-[#E8F1F5]/60 dark:bg-[#0A1A27] overflow-hidden flex-shrink-0 flex items-center justify-center p-2 shadow-2xs group-hover:scale-105 transition-transform">
+        <div className="flex items-start gap-4 min-w-0 flex-1">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-[#E8F1F5]/60 dark:bg-[#0A1A27] overflow-hidden shrink-0 flex items-center justify-center p-2 shadow-2xs group-hover:scale-105 transition-transform">
             {job.companyLogoUrl ? (
               <img
                 src={job.companyLogoUrl}
@@ -92,29 +92,29 @@ export const JobCard: React.FC<JobCardProps> = ({
             )}
           </div>
 
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
+          <div className="space-y-1 min-w-0 flex-1">
+            <div className="flex items-center gap-2 min-w-0">
               <Link
                 to={`/jobs/${job.jobId}`}
-                className="text-base sm:text-lg font-bold text-[#1F2D3D] dark:text-white group-hover:text-[#00BFA6] dark:group-hover:text-[#5EEAD9] transition-colors line-clamp-1 tracking-tight"
+                className="text-base sm:text-lg font-bold text-[#1F2D3D] dark:text-white group-hover:text-[#00BFA6] dark:group-hover:text-[#5EEAD9] transition-colors line-clamp-1 truncate tracking-tight"
               >
                 {job.roleName}
               </Link>
             </div>
 
-            <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#1F2D3D] dark:text-[#BACDD8]">
+            <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#1F2D3D] dark:text-[#BACDD8] min-w-0">
               {job.companyId ? (
                 <Link
                   to={`/companies/${job.companyId}`}
-                  className="hover:underline hover:text-[#0E2233] dark:hover:text-white transition-colors"
+                  className="hover:underline hover:text-[#0E2233] dark:hover:text-white transition-colors truncate"
                 >
                   {job.companyName}
                 </Link>
               ) : (
-                <span>{job.companyName}</span>
+                <span className="truncate">{job.companyName}</span>
               )}
               {job.isVerifiedCompany && (
-                <span className="inline-flex items-center text-[10px] text-[#008C79] dark:text-[#5EEAD9] font-semibold px-1.5 py-0.2 rounded bg-[#00BFA6]/15 border border-[#00BFA6]/30">
+                <span className="inline-flex items-center text-[10px] text-[#008C79] dark:text-[#5EEAD9] font-semibold px-1.5 py-0.2 rounded bg-[#00BFA6]/15 border border-[#00BFA6]/30 shrink-0">
                   ✓ Verified
                 </span>
               )}
@@ -147,7 +147,7 @@ export const JobCard: React.FC<JobCardProps> = ({
         </div>
 
         {/* Top-Right Badges & Save Action */}
-        <div className="flex items-center gap-2 self-start sm:self-auto">
+        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
           {/* Skill Match Indicator */}
           {candidateSkills.length > 0 && matchResult.totalRequired > 0 && (
             <div
@@ -185,7 +185,7 @@ export const JobCard: React.FC<JobCardProps> = ({
       {/* Salary & Required Skills */}
       <div className="mt-4 pt-4 border-t border-[#D8E4EA] dark:border-[#1F2D3D] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         {/* Skills Chips */}
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5 min-w-0 flex-1">
           {job.skillsRequired.slice(0, 4).map((skill) => {
             const isMatched = matchResult.matchingSkills.includes(skill);
             return (
@@ -209,8 +209,8 @@ export const JobCard: React.FC<JobCardProps> = ({
         </div>
 
         {/* Salary & Application Action */}
-        <div className="flex items-center justify-between sm:justify-end gap-3 flex-shrink-0">
-          <div className="text-right">
+        <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 w-full sm:w-auto">
+          <div className="text-left sm:text-right">
             <span className="text-xs text-[#8CA6B7] block font-normal">Salary (Estimated)</span>
             <span className="text-xs sm:text-sm font-bold text-[#1F2D3D] dark:text-white">
               {salaryDisplay}

@@ -22,6 +22,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { chatService } from '@/services/chatService';
 import type { ChatModel, MessageModel } from '@/types/chat';
 import { ROUTES } from '@/utils/constants';
+import { ModalPortal } from '@/components/common/Modal';
 
 export const ChatPage: React.FC = () => {
   const { chatId: routeChatId } = useParams<{ chatId: string }>();
@@ -513,13 +514,13 @@ export const ChatPage: React.FC = () => {
 
                           {/* Message Bubble */}
                           <div
-                            className={`px-4 py-2.5 rounded-2xl shadow-xs text-xs sm:text-sm break-words leading-relaxed ${
+                            className={`px-4 py-2.5 rounded-2xl shadow-xs text-xs sm:text-sm break-words leading-relaxed max-w-[85%] sm:max-w-[75%] ${
                               isCandidate
-                                ? 'bg-[#00BFA6] text-white rounded-tr-xs'
-                                : 'bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] text-[#1F2D3D] dark:text-[#E8F1F5] rounded-tl-xs'
+                                ? 'bg-[#0E2233] text-white border border-[#00BFA6]/40 rounded-tr-xs'
+                                : 'bg-white dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] text-[#1F2D3D] dark:text-[#E8F1F5] rounded-tl-xs'
                             }`}
                           >
-                            <p>{msg.decryptedContent || msg.content}</p>
+                            <p className="break-words">{msg.decryptedContent || msg.content}</p>
 
                             <div
                               className={`flex items-center justify-end gap-1.5 text-[10px] mt-1 ${
@@ -586,8 +587,14 @@ export const ChatPage: React.FC = () => {
 
       {/* Edit Message Modal */}
       {editingMessage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#0E2233] rounded-2xl max-w-md w-full p-6 border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xl space-y-4">
+        <ModalPortal
+          isOpen={Boolean(editingMessage)}
+          onClose={() => setEditingMessage(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-[#0E2233] rounded-3xl max-w-md w-full p-6 border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-2xl space-y-4 my-auto animate-in fade-in zoom-in-95 duration-150"
+          >
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-[#1F2D3D] dark:text-white flex items-center gap-2">
                 <Edit2 className="w-4 h-4 text-[#00BFA6]" />
@@ -596,7 +603,7 @@ export const ChatPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setEditingMessage(null)}
-                className="text-[#8CA6B7] hover:text-[#1F2D3D] dark:hover:text-white"
+                className="text-[#8CA6B7] hover:text-[#1F2D3D] dark:hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -606,14 +613,14 @@ export const ChatPage: React.FC = () => {
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
               rows={3}
-              className="w-full p-3 text-sm bg-[#E8F1F5] dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-xl text-[#1F2D3D] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#00BFA6]/20 focus:border-[#00BFA6]"
+              className="w-full p-3 text-sm bg-[#E8F1F5] dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-xl text-[#1F2D3D] dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#00BFA6]/20 focus:border-[#00BFA6]"
             />
 
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setEditingMessage(null)}
-                className="px-4 py-2 text-xs font-semibold text-[#1F2D3D] dark:text-[#BACDD8] hover:bg-[#E8F1F5] dark:hover:bg-[#332F34] rounded-xl transition"
+                className="px-4 py-2 text-xs font-semibold text-[#1F2D3D] dark:text-[#BACDD8] hover:bg-[#E8F1F5] dark:hover:bg-[#332F34] rounded-xl transition cursor-pointer"
               >
                 Cancel
               </button>
@@ -628,13 +635,19 @@ export const ChatPage: React.FC = () => {
               </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Delete Message Confirmation Modal */}
       {deletingMessage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#0E2233] rounded-2xl max-w-md w-full p-6 border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xl space-y-4">
+        <ModalPortal
+          isOpen={Boolean(deletingMessage)}
+          onClose={() => setDeletingMessage(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-[#0E2233] rounded-3xl max-w-md w-full p-6 border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-2xl space-y-4 my-auto animate-in fade-in zoom-in-95 duration-150"
+          >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
                 <Trash2 className="w-5 h-5" />
@@ -657,7 +670,7 @@ export const ChatPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setDeletingMessage(null)}
-                className="px-4 py-2 text-xs font-semibold text-[#1F2D3D] dark:text-[#BACDD8] hover:bg-[#E8F1F5] dark:hover:bg-[#332F34] rounded-xl transition"
+                className="px-4 py-2 text-xs font-semibold text-[#1F2D3D] dark:text-[#BACDD8] hover:bg-[#E8F1F5] dark:hover:bg-[#332F34] rounded-xl transition cursor-pointer"
               >
                 Cancel
               </button>
@@ -665,14 +678,14 @@ export const ChatPage: React.FC = () => {
                 type="button"
                 disabled={isActionLoading}
                 onClick={handleConfirmDelete}
-                className="px-4 py-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 disabled:opacity-50 rounded-xl transition flex items-center gap-1.5"
+                className="px-4 py-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 disabled:opacity-50 rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs"
               >
                 {isActionLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                 <span>Delete Message</span>
               </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
     </div>
   );

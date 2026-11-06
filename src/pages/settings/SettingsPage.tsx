@@ -25,6 +25,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/store/ThemeContext';
 import { authService } from '@/services/authService';
 import { PaymentRecoveryModal } from '@/components/subscription/PaymentRecoveryModal';
+import { ModalPortal } from '@/components/common/Modal';
 import { ROUTES, APP_CONFIG } from '@/utils/constants';
 import { getFriendlyErrorMessage } from '@/utils/errors';
 
@@ -143,7 +144,7 @@ export const SettingsPage: React.FC = () => {
     : null;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-24 animate-in fade-in duration-300">
+    <div className="max-w-4xl mx-auto w-full min-w-0 space-y-6 pb-24 animate-in fade-in duration-300">
       {/* Screen Title (Matching Flutter Slivertitle SETTINGS) */}
       <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
         <h1 className="text-2xl font-black tracking-[0.2em] uppercase text-slate-900 dark:text-white">
@@ -556,38 +557,50 @@ export const SettingsPage: React.FC = () => {
 
       {/* 1. LOGOUT DIALOG (Matching Flutter _showLogoutDialog) */}
       {showLogoutModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-full max-w-sm p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
-            <h3 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-white">
+        <ModalPortal
+          isOpen={showLogoutModal}
+          onClose={() => setShowLogoutModal(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-3xl w-full max-w-sm p-6 space-y-5 my-auto shadow-2xl animate-in fade-in zoom-in-95 duration-150"
+          >
+            <h3 className="text-base font-black uppercase tracking-wider text-[#1F2D3D] dark:text-white">
               LOGOUT
             </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+            <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] leading-relaxed font-normal">
               Are you sure you want to logout?
             </p>
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setShowLogoutModal(false)}
-                className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition uppercase tracking-wider cursor-pointer"
+                className="px-4 py-2 text-xs font-bold text-[#8CA6B7] hover:text-[#1F2D3D] dark:hover:text-white transition uppercase tracking-wider cursor-pointer"
               >
                 CANCEL
               </button>
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="px-5 py-2 text-xs font-bold text-white bg-slate-900 dark:bg-white dark:text-slate-900 hover:bg-slate-800 transition uppercase tracking-wider cursor-pointer"
+                className="px-5 py-2 text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] transition uppercase tracking-wider cursor-pointer rounded-xl shadow-xs"
               >
                 LOGOUT
               </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* 2. DELETE ACCOUNT DIALOG (Matching Flutter _showDeleteAccountDialog) */}
       {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-full max-w-md p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+        <ModalPortal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-3xl w-full max-w-md p-6 space-y-5 my-auto shadow-2xl animate-in fade-in zoom-in-95 duration-150"
+          >
             <h3 className="text-base font-black uppercase tracking-wider text-rose-600 dark:text-rose-400">
               DELETE ACCOUNT
             </h3>
@@ -595,7 +608,7 @@ export const SettingsPage: React.FC = () => {
               <p className="text-xs font-black text-rose-600 dark:text-rose-400 uppercase tracking-wide">
                 This action cannot be undone!
               </p>
-              <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+              <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] font-medium">
                 Deleting your account will permanently remove:
               </p>
               <div className="space-y-1.5 pl-2">
@@ -605,15 +618,15 @@ export const SettingsPage: React.FC = () => {
                   'Chat history',
                   'All saved preferences',
                 ].map((item) => (
-                  <div key={item} className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                  <div key={item} className="flex items-center gap-2 text-xs text-[#6B8699] dark:text-[#8CA6B7]">
                     <X className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                     <span>{item}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
-                <label className="text-[11px] font-bold text-slate-600 dark:text-slate-400 block">
+              <div className="pt-3 border-t border-[#D8E4EA] dark:border-[#1F2D3D] space-y-1.5">
+                <label className="text-[11px] font-bold text-[#1F2D3D] dark:text-white block">
                   Type <span className="font-black text-rose-600">DELETE</span> to confirm:
                 </label>
                 <input
@@ -621,12 +634,12 @@ export const SettingsPage: React.FC = () => {
                   value={deleteConfirmText}
                   onChange={(e) => setDeleteConfirmText(e.target.value)}
                   placeholder="DELETE"
-                  className="w-full px-3 py-2 text-xs border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white uppercase tracking-wider focus:outline-none focus:border-rose-500"
+                  className="w-full px-3 py-2 text-xs border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-xl bg-[#F6FAFC] dark:bg-[#0A1A27] text-[#1F2D3D] dark:text-white uppercase tracking-wider focus:outline-none focus:border-rose-500"
                 />
               </div>
 
               {deleteError && (
-                <div className="p-2.5 text-xs text-rose-700 bg-rose-50 border border-rose-200">
+                <div className="p-2.5 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-xl">
                   {deleteError}
                 </div>
               )}
@@ -636,7 +649,7 @@ export const SettingsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition uppercase tracking-wider cursor-pointer"
+                className="px-4 py-2 text-xs font-bold text-[#8CA6B7] hover:text-[#1F2D3D] dark:hover:text-white transition uppercase tracking-wider cursor-pointer"
               >
                 CANCEL
               </button>
@@ -644,23 +657,29 @@ export const SettingsPage: React.FC = () => {
                 type="button"
                 disabled={deleteConfirmText.trim().toUpperCase() !== 'DELETE' || isDeleting}
                 onClick={handleDeleteAccount}
-                className="px-5 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 transition uppercase tracking-wider cursor-pointer disabled:opacity-40"
+                className="px-5 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition uppercase tracking-wider cursor-pointer disabled:opacity-40 shadow-xs"
               >
                 {isDeleting ? 'DELETING...' : 'DELETE'}
               </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* 4. LINK/UPDATE PHONE MODAL */}
       {showPhoneModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 w-full max-w-sm p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+        <ModalPortal
+          isOpen={showPhoneModal}
+          onClose={() => setShowPhoneModal(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-slate-800 rounded-3xl shadow-2xl w-full max-w-sm p-6 space-y-4 my-auto animate-in fade-in zoom-in-95 duration-150"
+          >
+            <h3 className="text-sm font-black uppercase tracking-wider text-[#0E2233] dark:text-white">
               {candidate?.phoneNumber ? 'Update Mobile Number' : 'Link Mobile Number'}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-[#8CA6B7]">
               Enter your verified 10-digit mobile number for recruiter updates.
             </p>
 
@@ -670,7 +689,7 @@ export const SettingsPage: React.FC = () => {
                   type="text"
                   value={phoneCountryCode}
                   onChange={(e) => setPhoneCountryCode(e.target.value)}
-                  className="w-16 px-3 py-2 text-xs border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-center font-bold text-slate-900 dark:text-white"
+                  className="w-16 px-3 py-2 text-xs border border-[#D8E4EA] dark:border-slate-700 bg-white dark:bg-[#142B3B] rounded-xl text-center font-bold text-[#0E2233] dark:text-white"
                 />
                 <input
                   type="tel"
@@ -678,7 +697,7 @@ export const SettingsPage: React.FC = () => {
                   onChange={(e) => setPhoneInput(e.target.value)}
                   placeholder="9876543210"
                   maxLength={10}
-                  className="flex-1 px-3 py-2 text-xs border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:border-brand-600"
+                  className="flex-1 px-3 py-2 text-xs border border-[#D8E4EA] dark:border-slate-700 bg-white dark:bg-[#142B3B] rounded-xl text-[#0E2233] dark:text-white focus:outline-hidden focus:border-[#00BFA6]"
                 />
               </div>
 
@@ -690,21 +709,21 @@ export const SettingsPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowPhoneModal(false)}
-                  className="px-3 py-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition uppercase cursor-pointer"
+                  className="px-4 py-2 text-xs font-bold text-[#8CA6B7] hover:text-[#1F2D3D] dark:hover:text-white transition uppercase cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={phoneLoading}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] transition uppercase cursor-pointer disabled:opacity-50 shadow-xs"
+                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] transition uppercase cursor-pointer disabled:opacity-50 shadow-xs"
                 >
                   {phoneLoading ? 'Saving...' : 'Save'}
                 </button>
               </div>
             </form>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* 5. PAYMENT RECOVERY MODAL */}

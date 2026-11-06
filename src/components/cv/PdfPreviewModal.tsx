@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Download, X, FileText, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
+import { ModalPortal } from '@/components/common/Modal';
 import type { AiCvModel } from '@/types/aiCv';
 import { downloadAtsPdf, getPdfBlobUrl } from '@/utils/atsPdfGenerator';
 
@@ -36,8 +37,11 @@ export const PdfPreviewModal: React.FC<PdfPreviewModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-3xl shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-150"
+      >
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-dark-border bg-gray-50/50 dark:bg-dark-card/50">
           <div className="flex items-center gap-3">
@@ -104,7 +108,7 @@ export const PdfPreviewModal: React.FC<PdfPreviewModalProps> = ({
           </Button>
         </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 };
 

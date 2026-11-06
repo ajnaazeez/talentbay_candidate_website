@@ -8,6 +8,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
+import { ModalPortal } from '@/components/common/Modal';
 import { subscriptionService } from '@/services/subscriptionService';
 import { PAYMENT_CONFIG } from '@/utils/constants';
 
@@ -56,8 +57,11 @@ export const TrialActivationModal: React.FC<TrialActivationModalProps> = ({
   const trialInfo = PAYMENT_CONFIG.FREE_TRIAL;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-white dark:bg-[#0E2233] rounded-3xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-modal overflow-hidden">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-lg bg-white dark:bg-[#0E2233] rounded-3xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-2xl overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-150"
+      >
         {/* Header background with brand gradient */}
         <div className="relative p-6 sm:p-8 bg-[#0E2233] text-white border-b border-[#1F2D3D] overflow-hidden">
           <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#00BFA6]/20 via-transparent to-transparent pointer-events-none" />
@@ -156,6 +160,6 @@ export const TrialActivationModal: React.FC<TrialActivationModalProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/common/Button';
+import { ModalPortal } from '@/components/common/Modal';
 import { X, Plus, Trash2, Globe, Linkedin, Github, Languages, Link as LinkIcon } from 'lucide-react';
 
 interface EditSocialLinksModalProps {
@@ -103,8 +104,11 @@ export const EditSocialLinksModal: React.FC<EditSocialLinksModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-xl bg-white dark:bg-dark-card rounded-2xl shadow-xl border border-gray-100 dark:border-dark-border overflow-hidden my-8">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-xl bg-white dark:bg-[#0E2233] rounded-3xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto animate-in fade-in zoom-in-95 duration-150"
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-dark-border">
           <div className="flex items-center gap-2">
@@ -317,6 +321,6 @@ export const EditSocialLinksModal: React.FC<EditSocialLinksModalProps> = ({
           </div>
         </form>
       </div>
-    </div>
+    </ModalPortal>
   );
 };

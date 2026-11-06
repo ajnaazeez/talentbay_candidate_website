@@ -8,6 +8,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
+import { ModalPortal } from '@/components/common/Modal';
 import { Badge } from '@/components/common/Badge';
 import { POPULAR_ASSESSMENT_SKILLS } from '@/services/assessmentService';
 import type { AssessmentDifficulty } from '@/types/assessment';
@@ -56,8 +57,11 @@ export const SkillSelectorModal: React.FC<SkillSelectorModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-[#0E2233] w-full max-w-2xl rounded-2xl shadow-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] overflow-hidden flex flex-col max-h-[90vh]">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white dark:bg-[#0E2233] w-full max-w-2xl rounded-3xl shadow-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] overflow-hidden flex flex-col max-h-[90vh] my-auto animate-in fade-in zoom-in-95 duration-150"
+      >
         {/* Header */}
         <div className="p-6 border-b border-[#D8E4EA] dark:border-[#1F2D3D] flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -241,6 +245,6 @@ export const SkillSelectorModal: React.FC<SkillSelectorModalProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 };

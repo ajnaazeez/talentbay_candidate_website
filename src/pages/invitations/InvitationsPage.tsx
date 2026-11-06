@@ -131,7 +131,7 @@ export const InvitationsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full min-w-0">
       {/* Page Header */}
       <PageHeader
         title="Recruiter Invitations"
@@ -252,32 +252,32 @@ export const InvitationsPage: React.FC = () => {
               return (
                 <div
                   key={application.applicationId}
-                  className="bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-2xl p-6 shadow-soft hover:border-brand-200 dark:hover:border-brand-800 transition-all space-y-4"
+                  className="bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-2xl p-5 sm:p-6 shadow-xs hover:border-[#00BFA6]/60 transition-all space-y-4"
                 >
                   {/* Top Bar: Company, Title & Status */}
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                    <div className="flex items-start gap-3.5">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 min-w-0">
+                    <div className="flex items-start gap-3.5 min-w-0 flex-1">
                       {companyLogo ? (
                         <img
                           src={companyLogo}
                           alt={companyName}
-                          className="w-12 h-12 rounded-xl object-contain bg-gray-50 dark:bg-dark-hover p-1 border border-gray-100 dark:border-dark-border shrink-0"
+                          className="w-12 h-12 rounded-xl object-contain bg-[#E8F1F5]/60 dark:bg-[#0A1A27] p-1 border border-[#D8E4EA] dark:border-[#1F2D3D] shrink-0"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center shrink-0 border border-brand-100 dark:border-brand-900/50">
+                        <div className="w-12 h-12 rounded-xl bg-[#00BFA6]/15 text-[#00BFA6] flex items-center justify-center shrink-0 border border-[#00BFA6]/30">
                           <Building2 className="w-6 h-6" />
                         </div>
                       )}
 
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <h4 className="text-base font-bold text-gray-900 dark:text-white">
+                      <div className="space-y-1 min-w-0 flex-1">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <h4 className="text-base font-bold text-[#1F2D3D] dark:text-white truncate">
                             {job?.title || application.jobTitle || 'Role Invitation'}
                           </h4>
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-x-2 text-xs text-gray-600 dark:text-gray-400">
-                          <span className="font-semibold text-gray-800 dark:text-gray-200">
+                        <div className="flex flex-wrap items-center gap-x-2 text-xs text-[#6B8699] dark:text-[#8CA6B7]">
+                          <span className="font-semibold text-[#1F2D3D] dark:text-[#BACDD8] truncate">
                             {companyName}
                           </span>
                           {job?.isVerifiedCompany && (
@@ -353,10 +353,10 @@ export const InvitationsPage: React.FC = () => {
                   )}
 
                   {/* Bottom Action Bar */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-gray-100 dark:border-dark-border">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-[#D8E4EA] dark:border-[#1F2D3D]">
                     <Link
                       to={ROUTES.JOB_DETAILS.replace(':id', application.jobId)}
-                      className="text-xs text-brand-600 hover:text-brand-700 dark:text-brand-400 flex items-center gap-1 font-semibold"
+                      className="text-xs text-[#008C79] hover:text-[#00BFA6] dark:text-[#5EEAD9] flex items-center gap-1 font-semibold"
                     >
                       View Full Job Description <ExternalLink className="w-3 h-3" />
                     </Link>

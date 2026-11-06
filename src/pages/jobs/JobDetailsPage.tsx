@@ -299,13 +299,13 @@ export const JobDetailsPage: React.FC = () => {
       {/* Main Details Body */}
       <div className="space-y-8 pt-8">
         {/* Header Section: Logo + Title + Company + Location */}
-        <div className="flex items-start gap-5">
-          <div className="w-16 h-16 rounded-full border border-[#D8E4EA] dark:border-[#1F2D3D] bg-white dark:bg-[#0E2233] flex-shrink-0 flex items-center justify-center overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-start gap-5">
+          <div className="w-16 h-16 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-white dark:bg-[#0E2233] shrink-0 flex items-center justify-center overflow-hidden p-2 shadow-2xs">
             {job.companyLogoUrl ? (
               <img
                 src={job.companyLogoUrl}
                 alt={job.companyName || 'Company'}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = 'none';
                 }}
@@ -315,17 +315,17 @@ export const JobDetailsPage: React.FC = () => {
             )}
           </div>
 
-          <div className="space-y-2 flex-1">
-            <div className="text-xs font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7]">
+          <div className="space-y-2 flex-1 min-w-0">
+            <div className="text-xs font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7] truncate">
               {job.companyName?.toUpperCase() || 'UNKNOWN COMPANY'}
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-[#1F2D3D] dark:text-white leading-tight">
+            <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-[#1F2D3D] dark:text-white leading-tight break-words">
               {job.roleName}
             </h2>
 
             <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#6B8699] dark:text-[#8CA6B7]">
-              <span>{locationString.toUpperCase()}</span>
+              <span className="break-words">{locationString.toUpperCase()}</span>
               <span>•</span>
               <span>POSTED {formatDate(job.postedAt)}</span>
             </div>
@@ -489,7 +489,7 @@ export const JobDetailsPage: React.FC = () => {
       </div>
 
       {/* Pinned Bottom Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0E2233]/95 backdrop-blur-md border-t border-[#D8E4EA] dark:border-[#1F2D3D] py-3.5 px-4 md:px-8">
+      <div className="fixed bottom-0 left-0 lg:left-64 right-0 z-40 bg-white/95 dark:bg-[#0E2233]/95 backdrop-blur-md border-t border-[#D8E4EA] dark:border-[#1F2D3D] py-3.5 px-4 md:px-8 transition-[left] duration-300">
         <div className="max-w-4xl mx-auto flex items-center gap-3">
           {/* PREPARE Button */}
           <button

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { Project } from '@/types';
 import { aiService } from '@/services/aiService';
 import { Button } from '@/components/common/Button';
+import { ModalPortal } from '@/components/common/Modal';
 import { X, Sparkles, Plus, Trash2, Globe } from 'lucide-react';
 
 interface AddEditProjectModalProps {
@@ -133,8 +134,11 @@ export const AddEditProjectModal: React.FC<AddEditProjectModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-xl bg-white dark:bg-dark-card rounded-2xl shadow-xl border border-gray-100 dark:border-dark-border overflow-hidden my-8">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-xl bg-white dark:bg-[#0E2233] rounded-3xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto animate-in fade-in zoom-in-95 duration-150"
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-dark-border">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white">
@@ -303,6 +307,6 @@ export const AddEditProjectModal: React.FC<AddEditProjectModalProps> = ({
           </div>
         </form>
       </div>
-    </div>
+    </ModalPortal>
   );
 };

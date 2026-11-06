@@ -259,7 +259,7 @@ export const subscriptionService = {
    */
   async verifyPayment(params: {
     paymentId?: string;
-    orderId: string;
+    orderId?: string;
     signature?: string;
     planId: string;
   }): Promise<PaymentVerificationResult> {
@@ -267,7 +267,7 @@ export const subscriptionService = {
       const callable = httpsCallable<
         {
           paymentId?: string;
-          orderId: string;
+          orderId?: string;
           signature?: string;
           planId: string;
         },
