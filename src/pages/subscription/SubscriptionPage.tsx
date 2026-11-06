@@ -185,8 +185,8 @@ export const SubscriptionPage: React.FC = () => {
               <Button
                 variant="primary"
                 onClick={() => setTrialModalOpen(true)}
-                className="bg-[#00BFA6] hover:bg-[#00A892] text-white font-bold"
-                leftIcon={<Sparkles className="w-4 h-4 text-white" />}
+                className="font-bold"
+                leftIcon={<Sparkles className="w-4 h-4 text-[#00BFA6]" />}
               >
                 Start 7-Day Free Trial
               </Button>
@@ -219,8 +219,8 @@ export const SubscriptionPage: React.FC = () => {
               <Button
                 variant="primary"
                 onClick={() => setTrialModalOpen(true)}
-                className="bg-[#00BFA6] text-white hover:bg-[#00A892] font-extrabold shadow-md text-xs py-2.5 px-5"
-                rightIcon={<ArrowRight className="w-4 h-4" />}
+                className="font-extrabold text-xs py-2.5 px-5"
+                rightIcon={<ArrowRight className="w-4 h-4 text-[#00BFA6]" />}
               >
                 Activate Free Trial (₹0)
               </Button>

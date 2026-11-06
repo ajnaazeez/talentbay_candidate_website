@@ -97,8 +97,8 @@ export const NotificationsPage: React.FC = () => {
               onClick={() => setSelectedFilter(filter)}
               className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-brand-600 text-white border-brand-600 shadow-sm shadow-brand-200 dark:shadow-none'
-                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                  ? 'bg-[#0E2233] text-white border-[#00BFA6]/40 shadow-xs'
+                  : 'bg-white dark:bg-[#0E2233] text-[#1F2D3D] dark:text-[#BACDD8] border-[#D8E4EA] dark:border-[#1F2D3D] hover:bg-[#F6FAFC] dark:hover:bg-[#132B3E]'
               }`}
             >
               {filter.toUpperCase()}

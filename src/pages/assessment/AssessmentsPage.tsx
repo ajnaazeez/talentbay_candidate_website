@@ -311,7 +311,7 @@ export const AssessmentsPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setIsSkillSelectorOpen(true)}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#00BFA6] text-white hover:bg-[#00A892] active:bg-[#008C79] text-xs font-bold uppercase tracking-wider transition shadow-xs cursor-pointer self-start sm:self-auto"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#0E2233] text-white hover:bg-[#163248] active:bg-[#0A1A27] border border-[#00BFA6]/40 hover:border-[#00BFA6] text-xs font-bold uppercase tracking-wider transition shadow-xs cursor-pointer self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           <span>Assess Any Skill</span>
@@ -455,7 +455,7 @@ export const AssessmentsPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsSkillSelectorOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#00BFA6] text-white hover:bg-[#00A892] text-xs font-bold uppercase"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0E2233] text-white hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] text-xs font-bold uppercase transition shadow-xs cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Choose a Skill to Assess</span>

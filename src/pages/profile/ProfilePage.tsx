@@ -381,10 +381,10 @@ export const ProfilePage: React.FC = () => {
           <button
             type="button"
             onClick={() => setModalOpen((prev) => ({ ...prev, photoOptions: true }))}
-            className="absolute -bottom-1 -right-1 p-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white shadow-md hover:scale-105 transition cursor-pointer"
+            className="absolute -bottom-1 -right-1 p-2 rounded-xl bg-[#0E2233] hover:bg-[#163248] text-white border border-[#00BFA6]/40 hover:border-[#00BFA6] shadow-md hover:scale-105 transition cursor-pointer"
             title="Update photo"
           >
-            <Camera className="w-3.5 h-3.5" />
+            <Camera className="w-3.5 h-3.5 text-[#00BFA6]" />
           </button>
 
           <input
@@ -1080,9 +1080,9 @@ export const ProfilePage: React.FC = () => {
                 type="button"
                 disabled={uploadingResume}
                 onClick={() => fileInputRef.current?.click()}
-                className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider transition cursor-pointer shadow-sm shadow-brand-200 dark:shadow-none inline-flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-[#0E2233] hover:bg-[#163248] text-white border border-[#00BFA6]/40 hover:border-[#00BFA6] text-xs font-bold uppercase tracking-wider transition cursor-pointer shadow-xs inline-flex items-center gap-2"
               >
-                <Upload className="w-3.5 h-3.5" />
+                <Upload className="w-3.5 h-3.5 text-[#00BFA6]" />
                 <span>{uploadingResume ? 'UPLOADING...' : 'UPLOAD CV'}</span>
               </button>
               <input
@@ -1176,7 +1176,7 @@ export const ProfilePage: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate(ROUTES.RESUME_BUILDER)}
-              className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider transition cursor-pointer whitespace-nowrap self-start sm:self-auto shadow-sm shadow-brand-200 dark:shadow-none"
+              className="px-5 py-2.5 rounded-xl bg-[#0E2233] hover:bg-[#163248] text-white border border-[#00BFA6]/40 hover:border-[#00BFA6] text-xs font-bold uppercase tracking-wider transition cursor-pointer whitespace-nowrap self-start sm:self-auto shadow-xs"
             >
               CREATE
             </button>

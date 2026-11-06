@@ -206,7 +206,7 @@ export const JobDetailsPage: React.FC = () => {
         </p>
         <button
           onClick={() => navigate(ROUTES.JOBS)}
-          className="px-6 py-2.5 bg-[#00BFA6] hover:bg-[#00A892] text-white text-xs font-bold uppercase tracking-wider transition rounded-xl"
+          className="px-6 py-2.5 bg-[#0E2233] hover:bg-[#163248] text-white border border-[#00BFA6]/40 hover:border-[#00BFA6] text-xs font-bold uppercase tracking-wider transition rounded-xl shadow-xs cursor-pointer"
         >
           BROWSE ALL JOBS
         </button>
@@ -507,7 +507,7 @@ export const JobDetailsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate(ROUTES.LOGIN)}
-                className="w-full h-12 rounded-xl bg-[#00BFA6] text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer"
+                className="w-full h-12 rounded-xl bg-[#0E2233] hover:bg-[#163248] text-white border border-[#00BFA6]/40 hover:border-[#00BFA6] text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-xs"
               >
                 LOGIN TO APPLY
               </button>
@@ -516,7 +516,7 @@ export const JobDetailsPage: React.FC = () => {
                 type="button"
                 disabled={isApplying}
                 onClick={handleAcceptInvitation}
-                className="w-full h-12 rounded-xl bg-[#00BFA6] hover:bg-[#00A892] active:bg-[#008C79] text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm shadow-[#00BFA6]/20"
+                className="w-full h-12 rounded-xl bg-[#0E2233] hover:bg-[#163248] text-white border border-[#00BFA6]/40 hover:border-[#00BFA6] text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-xs"
               >
                 {isApplying ? 'ACCEPTING...' : 'ACCEPT & APPLY'}
               </button>
@@ -533,7 +533,7 @@ export const JobDetailsPage: React.FC = () => {
                 type="button"
                 disabled={isApplying}
                 onClick={() => setApplyModalOpen(true)}
-                className="w-full h-12 rounded-xl bg-[#00BFA6] hover:bg-[#00A892] active:bg-[#008C79] text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm shadow-[#00BFA6]/20"
+                className="w-full h-12 rounded-xl bg-[#0E2233] hover:bg-[#163248] text-white border border-[#00BFA6]/40 hover:border-[#00BFA6] text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-xs"
               >
                 {isApplying ? 'APPLYING...' : 'APPLY NOW'}
               </button>

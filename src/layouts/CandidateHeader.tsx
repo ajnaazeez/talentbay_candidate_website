@@ -117,9 +117,9 @@ export const CandidateHeader: React.FC<CandidateHeaderProps> = ({
             {/* Quick Find Jobs CTA */}
             <NavLink
               to={ROUTES.JOBS}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#00BFA6] text-white hover:bg-[#00A892] transition shadow-xs"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#0E2233] text-white border border-[#00BFA6]/40 hover:border-[#00BFA6] hover:bg-[#163248] transition shadow-xs"
             >
-              <Briefcase className="w-3.5 h-3.5" />
+              <Briefcase className="w-3.5 h-3.5 text-[#00BFA6]" />
               <span>Browse Jobs</span>
             </NavLink>
 

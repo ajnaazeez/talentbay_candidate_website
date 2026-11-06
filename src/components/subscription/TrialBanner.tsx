@@ -59,8 +59,8 @@ export const TrialBanner: React.FC = () => {
               <Button
                 variant="primary"
                 size="sm"
-                className="bg-[#00BFA6] text-white hover:bg-[#00A892] font-bold shadow-xs text-xs"
-                rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+                className="font-bold text-xs"
+                rightIcon={<ArrowRight className="w-3.5 h-3.5 text-[#00BFA6]" />}
               >
                 View Plans
               </Button>
@@ -97,8 +97,8 @@ export const TrialBanner: React.FC = () => {
               <Button
                 variant="primary"
                 size="sm"
-                className="bg-[#00BFA6] text-white hover:bg-[#00A892] font-bold shadow-xs text-xs"
-                rightIcon={<Crown className="w-3.5 h-3.5 text-white" />}
+                className="font-bold text-xs"
+                rightIcon={<Crown className="w-3.5 h-3.5 text-[#00BFA6]" />}
               >
                 Upgrade to Premium
               </Button>
@@ -143,8 +143,8 @@ export const TrialBanner: React.FC = () => {
                 variant="primary"
                 size="sm"
                 onClick={() => setModalOpen(true)}
-                className="bg-[#00BFA6] text-white hover:bg-[#00A892] font-extrabold shadow-sm text-xs"
-                rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+                className="font-extrabold text-xs"
+                rightIcon={<ArrowRight className="w-3.5 h-3.5 text-[#00BFA6]" />}
               >
                 Start Free Trial
               </Button>

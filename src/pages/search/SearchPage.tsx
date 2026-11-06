@@ -254,7 +254,7 @@ export const SearchPage: React.FC = () => {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-[#00BFA6] text-white border-[#00BFA6] shadow-xs'
+                  ? 'bg-[#0E2233] text-white border-[#00BFA6]/40 shadow-xs'
                   : 'bg-white dark:bg-[#0E2233] text-[#1F2D3D] dark:text-[#BACDD8] border-[#D8E4EA] dark:border-[#1F2D3D] hover:border-[#00BFA6]/40 dark:hover:border-[#00BFA6]/40'
               }`}
             >

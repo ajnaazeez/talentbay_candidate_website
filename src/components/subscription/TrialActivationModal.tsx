@@ -138,8 +138,8 @@ export const TrialActivationModal: React.FC<TrialActivationModalProps> = ({
                   variant="primary"
                   onClick={handleActivate}
                   isLoading={loading}
-                  className="w-full justify-center bg-[#00BFA6] hover:bg-[#00A892] active:bg-[#008C79] text-white font-bold py-3 shadow-md"
-                  rightIcon={<ArrowRight className="w-4 h-4" />}
+                  className="w-full justify-center bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] text-white font-bold py-3 shadow-md cursor-pointer"
+                  rightIcon={<ArrowRight className="w-4 h-4 text-[#00BFA6]" />}
                 >
                   Start 7-Day Free Trial
                 </Button>

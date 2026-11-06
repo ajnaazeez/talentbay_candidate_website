@@ -15,17 +15,17 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-[#00BFA6] text-white hover:bg-[#00A892] active:bg-[#008C79] shadow-xs hover:shadow transition-all duration-150 disabled:opacity-40',
+    'bg-[#0E2233] text-white hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] active:bg-[#0A1A27] shadow-xs hover:shadow-md transition-all duration-150 disabled:opacity-40',
   secondary:
-    'bg-[#E8F1F5] dark:bg-[#132B3E] text-[#1F2D3D] dark:text-[#F6FAFC] hover:bg-[#D8E4EA] dark:hover:bg-[#1F2D3D] active:bg-[#D5E5ED] disabled:opacity-50 transition-all duration-150',
+    'bg-white dark:bg-[#0E2233] text-[#0E2233] dark:text-[#F6FAFC] border border-[#D8E4EA] dark:border-[#1F2D3D] hover:bg-[#F6FAFC] dark:hover:bg-[#132B3E] hover:border-[#0E2233]/50 dark:hover:border-[#00BFA6]/40 active:bg-[#E8F1F5] disabled:opacity-50 transition-all duration-150',
   outline:
-    'bg-white dark:bg-[#0E2233] text-[#1F2D3D] dark:text-[#F6FAFC] border border-[#D8E4EA] dark:border-[#1F2D3D] hover:bg-[#F6FAFC] dark:hover:bg-[#163248] hover:border-[#00BFA6]/40 dark:hover:border-[#00BFA6]/40 shadow-xs disabled:opacity-50 transition-all duration-150',
+    'bg-transparent text-[#0E2233] dark:text-[#F6FAFC] border border-[#D8E4EA] dark:border-[#1F2D3D] hover:bg-[#F6FAFC] dark:hover:bg-[#132B3E] hover:border-[#0E2233] dark:hover:border-[#00BFA6] shadow-xs disabled:opacity-50 transition-all duration-150',
   ghost:
     'bg-transparent text-[#1F2D3D] dark:text-[#BACDD8] hover:bg-[#E8F1F5] dark:hover:bg-[#132B3E] hover:text-[#0E2233] dark:hover:text-white transition-all duration-150 disabled:opacity-40',
   danger:
     'bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-xs hover:shadow transition-all duration-150 disabled:bg-rose-300',
   success:
-    'bg-[#00BFA6] text-white hover:bg-[#00A892] active:bg-[#008C79] shadow-xs hover:shadow transition-all duration-150 disabled:opacity-40',
+    'bg-[#0E2233] text-white hover:bg-[#163248] border border-[#00BFA6] shadow-xs hover:shadow transition-all duration-150 disabled:opacity-40',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {

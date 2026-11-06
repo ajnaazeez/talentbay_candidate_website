@@ -697,7 +697,7 @@ export const SettingsPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={phoneLoading}
-                  className="px-4 py-1.5 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 transition uppercase cursor-pointer disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] transition uppercase cursor-pointer disabled:opacity-50 shadow-xs"
                 >
                   {phoneLoading ? 'Saving...' : 'Save'}
                 </button>

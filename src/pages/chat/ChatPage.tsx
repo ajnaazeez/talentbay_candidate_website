@@ -559,12 +559,12 @@ export const ChatPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={!inputText.trim() || sending}
-                  className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 text-xs font-bold text-white bg-[#00BFA6] hover:bg-[#00A892] active:bg-[#008C79] rounded-xl transition shadow-xs disabled:opacity-50 shrink-0"
+                  className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] rounded-xl transition shadow-xs disabled:opacity-50 shrink-0 cursor-pointer"
                 >
                   {sending ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-[#00BFA6]" />
                   ) : (
-                    <Send className="w-3.5 h-3.5" />
+                    <Send className="w-3.5 h-3.5 text-[#00BFA6]" />
                   )}
                   <span>Send</span>
                 </button>
@@ -621,9 +621,9 @@ export const ChatPage: React.FC = () => {
                 type="button"
                 disabled={!editText.trim() || isActionLoading}
                 onClick={handleSaveEdit}
-                className="px-4 py-2 text-xs font-bold text-white bg-[#00BFA6] hover:bg-[#00A892] disabled:opacity-50 rounded-xl transition flex items-center gap-1.5"
+                className="px-4 py-2 text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] disabled:opacity-50 rounded-xl transition flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
-                {isActionLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                {isActionLoading && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#00BFA6]" />}
                 <span>Save Changes</span>
               </button>
             </div>

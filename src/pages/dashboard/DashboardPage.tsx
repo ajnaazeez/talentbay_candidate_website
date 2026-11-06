@@ -250,7 +250,7 @@ export const DashboardPage: React.FC = () => {
               />
               <button
                 type="submit"
-                className="px-5 py-2.5 bg-[#00BFA6] hover:bg-[#00A892] active:bg-[#008C79] text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer shrink-0"
+                className="px-5 py-2.5 bg-[#0E2233] hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer shrink-0"
               >
                 Search Jobs
               </button>
@@ -343,7 +343,7 @@ export const DashboardPage: React.FC = () => {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 text-xs font-semibold rounded-xl whitespace-nowrap transition-all duration-150 cursor-pointer ${
                   isSelected
-                    ? 'bg-[#00BFA6] text-white shadow-xs font-bold'
+                    ? 'bg-[#0E2233] text-white shadow-xs font-bold border border-[#00BFA6]/40'
                     : 'text-[#1F2D3D] dark:text-[#BACDD8] hover:text-[#0E2233] dark:hover:text-white hover:bg-white/80 dark:hover:bg-[#132B3E]'
                 }`}
               >
@@ -393,7 +393,7 @@ export const DashboardPage: React.FC = () => {
             <div className="pt-2">
               <Link
                 to={ROUTES.JOBS}
-                className="inline-block px-5 py-2.5 bg-[#00BFA6] hover:bg-[#00A892] text-white text-xs font-bold rounded-xl transition shadow-xs"
+                className="inline-block px-5 py-2.5 bg-[#0E2233] text-white hover:bg-[#163248] active:bg-[#0A1A27] border border-[#00BFA6]/40 hover:border-[#00BFA6] text-xs font-bold rounded-xl transition shadow-xs"
               >
                 Explore All Jobs
               </Link>

@@ -237,7 +237,7 @@ export const SupportPage: React.FC = () => {
             <div className="flex justify-end pt-1">
               <button
                 type="submit"
-                className="px-5 py-2.5 text-xs font-bold text-white bg-[#00BFA6] hover:bg-[#00A892] active:bg-[#008C79] rounded-xl transition shadow-xs inline-flex items-center gap-1.5"
+                className="px-5 py-2.5 text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] active:bg-[#0A1A27] border border-[#00BFA6]/40 hover:border-[#00BFA6] rounded-xl transition shadow-xs inline-flex items-center gap-1.5 cursor-pointer"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>Submit Ticket</span>

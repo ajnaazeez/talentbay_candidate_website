@@ -312,7 +312,7 @@ export const ApplicationsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-600 text-white text-xs font-bold rounded-xl hover:bg-brand-700 transition"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#0E2233] text-white text-xs font-bold rounded-xl hover:bg-[#163248] border border-[#00BFA6]/40 hover:border-[#00BFA6] transition shadow-xs cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" /> Retry
               </button>
@@ -332,7 +332,7 @@ export const ApplicationsPage: React.FC = () => {
               <div className="pt-2">
                 <Link
                   to={ROUTES.JOBS}
-                  className="inline-block px-5 py-2.5 bg-[#00BFA6] hover:bg-[#00A892] text-white text-xs font-bold rounded-xl transition shadow-xs"
+                  className="inline-block px-5 py-2.5 bg-[#0E2233] text-white hover:bg-[#163248] active:bg-[#0A1A27] border border-[#00BFA6]/40 hover:border-[#00BFA6] text-xs font-bold rounded-xl transition shadow-xs"
                 >
                   Explore Jobs
                 </Link>
@@ -409,7 +409,7 @@ export const ApplicationsPage: React.FC = () => {
                             type="button"
                             disabled={isConnecting}
                             onClick={() => handleMessageRecruiter(job, app.applicationId)}
-                            className="px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-[#00BFA6] hover:bg-[#00A892] shadow-xs transition cursor-pointer inline-flex items-center gap-1.5"
+                            className="px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] active:bg-[#0A1A27] border border-[#00BFA6]/40 hover:border-[#00BFA6] shadow-xs transition cursor-pointer inline-flex items-center gap-1.5"
                           >
                             <MessageSquare className="w-3.5 h-3.5" />
                             <span>{isConnecting ? 'Connecting...' : 'Message Recruiter'}</span>
@@ -451,7 +451,7 @@ export const ApplicationsPage: React.FC = () => {
               <div className="pt-2">
                 <Link
                   to={ROUTES.JOBS}
-                  className="inline-block px-5 py-2.5 bg-[#00BFA6] hover:bg-[#00A892] text-white text-xs font-bold rounded-xl transition shadow-xs"
+                  className="inline-block px-5 py-2.5 bg-[#0E2233] text-white hover:bg-[#163248] active:bg-[#0A1A27] border border-[#00BFA6]/40 hover:border-[#00BFA6] text-xs font-bold rounded-xl transition shadow-xs"
                 >
                   Browse Vacancies
                 </Link>
@@ -559,7 +559,7 @@ export const ApplicationsPage: React.FC = () => {
                         type="button"
                         disabled={isConnecting}
                         onClick={() => handleMessageRecruiter(job, app.applicationId)}
-                        className="ml-auto px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-[#00BFA6] hover:bg-[#00A892] shadow-xs transition cursor-pointer inline-flex items-center gap-1.5"
+                        className="ml-auto px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-[#0E2233] hover:bg-[#163248] active:bg-[#0A1A27] border border-[#00BFA6]/40 hover:border-[#00BFA6] shadow-xs transition cursor-pointer inline-flex items-center gap-1.5"
                       >
                         <MessageSquare className="w-3.5 h-3.5" />
                         <span>{isConnecting ? 'Connecting...' : 'Message Recruiter'}</span>
