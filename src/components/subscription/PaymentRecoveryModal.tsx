@@ -52,21 +52,21 @@ export const PaymentRecoveryModal: React.FC<PaymentRecoveryModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-white dark:bg-[#142B3B] rounded-3xl border border-[#DCE5EB] dark:border-[#243746] shadow-modal overflow-hidden p-6 sm:p-8 space-y-5">
+      <div className="relative w-full max-w-md bg-white dark:bg-[#0E2233] rounded-3xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-modal overflow-hidden p-6 sm:p-8 space-y-5">
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-[#E7EFF3] dark:hover:bg-[#332F34] transition-colors"
+          className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-[#E8F1F5] dark:hover:bg-[#332F34] transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
 
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-[#16B8A6]/15 text-[#16B8A6] flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-2xl bg-[#00BFA6]/15 text-[#00BFA6] flex items-center justify-center shrink-0">
             <RotateCw className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base sm:text-lg font-bold text-[#243746] dark:text-white">
+            <h3 className="text-base sm:text-lg font-bold text-[#1F2D3D] dark:text-white">
               Payment Reconciliation
             </h3>
             <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7]">
@@ -75,7 +75,7 @@ export const PaymentRecoveryModal: React.FC<PaymentRecoveryModalProps> = ({
           </div>
         </div>
 
-        <div className="text-xs text-[#243746] dark:text-[#BACDD8] leading-relaxed space-y-2">
+        <div className="text-xs text-[#1F2D3D] dark:text-[#BACDD8] leading-relaxed space-y-2">
           <p>
             If money was deducted from your bank account or UPI but your subscription did not immediately activate due to a network drop, our automated reconciliation service can synchronize it with the payment gateway.
           </p>
@@ -85,14 +85,14 @@ export const PaymentRecoveryModal: React.FC<PaymentRecoveryModalProps> = ({
           <div
             className={`p-4 rounded-2xl border text-xs flex items-start gap-3 ${
               isSuccess
-                ? 'bg-[#16B8A6]/15 dark:bg-[#16B8A6]/25 border-[#16B8A6]/30 text-[#16B8A6] dark:text-[#DCE5EB]'
-                : 'bg-[#E7EFF3] dark:bg-[#102230] border-[#DCE5EB] dark:border-[#243746] text-[#243746] dark:text-[#BACDD8]'
+                ? 'bg-[#00BFA6]/15 dark:bg-[#00BFA6]/25 border-[#00BFA6]/30 text-[#00BFA6] dark:text-[#D8E4EA]'
+                : 'bg-[#E8F1F5] dark:bg-[#0A1A27] border-[#D8E4EA] dark:border-[#1F2D3D] text-[#1F2D3D] dark:text-[#BACDD8]'
             }`}
           >
             {isSuccess ? (
-              <CheckCircle2 className="w-4 h-4 text-[#16B8A6] shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-4 h-4 text-[#00BFA6] shrink-0 mt-0.5" />
             ) : (
-              <HelpCircle className="w-4 h-4 text-[#16B8A6] shrink-0 mt-0.5" />
+              <HelpCircle className="w-4 h-4 text-[#00BFA6] shrink-0 mt-0.5" />
             )}
             <div className="space-y-1">
               <span className="font-semibold block">{isSuccess ? 'Success' : 'Status'}</span>

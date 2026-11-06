@@ -15,17 +15,17 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-[#16B8A6] text-white hover:bg-[#0D9488] active:bg-[#0F766E] shadow-xs hover:shadow transition-all duration-150 disabled:opacity-40',
+    'bg-[#00BFA6] text-white hover:bg-[#00A892] active:bg-[#008C79] shadow-xs hover:shadow transition-all duration-150 disabled:opacity-40',
   secondary:
-    'bg-[#E7EFF3] dark:bg-[#1A374B] text-[#243746] dark:text-[#F5F8FA] hover:bg-[#DCE5EB] dark:hover:bg-[#243746] active:bg-[#D5E3EB] disabled:opacity-50 transition-all duration-150',
+    'bg-[#E8F1F5] dark:bg-[#132B3E] text-[#1F2D3D] dark:text-[#F6FAFC] hover:bg-[#D8E4EA] dark:hover:bg-[#1F2D3D] active:bg-[#D5E5ED] disabled:opacity-50 transition-all duration-150',
   outline:
-    'bg-white dark:bg-[#142B3B] text-[#243746] dark:text-[#F5F8FA] border border-[#DCE5EB] dark:border-[#243746] hover:bg-[#F5F8FA] dark:hover:bg-[#1B364A] hover:border-[#16B8A6]/40 dark:hover:border-[#16B8A6]/40 shadow-xs disabled:opacity-50 transition-all duration-150',
+    'bg-white dark:bg-[#0E2233] text-[#1F2D3D] dark:text-[#F6FAFC] border border-[#D8E4EA] dark:border-[#1F2D3D] hover:bg-[#F6FAFC] dark:hover:bg-[#163248] hover:border-[#00BFA6]/40 dark:hover:border-[#00BFA6]/40 shadow-xs disabled:opacity-50 transition-all duration-150',
   ghost:
-    'bg-transparent text-[#243746] dark:text-[#BACDD8] hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B] hover:text-[#142B3B] dark:hover:text-white transition-all duration-150 disabled:opacity-40',
+    'bg-transparent text-[#1F2D3D] dark:text-[#BACDD8] hover:bg-[#E8F1F5] dark:hover:bg-[#132B3E] hover:text-[#0E2233] dark:hover:text-white transition-all duration-150 disabled:opacity-40',
   danger:
     'bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-xs hover:shadow transition-all duration-150 disabled:bg-rose-300',
   success:
-    'bg-teal-600 text-white hover:bg-teal-700 active:bg-teal-800 shadow-xs hover:shadow transition-all duration-150 disabled:bg-teal-300',
+    'bg-[#00BFA6] text-white hover:bg-[#00A892] active:bg-[#008C79] shadow-xs hover:shadow transition-all duration-150 disabled:opacity-40',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -54,7 +54,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || isLoading}
         className={cn(
-          'inline-flex items-center justify-center whitespace-nowrap transition-all duration-150 select-none focus:outline-none focus:ring-2 focus:ring-[#16B8A6]/25 focus:ring-offset-1 disabled:cursor-not-allowed disabled:shadow-none active:scale-[0.98]',
+          'inline-flex items-center justify-center whitespace-nowrap transition-all duration-150 select-none focus:outline-none focus:ring-2 focus:ring-[#00BFA6]/25 focus:ring-offset-1 disabled:cursor-not-allowed disabled:shadow-none active:scale-[0.98]',
           variantClasses[variant],
           sizeClasses[size],
           className

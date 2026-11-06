@@ -104,7 +104,7 @@ export const SubscriptionPage: React.FC = () => {
         description="Accelerate your job search with verified applicant badges, AI CV creation, and direct employer chat."
         badge={
           <Badge variant="brand" isAi>
-            <Crown className="w-3.5 h-3.5 mr-1 text-[#16B8A6]" />
+            <Crown className="w-3.5 h-3.5 mr-1 text-[#00BFA6]" />
             Premium Membership
           </Badge>
         }
@@ -142,7 +142,7 @@ export const SubscriptionPage: React.FC = () => {
       )}
 
       {/* Current Membership Status Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] shadow-card">
+      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-card">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2.5">
@@ -155,13 +155,13 @@ export const SubscriptionPage: React.FC = () => {
                   {isPaidActive ? 'PREMIUM ACTIVE' : '7-DAY TRIAL ACTIVE'}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-[#243746] dark:text-[#BACDD8] bg-[#E7EFF3] dark:bg-[#102230] px-2.5 py-0.5 rounded-full border border-[#DCE5EB] dark:border-[#243746]">
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-[#1F2D3D] dark:text-[#BACDD8] bg-[#E8F1F5] dark:bg-[#0A1A27] px-2.5 py-0.5 rounded-full border border-[#D8E4EA] dark:border-[#1F2D3D]">
                   BASIC ACCOUNT
                 </span>
               )}
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-black text-[#243746] dark:text-white tracking-tight">
+            <h3 className="text-xl sm:text-2xl font-black text-[#1F2D3D] dark:text-white tracking-tight">
               {isPaidActive
                 ? currentPlanObj?.title || 'Active Premium Membership'
                 : isTrialActive
@@ -185,7 +185,7 @@ export const SubscriptionPage: React.FC = () => {
               <Button
                 variant="primary"
                 onClick={() => setTrialModalOpen(true)}
-                className="bg-[#16B8A6] hover:bg-[#0D9488] text-white font-bold"
+                className="bg-[#00BFA6] hover:bg-[#00A892] text-white font-bold"
                 leftIcon={<Sparkles className="w-4 h-4 text-white" />}
               >
                 Start 7-Day Free Trial
@@ -197,15 +197,15 @@ export const SubscriptionPage: React.FC = () => {
 
       {/* Free Trial Callout Card (if eligible) */}
       {isEligibleForTrial && (
-        <div className="p-6 rounded-3xl bg-[#142B3B] text-white border border-[#243746] shadow-xl relative overflow-hidden">
-          <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#16B8A6]/20 via-transparent to-transparent pointer-events-none" />
+        <div className="p-6 rounded-3xl bg-[#0E2233] text-white border border-[#1F2D3D] shadow-xl relative overflow-hidden">
+          <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#00BFA6]/20 via-transparent to-transparent pointer-events-none" />
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2 max-w-xl">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#16B8A6]/20 text-[#16B8A6] border border-[#16B8A6]/40">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#00BFA6]/20 text-[#00BFA6] border border-[#00BFA6]/40">
                   Zero Cost
                 </span>
-                <span className="text-xs text-[#5EEAD4]">No payment info required</span>
+                <span className="text-xs text-[#5EEAD9]">No payment info required</span>
               </div>
               <h4 className="text-lg sm:text-xl font-bold tracking-tight">
                 {trialPlan.title} — 100% Free for 7 Days
@@ -219,7 +219,7 @@ export const SubscriptionPage: React.FC = () => {
               <Button
                 variant="primary"
                 onClick={() => setTrialModalOpen(true)}
-                className="bg-[#16B8A6] text-white hover:bg-[#0D9488] font-extrabold shadow-md text-xs py-2.5 px-5"
+                className="bg-[#00BFA6] text-white hover:bg-[#00A892] font-extrabold shadow-md text-xs py-2.5 px-5"
                 rightIcon={<ArrowRight className="w-4 h-4" />}
               >
                 Activate Free Trial (₹0)
@@ -232,7 +232,7 @@ export const SubscriptionPage: React.FC = () => {
       {/* Subscription Plans Grid */}
       <div>
         <div className="mb-6 text-center max-w-xl mx-auto space-y-1">
-          <h3 className="text-xl sm:text-2xl font-black text-[#243746] dark:text-white tracking-tight">
+          <h3 className="text-xl sm:text-2xl font-black text-[#1F2D3D] dark:text-white tracking-tight">
             Select a Subscription Plan
           </h3>
           <p className="text-xs sm:text-sm text-[#6B8699] dark:text-[#8CA6B7]">
@@ -250,14 +250,14 @@ export const SubscriptionPage: React.FC = () => {
                 key={plan.id}
                 className={`relative rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 ${
                   plan.isPopular
-                    ? 'bg-white dark:bg-[#142B3B] border-2 border-[#16B8A6] shadow-xl ring-4 ring-[#16B8A6]/10'
-                    : 'bg-white dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] shadow-card hover:border-[#16B8A6]/60'
+                    ? 'bg-white dark:bg-[#0E2233] border-2 border-[#00BFA6] shadow-xl ring-4 ring-[#00BFA6]/10'
+                    : 'bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-card hover:border-[#00BFA6]/60'
                 }`}
               >
                 {/* Plan Badge */}
                 {plan.offer && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#16B8A6] text-white shadow-md">
+                    <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#00BFA6] text-white shadow-md">
                       {plan.offer}
                     </span>
                   </div>
@@ -265,7 +265,7 @@ export const SubscriptionPage: React.FC = () => {
 
                 <div className="space-y-5">
                   <div>
-                    <h4 className="text-lg font-bold text-[#243746] dark:text-white">
+                    <h4 className="text-lg font-bold text-[#1F2D3D] dark:text-white">
                       {plan.title}
                     </h4>
                     <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] mt-1">
@@ -274,8 +274,8 @@ export const SubscriptionPage: React.FC = () => {
                   </div>
 
                   {/* Price Header */}
-                  <div className="flex items-baseline gap-1.5 pb-4 border-b border-[#DCE5EB] dark:border-[#243746]">
-                    <span className="text-3xl sm:text-4xl font-black text-[#243746] dark:text-white tracking-tight">
+                  <div className="flex items-baseline gap-1.5 pb-4 border-b border-[#D8E4EA] dark:border-[#1F2D3D]">
+                    <span className="text-3xl sm:text-4xl font-black text-[#1F2D3D] dark:text-white tracking-tight">
                       ₹{plan.displayAmount}
                     </span>
                     <span className="text-xs font-semibold text-[#6B8699] dark:text-[#8CA6B7]">
@@ -288,10 +288,10 @@ export const SubscriptionPage: React.FC = () => {
                     <span className="text-[11px] font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7] block">
                       Included with plan:
                     </span>
-                    <ul className="space-y-2.5 text-xs text-[#243746] dark:text-[#BACDD8]">
+                    <ul className="space-y-2.5 text-xs text-[#1F2D3D] dark:text-[#BACDD8]">
                       {plan.features.map((feature, fIdx) => (
                         <li key={fIdx} className="flex items-start gap-2.5">
-                          <CheckCircle2 className="w-4 h-4 text-[#16B8A6] shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-4 h-4 text-[#00BFA6] shrink-0 mt-0.5" />
                           <span>{feature}</span>
                         </li>
                       ))}
@@ -300,7 +300,7 @@ export const SubscriptionPage: React.FC = () => {
                 </div>
 
                 {/* Card CTA */}
-                <div className="mt-8 pt-5 border-t border-[#DCE5EB] dark:border-[#243746]">
+                <div className="mt-8 pt-5 border-t border-[#D8E4EA] dark:border-[#1F2D3D]">
                   <Button
                     variant={plan.isPopular ? 'primary' : 'outline'}
                     onClick={() => handleSubscribe(plan)}
@@ -319,13 +319,13 @@ export const SubscriptionPage: React.FC = () => {
       </div>
 
       {/* Trust & Guarantee Banner */}
-      <div className="p-6 rounded-3xl bg-[#E7EFF3]/80 dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] shadow-2xs">
+      <div className="p-6 rounded-3xl bg-[#E8F1F5]/80 dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-2xs">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#102230] border border-[#DCE5EB] dark:border-[#243746] text-[#16B8A6] flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] text-[#00BFA6] flex items-center justify-center shadow-xs">
               <ShieldCheck className="w-5 h-5" />
             </div>
-            <h5 className="text-xs font-bold text-[#243746] dark:text-white">
+            <h5 className="text-xs font-bold text-[#1F2D3D] dark:text-white">
               Authoritative Backend Verification
             </h5>
             <p className="text-[11px] text-[#6B8699] dark:text-[#8CA6B7] max-w-xs">
@@ -334,10 +334,10 @@ export const SubscriptionPage: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#102230] border border-[#DCE5EB] dark:border-[#243746] text-[#16B8A6] flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] text-[#00BFA6] flex items-center justify-center shadow-xs">
               <Lock className="w-5 h-5" />
             </div>
-            <h5 className="text-xs font-bold text-[#243746] dark:text-white">
+            <h5 className="text-xs font-bold text-[#1F2D3D] dark:text-white">
               Razorpay Secured Gateway
             </h5>
             <p className="text-[11px] text-[#6B8699] dark:text-[#8CA6B7] max-w-xs">
@@ -346,10 +346,10 @@ export const SubscriptionPage: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#102230] border border-[#DCE5EB] dark:border-[#243746] text-[#16B8A6] flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] text-[#00BFA6] flex items-center justify-center shadow-xs">
               <RotateCw className="w-5 h-5" />
             </div>
-            <h5 className="text-xs font-bold text-[#243746] dark:text-white">
+            <h5 className="text-xs font-bold text-[#1F2D3D] dark:text-white">
               Automated Reversal Protection
             </h5>
             <p className="text-[11px] text-[#6B8699] dark:text-[#8CA6B7] max-w-xs">

@@ -33,8 +33,8 @@ export const StatCard: React.FC<StatCardProps> = ({
     <div
       onClick={onClick}
       className={cn(
-        'p-5 rounded-2xl bg-white dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] shadow-card transition-all duration-200 flex flex-col justify-between',
-        onClick && 'cursor-pointer hover:border-[#16B8A6]/60 hover:shadow-card-hover group',
+        'p-5 rounded-2xl bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-card transition-all duration-200 flex flex-col justify-between',
+        onClick && 'cursor-pointer hover:border-[#00BFA6]/60 hover:shadow-card-hover group',
         className
       )}
     >
@@ -63,7 +63,7 @@ export const StatCard: React.FC<StatCardProps> = ({
             className={cn(
               'flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full',
               trend.isPositive !== false
-                ? 'text-[#0F766E] bg-[#16B8A6]/15 border border-[#16B8A6]/30 dark:bg-[#16B8A6]/20 dark:text-[#5EEAD4] dark:border-[#16B8A6]/40'
+                ? 'text-[#008C79] bg-[#00BFA6]/15 border border-[#00BFA6]/30 dark:bg-[#00BFA6]/20 dark:text-[#5EEAD9] dark:border-[#00BFA6]/40'
                 : 'text-rose-700 bg-rose-50 border border-rose-200/60 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60'
             )}
           >

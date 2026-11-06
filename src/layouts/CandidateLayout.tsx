@@ -32,7 +32,7 @@ export const CandidateLayout: React.FC = () => {
   }, [candidate?.uid]);
 
   return (
-    <div className="min-h-screen bg-[#F5F8FA] dark:bg-[#0F1D27] text-[#243746] dark:text-[#F5F8FA] flex flex-col transition-colors">
+    <div className="min-h-screen bg-[#F6FAFC] dark:bg-[#08141F] text-[#1F2D3D] dark:text-[#F6FAFC] flex flex-col transition-colors">
       {/* Sidebar Navigation */}
       <CandidateSidebar
         isOpen={sidebarOpen}

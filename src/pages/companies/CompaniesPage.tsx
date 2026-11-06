@@ -66,11 +66,11 @@ export const CompaniesPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-16">
       {/* Hero Banner */}
-      <div className="relative rounded-3xl bg-[#142B3B] border border-[#243746] text-white p-6 sm:p-10 shadow-lg overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#16B8A6]/20 via-transparent to-transparent pointer-events-none" />
+      <div className="relative rounded-3xl bg-[#0E2233] border border-[#1F2D3D] text-white p-6 sm:p-10 shadow-lg overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#00BFA6]/20 via-transparent to-transparent pointer-events-none" />
         <div className="relative z-10 max-w-2xl space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 backdrop-blur-md text-white border border-white/20">
-            <Building2 className="w-3.5 h-3.5 text-[#16B8A6]" />
+            <Building2 className="w-3.5 h-3.5 text-[#00BFA6]" />
             Verified Employer Directory
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">

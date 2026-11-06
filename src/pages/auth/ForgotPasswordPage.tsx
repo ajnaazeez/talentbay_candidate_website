@@ -64,7 +64,7 @@ export const ForgotPasswordPage: React.FC = () => {
 
       {success ? (
         <div className="p-6 bg-slate-900/90 border border-brand-500/30 rounded-2xl text-center space-y-4 animate-in fade-in zoom-in-95 duration-200">
-          <div className="w-12 h-12 rounded-full bg-[#16B8A6]/20 border border-[#16B8A6]/40 text-[#16B8A6] flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 rounded-full bg-[#00BFA6]/20 border border-[#00BFA6]/40 text-[#00BFA6] flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>

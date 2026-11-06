@@ -103,12 +103,12 @@ export const SupportPage: React.FC = () => {
       </div>
 
       {/* Hero Banner */}
-      <div className="bg-white dark:bg-[#142B3B] rounded-3xl p-6 sm:p-10 border border-[#DCE5EB] dark:border-[#243746] shadow-xs text-center relative overflow-hidden">
-        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#16B8A6]/15 border border-[#16B8A6]/30 flex items-center justify-center text-[#16B8A6] mx-auto mb-5 shadow-xs">
+      <div className="bg-white dark:bg-[#0E2233] rounded-3xl p-6 sm:p-10 border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs text-center relative overflow-hidden">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#00BFA6]/15 border border-[#00BFA6]/30 flex items-center justify-center text-[#00BFA6] mx-auto mb-5 shadow-xs">
           <Headphones className="w-8 h-8 sm:w-10 sm:h-10" />
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-black text-[#243746] dark:text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-black text-[#1F2D3D] dark:text-white tracking-tight">
           CANDIDATE SUPPORT & HELP
         </h1>
         <p className="text-xs sm:text-sm text-[#6B8699] dark:text-[#8CA6B7] max-w-xl mx-auto mt-2 leading-relaxed">
@@ -120,25 +120,25 @@ export const SupportPage: React.FC = () => {
         <div className="pt-6 flex justify-center">
           <div
             onClick={handleCopyEmail}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#E7EFF3] dark:bg-[#102230] border border-[#DCE5EB] dark:border-[#243746] cursor-pointer hover:border-[#16B8A6] transition shadow-xs group"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#E8F1F5] dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] cursor-pointer hover:border-[#00BFA6] transition shadow-xs group"
             title="Click to copy support email"
           >
-            <Mail className="w-4 h-4 text-[#16B8A6]" />
-            <span className="text-xs font-bold text-[#243746] dark:text-[#E7EFF3]">
+            <Mail className="w-4 h-4 text-[#00BFA6]" />
+            <span className="text-xs font-bold text-[#1F2D3D] dark:text-[#E8F1F5]">
               {APP_CONFIG.supportEmail}
             </span>
-            <span className="p-1 rounded-lg bg-white dark:bg-[#332F34] border border-[#DCE5EB] dark:border-[#243746] text-[#8CA6B7] group-hover:text-[#16B8A6] transition">
-              {copiedEmail ? <Check className="w-3.5 h-3.5 text-[#16B8A6]" /> : <Copy className="w-3.5 h-3.5" />}
+            <span className="p-1 rounded-lg bg-white dark:bg-[#332F34] border border-[#D8E4EA] dark:border-[#1F2D3D] text-[#8CA6B7] group-hover:text-[#00BFA6] transition">
+              {copiedEmail ? <Check className="w-3.5 h-3.5 text-[#00BFA6]" /> : <Copy className="w-3.5 h-3.5" />}
             </span>
           </div>
         </div>
       </div>
 
       {/* Frequently Asked Questions */}
-      <div className="bg-white dark:bg-[#142B3B] rounded-3xl p-6 sm:p-8 border border-[#DCE5EB] dark:border-[#243746] shadow-xs space-y-5">
+      <div className="bg-white dark:bg-[#0E2233] rounded-3xl p-6 sm:p-8 border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs space-y-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-[#243746] dark:text-white flex items-center gap-2">
-            <HelpCircle className="w-4 h-4 text-[#16B8A6]" />
+          <h2 className="text-sm font-bold text-[#1F2D3D] dark:text-white flex items-center gap-2">
+            <HelpCircle className="w-4 h-4 text-[#00BFA6]" />
             <span>Frequently Asked Questions</span>
           </h2>
           <span className="text-xs text-[#8CA6B7] font-semibold">{CANDIDATE_FAQS.length} Articles</span>
@@ -151,18 +151,18 @@ export const SupportPage: React.FC = () => {
             return (
               <div
                 key={faq.question}
-                className="border border-[#DCE5EB] dark:border-[#243746] rounded-2xl overflow-hidden transition"
+                className="border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-2xl overflow-hidden transition"
               >
                 <button
                   type="button"
                   onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 bg-[#E7EFF3]/50 dark:bg-[#102230]/40 hover:bg-[#E7EFF3] dark:hover:bg-[#332F34] transition"
+                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 bg-[#E8F1F5]/50 dark:bg-[#0A1A27]/40 hover:bg-[#E8F1F5] dark:hover:bg-[#332F34] transition"
                 >
                   <div className="space-y-1">
-                    <span className="text-[10px] uppercase font-bold text-[#16B8A6] tracking-wider">
+                    <span className="text-[10px] uppercase font-bold text-[#00BFA6] tracking-wider">
                       {faq.category}
                     </span>
-                    <h3 className="text-xs sm:text-sm font-bold text-[#243746] dark:text-white">
+                    <h3 className="text-xs sm:text-sm font-bold text-[#1F2D3D] dark:text-white">
                       {faq.question}
                     </h3>
                   </div>
@@ -172,7 +172,7 @@ export const SupportPage: React.FC = () => {
                 </button>
 
                 {isOpen && (
-                  <div className="p-4 sm:p-5 bg-white dark:bg-[#142B3B] border-t border-[#DCE5EB] dark:border-[#243746] text-xs text-[#6B8699] dark:text-[#8CA6B7] leading-relaxed">
+                  <div className="p-4 sm:p-5 bg-white dark:bg-[#0E2233] border-t border-[#D8E4EA] dark:border-[#1F2D3D] text-xs text-[#6B8699] dark:text-[#8CA6B7] leading-relaxed">
                     {faq.answer}
                   </div>
                 )}
@@ -183,10 +183,10 @@ export const SupportPage: React.FC = () => {
       </div>
 
       {/* Support Inquiry Form */}
-      <div className="bg-white dark:bg-[#142B3B] rounded-3xl p-6 sm:p-8 border border-[#DCE5EB] dark:border-[#243746] shadow-xs space-y-5">
+      <div className="bg-white dark:bg-[#0E2233] rounded-3xl p-6 sm:p-8 border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs space-y-5">
         <div>
-          <h2 className="text-sm font-bold text-[#243746] dark:text-white flex items-center gap-2">
-            <Send className="w-4 h-4 text-[#16B8A6]" />
+          <h2 className="text-sm font-bold text-[#1F2D3D] dark:text-white flex items-center gap-2">
+            <Send className="w-4 h-4 text-[#00BFA6]" />
             <span>Send a Support Message</span>
           </h2>
           <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] mt-1">
@@ -195,9 +195,9 @@ export const SupportPage: React.FC = () => {
         </div>
 
         {isSubmitted ? (
-          <div className="p-6 rounded-2xl bg-[#16B8A6]/10 dark:bg-[#16B8A6]/20 border border-[#16B8A6]/30 text-center space-y-2">
-            <CheckCircle2 className="w-8 h-8 text-[#16B8A6] mx-auto" />
-            <h3 className="text-sm font-bold text-[#243746] dark:text-white">
+          <div className="p-6 rounded-2xl bg-[#00BFA6]/10 dark:bg-[#00BFA6]/20 border border-[#00BFA6]/30 text-center space-y-2">
+            <CheckCircle2 className="w-8 h-8 text-[#00BFA6] mx-auto" />
+            <h3 className="text-sm font-bold text-[#1F2D3D] dark:text-white">
               Inquiry Dispatched Successfully!
             </h3>
             <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] max-w-sm mx-auto">
@@ -207,7 +207,7 @@ export const SupportPage: React.FC = () => {
         ) : (
           <form onSubmit={handleSubmitTicket} className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-[#243746] dark:text-[#BACDD8] block mb-1.5">
+              <label className="text-xs font-semibold text-[#1F2D3D] dark:text-[#BACDD8] block mb-1.5">
                 Subject
               </label>
               <input
@@ -216,12 +216,12 @@ export const SupportPage: React.FC = () => {
                 value={ticketSubject}
                 onChange={(e) => setTicketSubject(e.target.value)}
                 placeholder="Brief summary of your inquiry..."
-                className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-[#E7EFF3] dark:bg-[#102230] border border-[#DCE5EB] dark:border-[#243746] rounded-xl text-[#243746] dark:text-white placeholder:text-[#8CA6B7] focus:outline-none focus:ring-2 focus:ring-[#16B8A6]"
+                className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-[#E8F1F5] dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-xl text-[#1F2D3D] dark:text-white placeholder:text-[#8CA6B7] focus:outline-none focus:ring-2 focus:ring-[#00BFA6]"
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#243746] dark:text-[#BACDD8] block mb-1.5">
+              <label className="text-xs font-semibold text-[#1F2D3D] dark:text-[#BACDD8] block mb-1.5">
                 Detailed Message
               </label>
               <textarea
@@ -230,14 +230,14 @@ export const SupportPage: React.FC = () => {
                 value={ticketMessage}
                 onChange={(e) => setTicketMessage(e.target.value)}
                 placeholder="Describe your issue or question in detail..."
-                className="w-full p-3.5 text-xs sm:text-sm bg-[#E7EFF3] dark:bg-[#102230] border border-[#DCE5EB] dark:border-[#243746] rounded-xl text-[#243746] dark:text-white placeholder:text-[#8CA6B7] focus:outline-none focus:ring-2 focus:ring-[#16B8A6]"
+                className="w-full p-3.5 text-xs sm:text-sm bg-[#E8F1F5] dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-xl text-[#1F2D3D] dark:text-white placeholder:text-[#8CA6B7] focus:outline-none focus:ring-2 focus:ring-[#00BFA6]"
               />
             </div>
 
             <div className="flex justify-end pt-1">
               <button
                 type="submit"
-                className="px-5 py-2.5 text-xs font-bold text-white bg-[#16B8A6] hover:bg-[#0D9488] active:bg-[#0F766E] rounded-xl transition shadow-xs inline-flex items-center gap-1.5"
+                className="px-5 py-2.5 text-xs font-bold text-white bg-[#00BFA6] hover:bg-[#00A892] active:bg-[#008C79] rounded-xl transition shadow-xs inline-flex items-center gap-1.5"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>Submit Ticket</span>

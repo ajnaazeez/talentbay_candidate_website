@@ -90,14 +90,14 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Top Header Card */}
-      <div className="bg-white dark:bg-[#142B3B] rounded-2xl p-5 border border-[#DCE5EB] dark:border-[#243746] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#0E2233] rounded-2xl p-5 border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl bg-[#16B8A6]/15 text-[#16B8A6] flex items-center justify-center font-bold text-lg">
+          <div className="w-11 h-11 rounded-xl bg-[#00BFA6]/15 text-[#00BFA6] flex items-center justify-center font-bold text-lg">
             {skill.slice(0, 2).toUpperCase()}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold text-[#243746] dark:text-white">{skill}</h1>
+              <h1 className="text-lg font-bold text-[#1F2D3D] dark:text-white">{skill}</h1>
               <Badge variant="neutral" size="sm">{difficulty}</Badge>
             </div>
             <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7]">
@@ -112,7 +112,7 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-mono font-bold text-sm border transition-colors ${
               isTimeCritical
                 ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900/60 animate-pulse'
-                : 'bg-[#E7EFF3] dark:bg-[#102230] text-[#243746] dark:text-[#E7EFF3] border-[#DCE5EB] dark:border-[#243746]'
+                : 'bg-[#E8F1F5] dark:bg-[#0A1A27] text-[#1F2D3D] dark:text-[#E8F1F5] border-[#D8E4EA] dark:border-[#1F2D3D]'
             }`}
           >
             <Clock className={`w-4 h-4 ${isTimeCritical ? 'text-rose-500' : 'text-[#8CA6B7]'}`} />
@@ -132,21 +132,21 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
       </div>
 
       {/* Progress Bar */}
-      <div className="bg-[#DCE5EB] dark:bg-[#1A374B] h-2 rounded-full overflow-hidden">
+      <div className="bg-[#D8E4EA] dark:bg-[#132B3E] h-2 rounded-full overflow-hidden">
         <div
-          className="bg-[#16B8A6] h-full transition-all duration-300 ease-out"
+          className="bg-[#00BFA6] h-full transition-all duration-300 ease-out"
           style={{ width: `${progressPercentage}%` }}
         />
       </div>
 
       {/* Question Card */}
-      <div className="bg-white dark:bg-[#142B3B] rounded-2xl p-6 sm:p-8 border border-[#DCE5EB] dark:border-[#243746] shadow-xs space-y-6">
+      <div className="bg-white dark:bg-[#0E2233] rounded-2xl p-6 sm:p-8 border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs space-y-6">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#16B8A6]">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#00BFA6]">
               Question {currentIndex + 1}
             </span>
-            <h2 className="text-base sm:text-lg font-semibold text-[#243746] dark:text-white leading-relaxed">
+            <h2 className="text-base sm:text-lg font-semibold text-[#1F2D3D] dark:text-white leading-relaxed">
               {currentQuestion?.question}
             </h2>
           </div>
@@ -155,8 +155,8 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
             onClick={() => toggleFlag(currentIndex)}
             className={`p-2 rounded-lg border transition-colors cursor-pointer ${
               flagged[currentIndex]
-                ? 'bg-[#16B8A6]/15 border-[#16B8A6]/40 text-[#16B8A6]'
-                : 'border-[#DCE5EB] dark:border-[#243746] text-[#8CA6B7] hover:text-[#243746] dark:hover:text-white'
+                ? 'bg-[#00BFA6]/15 border-[#00BFA6]/40 text-[#00BFA6]'
+                : 'border-[#D8E4EA] dark:border-[#1F2D3D] text-[#8CA6B7] hover:text-[#1F2D3D] dark:hover:text-white'
             }`}
             title="Flag question for review"
           >
@@ -176,15 +176,15 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
                 onClick={() => handleSelectOption(idx)}
                 className={`w-full p-4 rounded-xl border text-left flex items-start gap-3.5 transition-all cursor-pointer group ${
                   isSelected
-                    ? 'border-[#16B8A6] bg-[#16B8A6]/10 text-[#243746] dark:text-white ring-2 ring-[#16B8A6]/20 shadow-xs'
-                    : 'border-[#DCE5EB] dark:border-[#243746] hover:border-[#16B8A6]/60 bg-white dark:bg-[#142B3B] text-[#243746] dark:text-[#BACDD8]'
+                    ? 'border-[#00BFA6] bg-[#00BFA6]/10 text-[#1F2D3D] dark:text-white ring-2 ring-[#00BFA6]/20 shadow-xs'
+                    : 'border-[#D8E4EA] dark:border-[#1F2D3D] hover:border-[#00BFA6]/60 bg-white dark:bg-[#0E2233] text-[#1F2D3D] dark:text-[#BACDD8]'
                 }`}
               >
                 <span
                   className={`w-7 h-7 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 transition-colors ${
                     isSelected
-                      ? 'bg-[#16B8A6] text-white'
-                      : 'bg-[#E7EFF3] dark:bg-[#102230] text-[#6B8699] dark:text-[#8CA6B7] group-hover:bg-[#DCE5EB] dark:group-hover:bg-[#1A374B]'
+                      ? 'bg-[#00BFA6] text-white'
+                      : 'bg-[#E8F1F5] dark:bg-[#0A1A27] text-[#6B8699] dark:text-[#8CA6B7] group-hover:bg-[#D8E4EA] dark:group-hover:bg-[#132B3E]'
                   }`}
                 >
                   {optionLetters[idx] || idx + 1}
@@ -196,7 +196,7 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
         </div>
 
         {/* Navigation Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-[#DCE5EB] dark:border-[#243746]">
+        <div className="flex items-center justify-between pt-4 border-t border-[#D8E4EA] dark:border-[#1F2D3D]">
           <Button
             variant="secondary"
             size="md"
@@ -233,15 +233,15 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
       </div>
 
       {/* Question Quick Palette */}
-      <div className="bg-white dark:bg-[#142B3B] rounded-2xl p-5 border border-[#DCE5EB] dark:border-[#243746] shadow-xs">
+      <div className="bg-white dark:bg-[#0E2233] rounded-2xl p-5 border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs">
         <div className="flex items-center justify-between mb-3 text-xs text-[#6B8699] dark:text-[#8CA6B7]">
           <span className="font-bold uppercase tracking-wider">Question Navigator</span>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#16B8A6]" /> Answered
+              <span className="w-2.5 h-2.5 rounded-full bg-[#00BFA6]" /> Answered
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#DCE5EB] dark:bg-[#1A374B]" /> Pending
+              <span className="w-2.5 h-2.5 rounded-full bg-[#D8E4EA] dark:bg-[#132B3E]" /> Pending
             </span>
           </div>
         </div>
@@ -259,17 +259,17 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
                 onClick={() => setCurrentIndex(idx)}
                 className={`w-9 h-9 rounded-xl font-mono text-xs font-bold transition-all relative cursor-pointer ${
                   isCurrent
-                    ? 'ring-2 ring-[#16B8A6] ring-offset-2 dark:ring-offset-[#142B3B]'
+                    ? 'ring-2 ring-[#00BFA6] ring-offset-2 dark:ring-offset-[#0E2233]'
                     : ''
                 } ${
                   isAnswered
-                    ? 'bg-[#16B8A6] text-white'
-                    : 'bg-[#E7EFF3] dark:bg-[#102230] text-[#243746] dark:text-[#BACDD8] hover:bg-[#DCE5EB] dark:hover:bg-[#1A374B]'
+                    ? 'bg-[#00BFA6] text-white'
+                    : 'bg-[#E8F1F5] dark:bg-[#0A1A27] text-[#1F2D3D] dark:text-[#BACDD8] hover:bg-[#D8E4EA] dark:hover:bg-[#132B3E]'
                 }`}
               >
                 {idx + 1}
                 {isFlagged && (
-                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white dark:border-[#142B3B]" />
+                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white dark:border-[#0E2233]" />
                 )}
               </button>
             );
@@ -280,19 +280,19 @@ export const AssessmentQuiz: React.FC<AssessmentQuizProps> = ({
       {/* Confirmation Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-[#142B3B] w-full max-w-md rounded-2xl shadow-xl border border-[#DCE5EB] dark:border-[#243746] p-6 space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#16B8A6]/15 text-[#16B8A6] flex items-center justify-center mx-auto">
+          <div className="bg-white dark:bg-[#0E2233] w-full max-w-md rounded-2xl shadow-xl border border-[#D8E4EA] dark:border-[#1F2D3D] p-6 space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-[#00BFA6]/15 text-[#00BFA6] flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-6 h-6" />
             </div>
             <div className="text-center">
-              <h3 className="text-lg font-bold text-[#243746] dark:text-white">
+              <h3 className="text-lg font-bold text-[#1F2D3D] dark:text-white">
                 Ready to Submit?
               </h3>
               <p className="text-xs sm:text-sm text-[#6B8699] dark:text-[#8CA6B7] mt-1">
                 You have answered <strong>{answeredCount}</strong> of{' '}
                 <strong>{questions.length}</strong> questions.
                 {answeredCount < questions.length && (
-                  <span className="block text-[#16B8A6] mt-1 font-medium">
+                  <span className="block text-[#00BFA6] mt-1 font-medium">
                     ⚠️ You still have {questions.length - answeredCount} unanswered questions!
                   </span>
                 )}

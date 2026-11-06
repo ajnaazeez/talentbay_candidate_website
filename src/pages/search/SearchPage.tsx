@@ -213,12 +213,12 @@ export const SearchPage: React.FC = () => {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="p-2.5 rounded-xl border border-[#DCE5EB] dark:border-[#243746] bg-white dark:bg-[#142B3B] text-[#6B8699] dark:text-[#8CA6B7] hover:text-[#243746] dark:hover:text-white shadow-xs transition cursor-pointer"
+          className="p-2.5 rounded-xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-white dark:bg-[#0E2233] text-[#6B8699] dark:text-[#8CA6B7] hover:text-[#1F2D3D] dark:hover:text-white shadow-xs transition cursor-pointer"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
 
-        <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center rounded-2xl border border-[#DCE5EB] dark:border-[#243746] bg-white dark:bg-[#142B3B] shadow-xs px-4 py-1.5 focus-within:border-[#16B8A6] focus-within:ring-2 focus-within:ring-[#16B8A6]/20 transition-all">
+        <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-white dark:bg-[#0E2233] shadow-xs px-4 py-1.5 focus-within:border-[#00BFA6] focus-within:ring-2 focus-within:ring-[#00BFA6]/20 transition-all">
           <Search className="w-5 h-5 text-[#8CA6B7] mr-2 flex-shrink-0" />
           <input
             type="text"
@@ -226,7 +226,7 @@ export const SearchPage: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search title, skill, or company..."
-            className="w-full py-2.5 text-sm md:text-base font-medium bg-transparent border-0 focus:outline-none focus:ring-0 text-[#243746] dark:text-white placeholder:text-[#8CA6B7]"
+            className="w-full py-2.5 text-sm md:text-base font-medium bg-transparent border-0 focus:outline-none focus:ring-0 text-[#1F2D3D] dark:text-white placeholder:text-[#8CA6B7]"
           />
           {searchQuery && (
             <button
@@ -235,7 +235,7 @@ export const SearchPage: React.FC = () => {
                 setSearchQuery('');
                 setSearchParams({});
               }}
-              className="p-1 rounded-lg text-[#8CA6B7] hover:text-[#243746] dark:hover:text-white"
+              className="p-1 rounded-lg text-[#8CA6B7] hover:text-[#1F2D3D] dark:hover:text-white"
             >
               <X className="w-4 h-4" />
             </button>
@@ -254,8 +254,8 @@ export const SearchPage: React.FC = () => {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
-                  ? 'bg-[#16B8A6] text-white border-[#16B8A6] shadow-xs'
-                  : 'bg-white dark:bg-[#142B3B] text-[#243746] dark:text-[#BACDD8] border-[#DCE5EB] dark:border-[#243746] hover:border-[#16B8A6]/40 dark:hover:border-[#16B8A6]/40'
+                  ? 'bg-[#00BFA6] text-white border-[#00BFA6] shadow-xs'
+                  : 'bg-white dark:bg-[#0E2233] text-[#1F2D3D] dark:text-[#BACDD8] border-[#D8E4EA] dark:border-[#1F2D3D] hover:border-[#00BFA6]/40 dark:hover:border-[#00BFA6]/40'
               }`}
             >
               {cat.toUpperCase()}
@@ -292,7 +292,7 @@ export const SearchPage: React.FC = () => {
           ) : (
             <div className="py-20 text-center space-y-4">
               <SearchX className="w-16 h-16 mx-auto text-[#8CA6B7] dark:text-[#6B8699]" />
-              <div className="text-base font-bold text-[#243746] dark:text-white">
+              <div className="text-base font-bold text-[#1F2D3D] dark:text-white">
                 No jobs found
               </div>
               <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] max-w-sm mx-auto">
@@ -305,30 +305,30 @@ export const SearchPage: React.FC = () => {
         /* Recent Searches View (Shown when no search query is active) */
         <div className="pt-2">
           {searchHistory.length > 0 ? (
-            <div className="rounded-2xl border border-[#DCE5EB] dark:border-[#243746] bg-white dark:bg-[#142B3B] shadow-card p-6 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#DCE5EB] dark:border-[#243746]">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#243746] dark:text-white">
+            <div className="rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-white dark:bg-[#0E2233] shadow-card p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-[#D8E4EA] dark:border-[#1F2D3D]">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#1F2D3D] dark:text-white">
                   RECENT SEARCHES
                 </span>
                 <button
                   type="button"
                   onClick={clearAllHistory}
-                  className="text-xs font-semibold text-[#6B8699] dark:text-[#8CA6B7] hover:text-[#16B8A6] dark:hover:text-[#16B8A6] cursor-pointer transition"
+                  className="text-xs font-semibold text-[#6B8699] dark:text-[#8CA6B7] hover:text-[#00BFA6] dark:hover:text-[#00BFA6] cursor-pointer transition"
                 >
                   Clear All
                 </button>
               </div>
 
-              <div className="divide-y divide-[#DCE5EB] dark:divide-[#243746]">
+              <div className="divide-y divide-[#D8E4EA] dark:divide-[#1F2D3D]">
                 {searchHistory.map((item) => (
                   <div
                     key={item.query}
                     onClick={() => handleSelectHistoryItem(item.query)}
-                    className="py-3 px-2 flex items-center justify-between hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B] rounded-xl transition cursor-pointer group"
+                    className="py-3 px-2 flex items-center justify-between hover:bg-[#E8F1F5] dark:hover:bg-[#132B3E] rounded-xl transition cursor-pointer group"
                   >
                     <div className="flex items-center gap-3">
-                      <History className="w-4 h-4 text-[#8CA6B7] group-hover:text-[#16B8A6] transition" />
-                      <span className="text-sm font-medium text-[#243746] dark:text-[#F5F8FA]">
+                      <History className="w-4 h-4 text-[#8CA6B7] group-hover:text-[#00BFA6] transition" />
+                      <span className="text-sm font-medium text-[#1F2D3D] dark:text-[#F6FAFC]">
                         {item.query}
                       </span>
                     </div>
@@ -345,7 +345,7 @@ export const SearchPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="rounded-2xl border border-[#DCE5EB] dark:border-[#243746] bg-white dark:bg-[#142B3B] shadow-xs py-16 text-center text-[#6B8699] dark:text-[#8CA6B7] text-xs font-medium">
+            <div className="rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-white dark:bg-[#0E2233] shadow-xs py-16 text-center text-[#6B8699] dark:text-[#8CA6B7] text-xs font-medium">
               Type in the search bar above to discover roles, skills, or companies.
             </div>
           )}

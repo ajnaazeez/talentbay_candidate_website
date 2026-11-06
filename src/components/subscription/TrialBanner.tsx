@@ -33,15 +33,15 @@ export const TrialBanner: React.FC = () => {
   if (isTrialActive) {
     const daysLeft = subscriptionService.getDaysRemaining(candidate.trialExpiryDate);
     return (
-      <div className="relative overflow-hidden rounded-2xl bg-[#142B3B] text-white p-4 sm:p-5 shadow-sm border border-[#16B8A6]/40">
+      <div className="relative overflow-hidden rounded-2xl bg-[#0E2233] text-white p-4 sm:p-5 shadow-sm border border-[#00BFA6]/40">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-[#16B8A6]/20 flex items-center justify-center shrink-0">
-              <Clock className="w-5 h-5 text-[#16B8A6]" />
+            <div className="w-10 h-10 rounded-xl bg-[#00BFA6]/20 flex items-center justify-center shrink-0">
+              <Clock className="w-5 h-5 text-[#00BFA6]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#16B8A6]/20 text-[#E7EFF3] border border-[#16B8A6]/30">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#00BFA6]/20 text-[#E8F1F5] border border-[#00BFA6]/30">
                   Trial Active
                 </span>
                 <span className="text-xs font-bold text-[#BACDD8]">
@@ -59,7 +59,7 @@ export const TrialBanner: React.FC = () => {
               <Button
                 variant="primary"
                 size="sm"
-                className="bg-[#16B8A6] text-white hover:bg-[#0D9488] font-bold shadow-xs text-xs"
+                className="bg-[#00BFA6] text-white hover:bg-[#00A892] font-bold shadow-xs text-xs"
                 rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
               >
                 View Plans
@@ -74,7 +74,7 @@ export const TrialBanner: React.FC = () => {
   // State 2: Trial Expired (Needs Upgrade)
   if (hasUsedTrial && !candidate.isPremium) {
     return (
-      <div className="relative overflow-hidden rounded-2xl bg-[#142B3B] text-white p-4 sm:p-5 shadow-sm border border-rose-500/30">
+      <div className="relative overflow-hidden rounded-2xl bg-[#0E2233] text-white p-4 sm:p-5 shadow-sm border border-rose-500/30">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center shrink-0">
@@ -97,7 +97,7 @@ export const TrialBanner: React.FC = () => {
               <Button
                 variant="primary"
                 size="sm"
-                className="bg-[#16B8A6] text-white hover:bg-[#0D9488] font-bold shadow-xs text-xs"
+                className="bg-[#00BFA6] text-white hover:bg-[#00A892] font-bold shadow-xs text-xs"
                 rightIcon={<Crown className="w-3.5 h-3.5 text-white" />}
               >
                 Upgrade to Premium
@@ -113,19 +113,19 @@ export const TrialBanner: React.FC = () => {
   if (isEligible) {
     return (
       <>
-        <div className="relative overflow-hidden rounded-2xl bg-[#142B3B] text-white p-4 sm:p-5 shadow-card border border-[#16B8A6]/40">
-          <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#16B8A6]/20 via-transparent to-transparent pointer-events-none" />
+        <div className="relative overflow-hidden rounded-2xl bg-[#0E2233] text-white p-4 sm:p-5 shadow-card border border-[#00BFA6]/40">
+          <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#00BFA6]/20 via-transparent to-transparent pointer-events-none" />
           <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#16B8A6]/20 border border-[#16B8A6]/30 flex items-center justify-center shrink-0">
-                <Sparkles className="w-5 h-5 text-[#16B8A6]" />
+              <div className="w-10 h-10 rounded-xl bg-[#00BFA6]/20 border border-[#00BFA6]/30 flex items-center justify-center shrink-0">
+                <Sparkles className="w-5 h-5 text-[#00BFA6]" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#16B8A6]/20 text-[#E7EFF3] border border-[#16B8A6]/30">
+                  <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#00BFA6]/20 text-[#E8F1F5] border border-[#00BFA6]/30">
                     Introductory Offer
                   </span>
-                  <span className="text-xs font-bold text-[#16B8A6]">
+                  <span className="text-xs font-bold text-[#00BFA6]">
                     ₹0 For 7 Days
                   </span>
                 </div>
@@ -143,7 +143,7 @@ export const TrialBanner: React.FC = () => {
                 variant="primary"
                 size="sm"
                 onClick={() => setModalOpen(true)}
-                className="bg-[#16B8A6] text-white hover:bg-[#0D9488] font-extrabold shadow-sm text-xs"
+                className="bg-[#00BFA6] text-white hover:bg-[#00A892] font-extrabold shadow-sm text-xs"
                 rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
               >
                 Start Free Trial

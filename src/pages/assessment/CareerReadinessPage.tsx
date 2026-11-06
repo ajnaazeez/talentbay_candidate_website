@@ -213,8 +213,8 @@ export const CareerReadinessPage: React.FC = () => {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#243746] dark:text-white tracking-tight flex items-center gap-3">
-            <Target className="w-8 h-8 text-[#16B8A6]" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1F2D3D] dark:text-white tracking-tight flex items-center gap-3">
+            <Target className="w-8 h-8 text-[#00BFA6]" />
             Career Readiness & Diagnostics
           </h1>
           <p className="text-xs sm:text-sm font-medium text-[#6B8699] dark:text-[#8CA6B7] mt-1">
@@ -227,7 +227,7 @@ export const CareerReadinessPage: React.FC = () => {
             variant="secondary"
             onClick={handleForceRefresh}
             isLoading={refreshing}
-            leftIcon={<RotateCw className="w-4 h-4 text-[#16B8A6]" />}
+            leftIcon={<RotateCw className="w-4 h-4 text-[#00BFA6]" />}
           >
             Refresh Guidance
           </Button>
@@ -255,13 +255,13 @@ export const CareerReadinessPage: React.FC = () => {
       )}
 
       {/* Target Job Role Selector Card */}
-      <div className="bg-white dark:bg-[#142B3B] p-6 rounded-2xl border border-[#DCE5EB] dark:border-[#243746] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#0E2233] p-6 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#16B8A6]/15 text-[#16B8A6] flex items-center justify-center font-bold">
+          <div className="w-10 h-10 rounded-xl bg-[#00BFA6]/15 text-[#00BFA6] flex items-center justify-center font-bold">
             <Briefcase className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-[#243746] dark:text-white">
+            <h2 className="text-sm font-bold text-[#1F2D3D] dark:text-white">
               Target Position for Analysis
             </h2>
             <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7]">
@@ -275,7 +275,7 @@ export const CareerReadinessPage: React.FC = () => {
             value={selectedJobId}
             onChange={(e) => handleJobChange(e.target.value)}
             disabled={refreshing}
-            className="px-3.5 py-2.5 rounded-xl bg-[#E7EFF3] dark:bg-[#102230] border border-[#DCE5EB] dark:border-[#243746] text-xs sm:text-sm font-medium text-[#243746] dark:text-[#E7EFF3] focus:outline-none focus:ring-2 focus:ring-[#16B8A6]/20 cursor-pointer"
+            className="px-3.5 py-2.5 rounded-xl bg-[#E8F1F5] dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] text-xs sm:text-sm font-medium text-[#1F2D3D] dark:text-[#E8F1F5] focus:outline-none focus:ring-2 focus:ring-[#00BFA6]/20 cursor-pointer"
           >
             <option value="custom">General Profile: {customJobTitle || 'Software Engineer'}</option>
             {availableJobs.map((j) => (
@@ -290,7 +290,7 @@ export const CareerReadinessPage: React.FC = () => {
       {/* Hero Readiness Overview Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Score Dial Card */}
-        <div className="bg-white dark:bg-[#142B3B] p-6 rounded-2xl border border-[#DCE5EB] dark:border-[#243746] shadow-xs flex flex-col items-center justify-center text-center space-y-4">
+        <div className="bg-white dark:bg-[#0E2233] p-6 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs flex flex-col items-center justify-center text-center space-y-4">
           <span className="text-xs font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7]">
             Overall Career Readiness Score
           </span>
@@ -302,7 +302,7 @@ export const CareerReadinessPage: React.FC = () => {
                 cx="60"
                 cy="60"
                 r="50"
-                className="stroke-[#DCE5EB] dark:stroke-[#1A374B]"
+                className="stroke-[#D8E4EA] dark:stroke-[#132B3E]"
                 strokeWidth="10"
                 fill="transparent"
               />
@@ -310,7 +310,7 @@ export const CareerReadinessPage: React.FC = () => {
                 cx="60"
                 cy="60"
                 r="50"
-                className="stroke-[#16B8A6] transition-all duration-1000 ease-out"
+                className="stroke-[#00BFA6] transition-all duration-1000 ease-out"
                 strokeWidth="10"
                 strokeDasharray={314.159}
                 strokeDashoffset={314.159 - (314.159 * readinessScore) / 100}
@@ -320,7 +320,7 @@ export const CareerReadinessPage: React.FC = () => {
             </svg>
 
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-3xl font-extrabold text-[#243746] dark:text-white">
+              <span className="text-3xl font-extrabold text-[#1F2D3D] dark:text-white">
                 {readinessScore}%
               </span>
               <span className="text-[10px] uppercase font-bold text-[#6B8699] dark:text-[#8CA6B7]">Readiness</span>
@@ -346,15 +346,15 @@ export const CareerReadinessPage: React.FC = () => {
         </div>
 
         {/* AI Guidance Summary & Strengths Card */}
-        <div className="lg:col-span-2 bg-white dark:bg-[#142B3B] p-6 rounded-2xl border border-[#DCE5EB] dark:border-[#243746] shadow-xs flex flex-col justify-between space-y-6">
+        <div className="lg:col-span-2 bg-white dark:bg-[#0E2233] p-6 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs flex flex-col justify-between space-y-6">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#16B8A6]" />
-              <h3 className="font-bold text-[#243746] dark:text-white text-base">
+              <Sparkles className="w-5 h-5 text-[#00BFA6]" />
+              <h3 className="font-bold text-[#1F2D3D] dark:text-white text-base">
                 AI Career Assessment Summary
               </h3>
             </div>
-            <p className="text-sm text-[#243746] dark:text-[#BACDD8] leading-relaxed bg-[#E7EFF3]/80 dark:bg-[#102230] p-4 rounded-xl border border-[#DCE5EB] dark:border-[#243746]">
+            <p className="text-sm text-[#1F2D3D] dark:text-[#BACDD8] leading-relaxed bg-[#E8F1F5]/80 dark:bg-[#0A1A27] p-4 rounded-xl border border-[#D8E4EA] dark:border-[#1F2D3D]">
               {guidance?.overallSummary || 'Complete technical assessments to unlock detailed career guidance.'}
             </p>
           </div>
@@ -386,7 +386,7 @@ export const CareerReadinessPage: React.FC = () => {
 
           {/* Target Job Advice */}
           {guidance?.jobMatchAdvice && (
-            <div className="pt-2 text-xs text-[#6B8699] dark:text-[#8CA6B7] border-t border-[#DCE5EB] dark:border-[#243746]">
+            <div className="pt-2 text-xs text-[#6B8699] dark:text-[#8CA6B7] border-t border-[#D8E4EA] dark:border-[#1F2D3D]">
               <strong>Role Focus:</strong> {guidance.jobMatchAdvice}
             </div>
           )}
@@ -394,10 +394,10 @@ export const CareerReadinessPage: React.FC = () => {
       </div>
 
       {/* AI SKILL GAP DIAGNOSTICS */}
-      <div className="bg-white dark:bg-[#142B3B] p-6 rounded-2xl border border-[#DCE5EB] dark:border-[#243746] shadow-xs space-y-6">
+      <div className="bg-white dark:bg-[#0E2233] p-6 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs space-y-6">
         <div>
-          <h3 className="text-lg font-bold text-[#243746] dark:text-white flex items-center gap-2">
-            <Layers className="w-5 h-5 text-[#16B8A6]" />
+          <h3 className="text-lg font-bold text-[#1F2D3D] dark:text-white flex items-center gap-2">
+            <Layers className="w-5 h-5 text-[#00BFA6]" />
             AI Skill Gap Diagnostics
           </h3>
           <p className="text-xs sm:text-sm text-[#6B8699] dark:text-[#8CA6B7]">
@@ -414,11 +414,11 @@ export const CareerReadinessPage: React.FC = () => {
               return (
                 <div
                   key={gap.skill}
-                  className="p-4 rounded-xl border border-[#DCE5EB] dark:border-[#243746] bg-[#E7EFF3]/50 dark:bg-[#102230]/50 flex flex-col justify-between space-y-3"
+                  className="p-4 rounded-xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-[#E8F1F5]/50 dark:bg-[#0A1A27]/50 flex flex-col justify-between space-y-3"
                 >
                   <div className="space-y-1">
                     <div className="flex items-start justify-between gap-2">
-                      <span className="font-semibold text-sm text-[#243746] dark:text-white">
+                      <span className="font-semibold text-sm text-[#1F2D3D] dark:text-white">
                         {gap.skill}
                       </span>
                       <Badge
@@ -434,10 +434,10 @@ export const CareerReadinessPage: React.FC = () => {
                       <span>Target: <strong>{gap.requiredScore}%</strong></span>
                     </div>
 
-                    <div className="bg-[#DCE5EB] dark:bg-[#1A374B] h-2 rounded-full overflow-hidden mt-1">
+                    <div className="bg-[#D8E4EA] dark:bg-[#132B3E] h-2 rounded-full overflow-hidden mt-1">
                       <div
                         className={`h-full rounded-full transition-all ${
-                          hasMetRequirement ? 'bg-emerald-500' : 'bg-[#16B8A6]'
+                          hasMetRequirement ? 'bg-emerald-500' : 'bg-[#00BFA6]'
                         }`}
                         style={{ width: `${Math.min(100, gap.currentScore)}%` }}
                       />
@@ -447,9 +447,9 @@ export const CareerReadinessPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => navigate(`${ROUTES.ASSESSMENTS}?skill=${encodeURIComponent(gap.skill)}`)}
-                    className="w-full py-2 px-3 rounded-lg border border-[#DCE5EB] dark:border-[#243746] hover:border-[#16B8A6] text-[#243746] dark:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B]"
+                    className="w-full py-2 px-3 rounded-lg border border-[#D8E4EA] dark:border-[#1F2D3D] hover:border-[#00BFA6] text-[#1F2D3D] dark:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer hover:bg-[#E8F1F5] dark:hover:bg-[#132B3E]"
                   >
-                    <Zap className="w-3.5 h-3.5 text-[#16B8A6]" />
+                    <Zap className="w-3.5 h-3.5 text-[#00BFA6]" />
                     <span>{isAssessed ? 'Retake Test' : 'Take Assessment'}</span>
                   </button>
                 </div>
@@ -464,10 +464,10 @@ export const CareerReadinessPage: React.FC = () => {
       </div>
 
       {/* PERSONALIZED LEARNING ROADMAP */}
-      <div className="bg-white dark:bg-[#142B3B] p-6 rounded-2xl border border-[#DCE5EB] dark:border-[#243746] shadow-xs space-y-6">
+      <div className="bg-white dark:bg-[#0E2233] p-6 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs space-y-6">
         <div>
-          <h3 className="text-lg font-bold text-[#243746] dark:text-white flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-[#16B8A6]" />
+          <h3 className="text-lg font-bold text-[#1F2D3D] dark:text-white flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-[#00BFA6]" />
             Personalized Learning Roadmap
           </h3>
           <p className="text-xs sm:text-sm text-[#6B8699] dark:text-[#8CA6B7]">
@@ -480,11 +480,11 @@ export const CareerReadinessPage: React.FC = () => {
             {guidance.skillsToStrengthen.map((skillItem) => (
               <div
                 key={skillItem.skill}
-                className="p-5 rounded-2xl border border-[#DCE5EB] dark:border-[#243746] bg-[#E7EFF3]/30 dark:bg-[#102230]/30 space-y-4"
+                className="p-5 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-[#E8F1F5]/30 dark:bg-[#0A1A27]/30 space-y-4"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
-                    <h4 className="font-bold text-[#243746] dark:text-white text-base">
+                    <h4 className="font-bold text-[#1F2D3D] dark:text-white text-base">
                       {skillItem.skill}
                     </h4>
                     <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] mt-0.5">
@@ -501,18 +501,18 @@ export const CareerReadinessPage: React.FC = () => {
                   {skillItem.roadmapSteps.map((step) => (
                     <div
                       key={step.stepNumber}
-                      className="bg-white dark:bg-[#142B3B] p-4 rounded-xl border border-[#DCE5EB] dark:border-[#243746] space-y-2 flex flex-col justify-between"
+                      className="bg-white dark:bg-[#0E2233] p-4 rounded-xl border border-[#D8E4EA] dark:border-[#1F2D3D] space-y-2 flex flex-col justify-between"
                     >
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#16B8A6] bg-[#16B8A6]/15 px-2 py-0.5 rounded">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#00BFA6] bg-[#00BFA6]/15 px-2 py-0.5 rounded">
                             Step {step.stepNumber}
                           </span>
                           <span className="text-[10px] font-bold text-[#6B8699] dark:text-[#8CA6B7]">
                             {step.actionHeader}
                           </span>
                         </div>
-                        <h5 className="font-bold text-xs text-[#243746] dark:text-white">
+                        <h5 className="font-bold text-xs text-[#1F2D3D] dark:text-white">
                           {step.title}
                         </h5>
                         <p className="text-[11px] text-[#6B8699] dark:text-[#8CA6B7] mt-1">
@@ -520,13 +520,13 @@ export const CareerReadinessPage: React.FC = () => {
                         </p>
                       </div>
 
-                      <ul className="space-y-1 pt-2 border-t border-[#DCE5EB] dark:border-[#243746] mt-2">
+                      <ul className="space-y-1 pt-2 border-t border-[#D8E4EA] dark:border-[#1F2D3D] mt-2">
                         {step.actionItems?.map((item, idx) => (
                           <li
                             key={idx}
-                            className="text-[10px] text-[#243746] dark:text-[#BACDD8] flex items-start gap-1"
+                            className="text-[10px] text-[#1F2D3D] dark:text-[#BACDD8] flex items-start gap-1"
                           >
-                            <span className="text-[#16B8A6] shrink-0">•</span>
+                            <span className="text-[#00BFA6] shrink-0">•</span>
                             <span>{item}</span>
                           </li>
                         ))}
@@ -545,10 +545,10 @@ export const CareerReadinessPage: React.FC = () => {
       </div>
 
       {/* INTERVIEW PREPARATION PLAN */}
-      <div className="bg-white dark:bg-[#142B3B] p-6 rounded-2xl border border-[#DCE5EB] dark:border-[#243746] shadow-xs space-y-6">
+      <div className="bg-white dark:bg-[#0E2233] p-6 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-xs space-y-6">
         <div>
-          <h3 className="text-lg font-bold text-[#243746] dark:text-white flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-[#16B8A6]" />
+          <h3 className="text-lg font-bold text-[#1F2D3D] dark:text-white flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-[#00BFA6]" />
             Interview Preparation Plan
           </h3>
           <p className="text-xs sm:text-sm text-[#6B8699] dark:text-[#8CA6B7]">
@@ -560,17 +560,17 @@ export const CareerReadinessPage: React.FC = () => {
           {guidance?.interviewPreparationPlan?.map((plan, idx) => (
             <div
               key={idx}
-              className="p-5 rounded-2xl border border-[#DCE5EB] dark:border-[#243746] bg-white dark:bg-[#142B3B] space-y-3"
+              className="p-5 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-white dark:bg-[#0E2233] space-y-3"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#16B8A6] bg-[#16B8A6]/15 px-2.5 py-1 rounded-lg">
+                <span className="text-xs font-bold text-[#00BFA6] bg-[#00BFA6]/15 px-2.5 py-1 rounded-lg">
                   {plan.timeline}
                 </span>
                 <span className="text-xs text-[#6B8699] dark:text-[#8CA6B7] font-semibold">Phase {idx + 1}</span>
               </div>
 
               <div>
-                <h4 className="font-bold text-sm text-[#243746] dark:text-white">
+                <h4 className="font-bold text-sm text-[#1F2D3D] dark:text-white">
                   {plan.phase}
                 </h4>
                 <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7] mt-1">
@@ -579,13 +579,13 @@ export const CareerReadinessPage: React.FC = () => {
               </div>
 
               {plan.actionItems && plan.actionItems.length > 0 && (
-                <ul className="space-y-1.5 pt-2 border-t border-[#DCE5EB] dark:border-[#243746]">
+                <ul className="space-y-1.5 pt-2 border-t border-[#D8E4EA] dark:border-[#1F2D3D]">
                   {plan.actionItems.map((act, aIdx) => (
                     <li
                       key={aIdx}
-                      className="text-xs text-[#243746] dark:text-[#BACDD8] flex items-start gap-1.5"
+                      className="text-xs text-[#1F2D3D] dark:text-[#BACDD8] flex items-start gap-1.5"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#16B8A6] shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#00BFA6] shrink-0 mt-0.5" />
                       <span>{act}</span>
                     </li>
                   ))}

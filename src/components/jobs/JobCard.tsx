@@ -73,11 +73,11 @@ export const JobCard: React.FC<JobCardProps> = ({
   const salaryDisplay = formatSalary(job.salary.min, job.salary.max, job.salary.currency, job.salary.type);
 
   return (
-    <div className="group relative rounded-2xl bg-white dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] p-5 sm:p-6 shadow-card hover:shadow-card-hover hover:border-[#16B8A6]/60 hover:-translate-y-0.5 transition-all duration-200">
+    <div className="group relative rounded-2xl bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] p-5 sm:p-6 shadow-card hover:shadow-card-hover hover:border-[#00BFA6]/60 hover:-translate-y-0.5 transition-all duration-200">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         {/* Company Logo & Basic Meta */}
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border border-[#DCE5EB] dark:border-[#243746] bg-[#E7EFF3]/60 dark:bg-[#102230] overflow-hidden flex-shrink-0 flex items-center justify-center p-2 shadow-2xs group-hover:scale-105 transition-transform">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border border-[#D8E4EA] dark:border-[#1F2D3D] bg-[#E8F1F5]/60 dark:bg-[#0A1A27] overflow-hidden flex-shrink-0 flex items-center justify-center p-2 shadow-2xs group-hover:scale-105 transition-transform">
             {job.companyLogoUrl ? (
               <img
                 src={job.companyLogoUrl}
@@ -96,17 +96,17 @@ export const JobCard: React.FC<JobCardProps> = ({
             <div className="flex items-center gap-2">
               <Link
                 to={`/jobs/${job.jobId}`}
-                className="text-base sm:text-lg font-bold text-[#243746] dark:text-white group-hover:text-[#16B8A6] dark:group-hover:text-[#5EEAD4] transition-colors line-clamp-1 tracking-tight"
+                className="text-base sm:text-lg font-bold text-[#1F2D3D] dark:text-white group-hover:text-[#00BFA6] dark:group-hover:text-[#5EEAD9] transition-colors line-clamp-1 tracking-tight"
               >
                 {job.roleName}
               </Link>
             </div>
 
-            <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#243746] dark:text-[#BACDD8]">
+            <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#1F2D3D] dark:text-[#BACDD8]">
               {job.companyId ? (
                 <Link
                   to={`/companies/${job.companyId}`}
-                  className="hover:underline hover:text-[#142B3B] dark:hover:text-white transition-colors"
+                  className="hover:underline hover:text-[#0E2233] dark:hover:text-white transition-colors"
                 >
                   {job.companyName}
                 </Link>
@@ -114,7 +114,7 @@ export const JobCard: React.FC<JobCardProps> = ({
                 <span>{job.companyName}</span>
               )}
               {job.isVerifiedCompany && (
-                <span className="inline-flex items-center text-[10px] text-[#0F766E] dark:text-[#5EEAD4] font-semibold px-1.5 py-0.2 rounded bg-[#16B8A6]/15 border border-[#16B8A6]/30">
+                <span className="inline-flex items-center text-[10px] text-[#008C79] dark:text-[#5EEAD9] font-semibold px-1.5 py-0.2 rounded bg-[#00BFA6]/15 border border-[#00BFA6]/30">
                   ✓ Verified
                 </span>
               )}
@@ -153,12 +153,12 @@ export const JobCard: React.FC<JobCardProps> = ({
             <div
               className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-all ${
                 matchResult.matchPercentage >= 70
-                  ? 'bg-[#16B8A6]/15 text-[#0F766E] dark:text-[#5EEAD4] border-[#16B8A6]/30 shadow-2xs'
-                  : 'bg-[#E7EFF3] dark:bg-[#1A374B] text-[#243746] dark:text-[#BACDD8] border-[#DCE5EB] dark:border-[#243746]'
+                  ? 'bg-[#00BFA6]/15 text-[#008C79] dark:text-[#5EEAD9] border-[#00BFA6]/30 shadow-2xs'
+                  : 'bg-[#E8F1F5] dark:bg-[#132B3E] text-[#1F2D3D] dark:text-[#BACDD8] border-[#D8E4EA] dark:border-[#1F2D3D]'
               }`}
               title={`${matchResult.matchingSkills.length} of ${matchResult.totalRequired} required skills match your profile`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#16B8A6]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#00BFA6]" />
               <span>{matchResult.matchPercentage}% Match</span>
             </div>
           )}
@@ -172,7 +172,7 @@ export const JobCard: React.FC<JobCardProps> = ({
               className={`p-2 rounded-xl border transition-all duration-150 active:scale-95 cursor-pointer ${
                 isSaved
                   ? 'bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-950/40 dark:border-rose-900/60 dark:text-rose-400 shadow-2xs'
-                  : 'bg-white dark:bg-[#102230] border-[#DCE5EB] dark:border-[#243746] text-[#8CA6B7] hover:text-rose-600 hover:border-rose-200 dark:hover:border-rose-900/60'
+                  : 'bg-white dark:bg-[#0A1A27] border-[#D8E4EA] dark:border-[#1F2D3D] text-[#8CA6B7] hover:text-rose-600 hover:border-rose-200 dark:hover:border-rose-900/60'
               }`}
               title={isSaved ? 'Remove from Saved Jobs' : 'Save Job'}
             >
@@ -183,7 +183,7 @@ export const JobCard: React.FC<JobCardProps> = ({
       </div>
 
       {/* Salary & Required Skills */}
-      <div className="mt-4 pt-4 border-t border-[#DCE5EB] dark:border-[#243746] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="mt-4 pt-4 border-t border-[#D8E4EA] dark:border-[#1F2D3D] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         {/* Skills Chips */}
         <div className="flex flex-wrap items-center gap-1.5">
           {job.skillsRequired.slice(0, 4).map((skill) => {
@@ -193,8 +193,8 @@ export const JobCard: React.FC<JobCardProps> = ({
                 key={skill}
                 className={`px-2.5 py-0.5 rounded-lg text-xs font-medium border transition-colors ${
                   isMatched
-                    ? 'bg-[#16B8A6]/15 text-[#0F766E] dark:text-[#5EEAD4] border-[#16B8A6]/30'
-                    : 'bg-[#E7EFF3] dark:bg-[#102230] text-[#243746] dark:text-[#BACDD8] border-[#DCE5EB] dark:border-[#243746]'
+                    ? 'bg-[#00BFA6]/15 text-[#008C79] dark:text-[#5EEAD9] border-[#00BFA6]/30'
+                    : 'bg-[#E8F1F5] dark:bg-[#0A1A27] text-[#1F2D3D] dark:text-[#BACDD8] border-[#D8E4EA] dark:border-[#1F2D3D]'
                 }`}
               >
                 {skill}
@@ -212,7 +212,7 @@ export const JobCard: React.FC<JobCardProps> = ({
         <div className="flex items-center justify-between sm:justify-end gap-3 flex-shrink-0">
           <div className="text-right">
             <span className="text-xs text-[#8CA6B7] block font-normal">Salary (Estimated)</span>
-            <span className="text-xs sm:text-sm font-bold text-[#243746] dark:text-white">
+            <span className="text-xs sm:text-sm font-bold text-[#1F2D3D] dark:text-white">
               {salaryDisplay}
             </span>
           </div>

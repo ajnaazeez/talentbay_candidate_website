@@ -57,10 +57,10 @@ export const TrialActivationModal: React.FC<TrialActivationModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-white dark:bg-[#142B3B] rounded-3xl border border-[#DCE5EB] dark:border-[#243746] shadow-modal overflow-hidden">
+      <div className="relative w-full max-w-lg bg-white dark:bg-[#0E2233] rounded-3xl border border-[#D8E4EA] dark:border-[#1F2D3D] shadow-modal overflow-hidden">
         {/* Header background with brand gradient */}
-        <div className="relative p-6 sm:p-8 bg-[#142B3B] text-white border-b border-[#243746] overflow-hidden">
-          <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#16B8A6]/20 via-transparent to-transparent pointer-events-none" />
+        <div className="relative p-6 sm:p-8 bg-[#0E2233] text-white border-b border-[#1F2D3D] overflow-hidden">
+          <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#00BFA6]/20 via-transparent to-transparent pointer-events-none" />
           
           <button
             type="button"
@@ -70,8 +70,8 @@ export const TrialActivationModal: React.FC<TrialActivationModalProps> = ({
             <X className="w-5 h-5" />
           </button>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#16B8A6]/20 backdrop-blur-md text-[#E7EFF3] border border-[#16B8A6]/40 mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-[#16B8A6]" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#00BFA6]/20 backdrop-blur-md text-[#E8F1F5] border border-[#00BFA6]/40 mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-[#00BFA6]" />
             7-DAY FREE TRIAL
           </div>
 
@@ -94,10 +94,10 @@ export const TrialActivationModal: React.FC<TrialActivationModalProps> = ({
 
           {success ? (
             <div className="text-center py-6 space-y-3">
-              <div className="w-14 h-14 rounded-2xl bg-[#16B8A6]/15 text-[#16B8A6] mx-auto flex items-center justify-center">
+              <div className="w-14 h-14 rounded-2xl bg-[#00BFA6]/15 text-[#00BFA6] mx-auto flex items-center justify-center">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="text-lg font-bold text-[#243746] dark:text-white">
+              <h3 className="text-lg font-bold text-[#1F2D3D] dark:text-white">
                 Welcome to TalentBay Premium!
               </h3>
               <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7]">
@@ -113,8 +113,8 @@ export const TrialActivationModal: React.FC<TrialActivationModalProps> = ({
                 </p>
                 <div className="space-y-2.5">
                   {trialInfo.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 text-xs text-[#243746] dark:text-[#BACDD8]">
-                      <CheckCircle2 className="w-4 h-4 text-[#16B8A6] shrink-0 mt-0.5" />
+                    <div key={idx} className="flex items-start gap-2.5 text-xs text-[#1F2D3D] dark:text-[#BACDD8]">
+                      <CheckCircle2 className="w-4 h-4 text-[#00BFA6] shrink-0 mt-0.5" />
                       <span>{feature}</span>
                     </div>
                   ))}
@@ -122,12 +122,12 @@ export const TrialActivationModal: React.FC<TrialActivationModalProps> = ({
               </div>
 
               {/* Security & Pricing Banner */}
-              <div className="p-3.5 rounded-2xl bg-[#E7EFF3] dark:bg-[#102230] border border-[#DCE5EB] dark:border-[#243746] flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2 text-[#243746] dark:text-[#BACDD8] font-medium">
-                  <ShieldCheck className="w-4 h-4 text-[#16B8A6] shrink-0" />
+              <div className="p-3.5 rounded-2xl bg-[#E8F1F5] dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 text-[#1F2D3D] dark:text-[#BACDD8] font-medium">
+                  <ShieldCheck className="w-4 h-4 text-[#00BFA6] shrink-0" />
                   <span>Duration: 7 Days &bull; ₹0 Cost</span>
                 </div>
-                <span className="font-bold text-[#16B8A6] uppercase tracking-wider text-[11px]">
+                <span className="font-bold text-[#00BFA6] uppercase tracking-wider text-[11px]">
                   Zero Commitment
                 </span>
               </div>
@@ -138,7 +138,7 @@ export const TrialActivationModal: React.FC<TrialActivationModalProps> = ({
                   variant="primary"
                   onClick={handleActivate}
                   isLoading={loading}
-                  className="w-full justify-center bg-[#16B8A6] hover:bg-[#0D9488] active:bg-[#0F766E] text-white font-bold py-3 shadow-md"
+                  className="w-full justify-center bg-[#00BFA6] hover:bg-[#00A892] active:bg-[#008C79] text-white font-bold py-3 shadow-md"
                   rightIcon={<ArrowRight className="w-4 h-4" />}
                 >
                   Start 7-Day Free Trial

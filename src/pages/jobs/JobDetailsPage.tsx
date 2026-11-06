@@ -198,7 +198,7 @@ export const JobDetailsPage: React.FC = () => {
     return (
       <div className="max-w-xl mx-auto py-20 text-center space-y-4">
         <AlertCircle className="w-12 h-12 text-rose-500 mx-auto" />
-        <h2 className="text-xl font-black uppercase tracking-wider text-[#243746] dark:text-white">
+        <h2 className="text-xl font-black uppercase tracking-wider text-[#1F2D3D] dark:text-white">
           JOB NOT FOUND
         </h2>
         <p className="text-xs text-[#6B8699] dark:text-[#8CA6B7]">
@@ -206,7 +206,7 @@ export const JobDetailsPage: React.FC = () => {
         </p>
         <button
           onClick={() => navigate(ROUTES.JOBS)}
-          className="px-6 py-2.5 bg-[#16B8A6] hover:bg-[#0D9488] text-white text-xs font-bold uppercase tracking-wider transition rounded-xl"
+          className="px-6 py-2.5 bg-[#00BFA6] hover:bg-[#00A892] text-white text-xs font-bold uppercase tracking-wider transition rounded-xl"
         >
           BROWSE ALL JOBS
         </button>
@@ -240,16 +240,16 @@ export const JobDetailsPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto pb-32 animate-in fade-in duration-300">
       {/* Top Bar */}
-      <div className="flex items-center justify-between py-4 border-b border-[#DCE5EB] dark:border-[#243746]">
+      <div className="flex items-center justify-between py-4 border-b border-[#D8E4EA] dark:border-[#1F2D3D]">
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="p-2 text-[#243746] dark:text-[#BACDD8] hover:text-[#142B3B] dark:hover:text-white cursor-pointer"
+          className="p-2 text-[#1F2D3D] dark:text-[#BACDD8] hover:text-[#0E2233] dark:hover:text-white cursor-pointer"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
 
-        <h1 className="text-sm md:text-base font-black uppercase tracking-widest text-[#243746] dark:text-white text-center truncate max-w-md px-2">
+        <h1 className="text-sm md:text-base font-black uppercase tracking-widest text-[#1F2D3D] dark:text-white text-center truncate max-w-md px-2">
           {job.roleName}
         </h1>
 
@@ -258,17 +258,17 @@ export const JobDetailsPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setShareMenuOpen(!shareMenuOpen)}
-            className="p-2 text-[#243746] dark:text-[#BACDD8] hover:text-[#142B3B] dark:hover:text-white cursor-pointer"
+            className="p-2 text-[#1F2D3D] dark:text-[#BACDD8] hover:text-[#0E2233] dark:hover:text-white cursor-pointer"
           >
             <Share2 className="w-5 h-5" />
           </button>
 
           {shareMenuOpen && (
-            <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-[#142B3B] border border-[#DCE5EB] dark:border-[#243746] rounded-2xl shadow-xl z-50 py-2 divide-y divide-[#DCE5EB] dark:divide-[#243746] overflow-hidden">
+            <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-[#0E2233] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-2xl shadow-xl z-50 py-2 divide-y divide-[#D8E4EA] dark:divide-[#1F2D3D] overflow-hidden">
               <button
                 type="button"
                 onClick={handleShareWhatsApp}
-                className="w-full px-4 py-2.5 text-left text-xs font-semibold text-[#243746] dark:text-[#BACDD8] hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B] flex items-center gap-2.5 cursor-pointer"
+                className="w-full px-4 py-2.5 text-left text-xs font-semibold text-[#1F2D3D] dark:text-[#BACDD8] hover:bg-[#E8F1F5] dark:hover:bg-[#132B3E] flex items-center gap-2.5 cursor-pointer"
               >
                 <MessageCircle className="w-4 h-4 text-teal-500" />
                 <span>Share on WhatsApp</span>
@@ -277,11 +277,11 @@ export const JobDetailsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleCopyLink}
-                className="w-full px-4 py-2.5 text-left text-xs font-semibold text-[#243746] dark:text-[#BACDD8] hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B] flex items-center gap-2.5 cursor-pointer"
+                className="w-full px-4 py-2.5 text-left text-xs font-semibold text-[#1F2D3D] dark:text-[#BACDD8] hover:bg-[#E8F1F5] dark:hover:bg-[#132B3E] flex items-center gap-2.5 cursor-pointer"
               >
                 {copiedLink ? (
                   <>
-                    <Check className="w-4 h-4 text-[#16B8A6]" />
+                    <Check className="w-4 h-4 text-[#00BFA6]" />
                     <span>Copied to Clipboard!</span>
                   </>
                 ) : (
@@ -300,7 +300,7 @@ export const JobDetailsPage: React.FC = () => {
       <div className="space-y-8 pt-8">
         {/* Header Section: Logo + Title + Company + Location */}
         <div className="flex items-start gap-5">
-          <div className="w-16 h-16 rounded-full border border-[#DCE5EB] dark:border-[#243746] bg-white dark:bg-[#142B3B] flex-shrink-0 flex items-center justify-center overflow-hidden">
+          <div className="w-16 h-16 rounded-full border border-[#D8E4EA] dark:border-[#1F2D3D] bg-white dark:bg-[#0E2233] flex-shrink-0 flex items-center justify-center overflow-hidden">
             {job.companyLogoUrl ? (
               <img
                 src={job.companyLogoUrl}
@@ -320,7 +320,7 @@ export const JobDetailsPage: React.FC = () => {
               {job.companyName?.toUpperCase() || 'UNKNOWN COMPANY'}
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-[#243746] dark:text-white leading-tight">
+            <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-[#1F2D3D] dark:text-white leading-tight">
               {job.roleName}
             </h2>
 
@@ -333,12 +333,12 @@ export const JobDetailsPage: React.FC = () => {
         </div>
 
         {/* Meta Info Row: Work Mode, Type, Level */}
-        <div className="grid grid-cols-3 border-y border-[#DCE5EB] dark:border-[#243746] py-5 text-left">
+        <div className="grid grid-cols-3 border-y border-[#D8E4EA] dark:border-[#1F2D3D] py-5 text-left">
           <div>
             <div className="text-[10px] font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7]">
               WORK MODE
             </div>
-            <div className="text-xs font-bold uppercase tracking-wider text-[#243746] dark:text-white mt-1">
+            <div className="text-xs font-bold uppercase tracking-wider text-[#1F2D3D] dark:text-white mt-1">
               {(job.workMode || 'ONSITE').toUpperCase()}
             </div>
           </div>
@@ -347,7 +347,7 @@ export const JobDetailsPage: React.FC = () => {
             <div className="text-[10px] font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7]">
               TYPE
             </div>
-            <div className="text-xs font-bold uppercase tracking-wider text-[#243746] dark:text-white mt-1">
+            <div className="text-xs font-bold uppercase tracking-wider text-[#1F2D3D] dark:text-white mt-1">
               {(job.employmentType || 'FULL-TIME').toUpperCase()}
             </div>
           </div>
@@ -356,7 +356,7 @@ export const JobDetailsPage: React.FC = () => {
             <div className="text-[10px] font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7]">
               LEVEL
             </div>
-            <div className="text-xs font-bold uppercase tracking-wider text-[#243746] dark:text-white mt-1">
+            <div className="text-xs font-bold uppercase tracking-wider text-[#1F2D3D] dark:text-white mt-1">
               {(job.experienceLevel || 'MID-LEVEL').toUpperCase()}
             </div>
           </div>
@@ -364,16 +364,16 @@ export const JobDetailsPage: React.FC = () => {
 
         {/* OVERVIEW Grid: Salary, Experience, Vacancies */}
         <div className="space-y-4">
-          <h3 className="text-xs font-black uppercase tracking-wider text-[#243746] dark:text-white">
+          <h3 className="text-xs font-black uppercase tracking-wider text-[#1F2D3D] dark:text-white">
             OVERVIEW
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 bg-[#E7EFF3]/60 dark:bg-[#102230] border border-[#DCE5EB] dark:border-[#243746] rounded-2xl p-6 shadow-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 bg-[#E8F1F5]/60 dark:bg-[#0A1A27] border border-[#D8E4EA] dark:border-[#1F2D3D] rounded-2xl p-6 shadow-xs">
             <div>
               <div className="text-[10px] font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7]">
                 SALARY
               </div>
-              <div className="text-sm font-black uppercase tracking-wider text-[#243746] dark:text-white mt-1">
+              <div className="text-sm font-black uppercase tracking-wider text-[#1F2D3D] dark:text-white mt-1">
                 {salaryString}
               </div>
             </div>
@@ -382,7 +382,7 @@ export const JobDetailsPage: React.FC = () => {
               <div className="text-[10px] font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7]">
                 EXPERIENCE
               </div>
-              <div className="text-sm font-black uppercase tracking-wider text-[#243746] dark:text-white mt-1">
+              <div className="text-sm font-black uppercase tracking-wider text-[#1F2D3D] dark:text-white mt-1">
                 {experienceString}
               </div>
             </div>
@@ -391,7 +391,7 @@ export const JobDetailsPage: React.FC = () => {
               <div className="text-[10px] font-bold uppercase tracking-wider text-[#6B8699] dark:text-[#8CA6B7]">
                 VACANCIES
               </div>
-              <div className="text-sm font-black uppercase tracking-wider text-[#243746] dark:text-white mt-1">
+              <div className="text-sm font-black uppercase tracking-wider text-[#1F2D3D] dark:text-white mt-1">
                 {vacanciesString}
               </div>
             </div>
@@ -400,10 +400,10 @@ export const JobDetailsPage: React.FC = () => {
 
         {/* ABOUT THE ROLE */}
         <div className="space-y-3">
-          <h3 className="text-xs font-black uppercase tracking-wider text-[#243746] dark:text-white">
+          <h3 className="text-xs font-black uppercase tracking-wider text-[#1F2D3D] dark:text-white">
             ABOUT THE ROLE
           </h3>
-          <div className="text-sm leading-relaxed text-[#243746] dark:text-[#BACDD8] whitespace-pre-line font-normal">
+          <div className="text-sm leading-relaxed text-[#1F2D3D] dark:text-[#BACDD8] whitespace-pre-line font-normal">
             {job.jobDescription}
           </div>
         </div>
@@ -411,13 +411,13 @@ export const JobDetailsPage: React.FC = () => {
         {/* KEY RESPONSIBILITIES */}
         {job.responsibilities && job.responsibilities.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-xs font-black uppercase tracking-wider text-[#243746] dark:text-white">
+            <h3 className="text-xs font-black uppercase tracking-wider text-[#1F2D3D] dark:text-white">
               KEY RESPONSIBILITIES
             </h3>
-            <ul className="space-y-2 text-sm text-[#243746] dark:text-[#BACDD8]">
+            <ul className="space-y-2 text-sm text-[#1F2D3D] dark:text-[#BACDD8]">
               {job.responsibilities.map((resp, idx) => (
                 <li key={idx} className="flex items-start gap-2.5">
-                  <span className="text-[#16B8A6] font-bold">•</span>
+                  <span className="text-[#00BFA6] font-bold">•</span>
                   <span className="leading-relaxed">{resp}</span>
                 </li>
               ))}
@@ -428,13 +428,13 @@ export const JobDetailsPage: React.FC = () => {
         {/* REQUIREMENTS */}
         {job.requirements && job.requirements.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-xs font-black uppercase tracking-wider text-[#243746] dark:text-white">
+            <h3 className="text-xs font-black uppercase tracking-wider text-[#1F2D3D] dark:text-white">
               REQUIREMENTS
             </h3>
-            <ul className="space-y-2 text-sm text-[#243746] dark:text-[#BACDD8]">
+            <ul className="space-y-2 text-sm text-[#1F2D3D] dark:text-[#BACDD8]">
               {job.requirements.map((req, idx) => (
                 <li key={idx} className="flex items-start gap-2.5">
-                  <span className="text-[#16B8A6] font-bold">•</span>
+                  <span className="text-[#00BFA6] font-bold">•</span>
                   <span className="leading-relaxed">{req}</span>
                 </li>
               ))}
@@ -445,14 +445,14 @@ export const JobDetailsPage: React.FC = () => {
         {/* SKILLS REQUIRED */}
         {job.skillsRequired && job.skillsRequired.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-xs font-black uppercase tracking-wider text-[#243746] dark:text-white">
+            <h3 className="text-xs font-black uppercase tracking-wider text-[#1F2D3D] dark:text-white">
               SKILLS REQUIRED
             </h3>
             <div className="flex flex-wrap gap-2">
               {job.skillsRequired.map((skill) => (
                 <div
                   key={skill}
-                  className="px-3.5 py-1.5 rounded-xl border border-[#16B8A6]/30 bg-[#16B8A6]/15 text-xs font-bold uppercase tracking-wider text-[#0F766E] dark:text-[#5EEAD4]"
+                  className="px-3.5 py-1.5 rounded-xl border border-[#00BFA6]/30 bg-[#00BFA6]/15 text-xs font-bold uppercase tracking-wider text-[#008C79] dark:text-[#5EEAD9]"
                 >
                   {skill}
                 </div>
@@ -462,8 +462,8 @@ export const JobDetailsPage: React.FC = () => {
         )}
 
         {/* RELATED JOBS */}
-        <div className="space-y-4 pt-6 border-t border-[#DCE5EB] dark:border-[#243746]">
-          <h3 className="text-xs font-black uppercase tracking-wider text-[#243746] dark:text-white">
+        <div className="space-y-4 pt-6 border-t border-[#D8E4EA] dark:border-[#1F2D3D]">
+          <h3 className="text-xs font-black uppercase tracking-wider text-[#1F2D3D] dark:text-white">
             RELATED JOBS
           </h3>
 
@@ -489,15 +489,15 @@ export const JobDetailsPage: React.FC = () => {
       </div>
 
       {/* Pinned Bottom Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#142B3B]/95 backdrop-blur-md border-t border-[#DCE5EB] dark:border-[#243746] py-3.5 px-4 md:px-8">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0E2233]/95 backdrop-blur-md border-t border-[#D8E4EA] dark:border-[#1F2D3D] py-3.5 px-4 md:px-8">
         <div className="max-w-4xl mx-auto flex items-center gap-3">
           {/* PREPARE Button */}
           <button
             type="button"
             onClick={() => navigate(`${ROUTES.CAREER_READINESS}?jobId=${job.jobId}`)}
-            className="h-12 px-6 rounded-xl border border-[#DCE5EB] dark:border-[#243746] hover:bg-[#E7EFF3] dark:hover:bg-[#1A374B] hover:border-[#16B8A6]/60 text-[#243746] dark:text-[#F5F8FA] text-xs font-bold tracking-wider uppercase transition flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+            className="h-12 px-6 rounded-xl border border-[#D8E4EA] dark:border-[#1F2D3D] hover:bg-[#E8F1F5] dark:hover:bg-[#132B3E] hover:border-[#00BFA6]/60 text-[#1F2D3D] dark:text-[#F6FAFC] text-xs font-bold tracking-wider uppercase transition flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
           >
-            <School className="w-4 h-4 text-[#16B8A6]" />
+            <School className="w-4 h-4 text-[#00BFA6]" />
             <span>PREPARE</span>
           </button>
 
@@ -507,7 +507,7 @@ export const JobDetailsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate(ROUTES.LOGIN)}
-                className="w-full h-12 rounded-xl bg-[#16B8A6] text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer"
+                className="w-full h-12 rounded-xl bg-[#00BFA6] text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer"
               >
                 LOGIN TO APPLY
               </button>
@@ -516,7 +516,7 @@ export const JobDetailsPage: React.FC = () => {
                 type="button"
                 disabled={isApplying}
                 onClick={handleAcceptInvitation}
-                className="w-full h-12 rounded-xl bg-[#16B8A6] hover:bg-[#0D9488] active:bg-[#0F766E] text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm shadow-[#16B8A6]/20"
+                className="w-full h-12 rounded-xl bg-[#00BFA6] hover:bg-[#00A892] active:bg-[#008C79] text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm shadow-[#00BFA6]/20"
               >
                 {isApplying ? 'ACCEPTING...' : 'ACCEPT & APPLY'}
               </button>
@@ -524,7 +524,7 @@ export const JobDetailsPage: React.FC = () => {
               <button
                 type="button"
                 disabled
-                className="w-full h-12 rounded-xl bg-[#E7EFF3] dark:bg-[#1A374B] text-[#6B8699] dark:text-[#8CA6B7] text-xs font-bold tracking-wider uppercase cursor-not-allowed flex items-center justify-center border border-[#DCE5EB] dark:border-[#243746]"
+                className="w-full h-12 rounded-xl bg-[#E8F1F5] dark:bg-[#132B3E] text-[#6B8699] dark:text-[#8CA6B7] text-xs font-bold tracking-wider uppercase cursor-not-allowed flex items-center justify-center border border-[#D8E4EA] dark:border-[#1F2D3D]"
               >
                 APPLIED
               </button>
@@ -533,7 +533,7 @@ export const JobDetailsPage: React.FC = () => {
                 type="button"
                 disabled={isApplying}
                 onClick={() => setApplyModalOpen(true)}
-                className="w-full h-12 rounded-xl bg-[#16B8A6] hover:bg-[#0D9488] active:bg-[#0F766E] text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm shadow-[#16B8A6]/20"
+                className="w-full h-12 rounded-xl bg-[#00BFA6] hover:bg-[#00A892] active:bg-[#008C79] text-white text-xs font-bold tracking-wider uppercase transition flex items-center justify-center cursor-pointer shadow-sm shadow-[#00BFA6]/20"
               >
                 {isApplying ? 'APPLYING...' : 'APPLY NOW'}
               </button>
